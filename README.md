@@ -1,4 +1,4 @@
-#  ![Logo](CareCritique/public/assets/carecritique.jpg)
+#  ![Logo](CareCritique/carecritique.jpg)
 ---
 <div align="center">
   <h1>CareCritique</h1>
