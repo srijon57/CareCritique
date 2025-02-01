@@ -1,3 +1,5 @@
+import { FaFacebook, FaTwitter } from "react-icons/fa";
+
 const Footer = () => {
     return (
         <footer className="bg-gray-700 text-white py-8">
@@ -35,13 +37,13 @@ const Footer = () => {
                 <div>
                     <h3 className="font-bold text-lg mb-4">Top Local Doctors</h3>
                     <ul className="space-y-2">
-                        <li><a href="#" className="hover:underline">Badda</a></li>
-                        <li><a href="#" className="hover:underline">Farmgate</a></li>
+                        <li><a href="#" className="hover:underline">Motijhil</a></li>
+                        <li><a href="#" className="hover:underline">Hatirjhil</a></li>
+                        <li><a href="#" className="hover:underline">Dhanmondi</a></li>
                         <li><a href="#" className="hover:underline">Mirpur</a></li>
                         <li><a href="#" className="hover:underline">Uttara</a></li>
-                        <li><a href="#" className="hover:underline">Dhanmondi</a></li>
                         <li><a href="#" className="hover:underline">Shahbag</a></li>
-                        <li><a href="#" className="hover:underline">Motijhil</a></li>
+                        <li><a href="#" className="hover:underline">Farmgate</a></li>
                     </ul>
                 </div>
 
@@ -49,10 +51,10 @@ const Footer = () => {
                     <h3 className="font-bold text-lg mb-4">Follow Us</h3>
                     <div className="flex flex-col space-y-3">
                         <a href="#" className="flex items-center gap-2 hover:underline">
-                            <span className="bg-white text-gray-700 px-2 py-1 rounded">📘</span> Facebook
+                            <FaFacebook className="text-blue-500 text-2xl" /> Facebook
                         </a>
                         <a href="#" className="flex items-center gap-2 hover:underline">
-                            <span className="bg-white text-gray-700 px-2 py-1 rounded">🐦</span> Twitter
+                            <FaTwitter className="text-blue-400 text-2xl" /> Twitter
                         </a>
                     </div>
                 </div>
