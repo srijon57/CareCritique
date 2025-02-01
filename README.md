@@ -1,4 +1,8 @@
-# CareCritique
+#  ![Logo](CareCritique/public/assets/carecritique.jpg)
+---
+<div align="center">
+  <h1>CareCritique</h1>
+</div>
 
 ### Table of Contents:
 [Project Description](#project-description) - [Features](#features) - [Objectives](#objectives) - [Target Audience](#target-audience) - [API Endpoints](#api-endpoints) - [Milestones](#milestones) - [Technologies Used](#technologies-used) - [Installation](#installation) - [Team Members](#team) - [Live Project & Mock UI](#lpmui)
