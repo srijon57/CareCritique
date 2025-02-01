@@ -1,4 +1,6 @@
 import { useState } from "react";
+import Footer from "../../components/Footer/footer";
+
 
 const Homepage = () => {
     return (
@@ -94,17 +96,10 @@ const Homepage = () => {
                         </div>
                     </div>
                 </section>
+                <Footer />
             </main>
 
-            <footer className="bg-cyan-800 text-white py-6">
-                <div className="container mx-auto text-center">
-                    <p className="mb-4">CSE3100 C1 @Team_2 2025 - All Rights Reserved</p>
-                    <div className="flex justify-center gap-8">
-                        <a href="#" className="hover:underline">Instagram</a>
-                        <a href="#" className="hover:underline">Facebook</a>
-                    </div>
-                </div>
-            </footer>
+            
         </div>
     );
 }
