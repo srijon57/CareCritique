@@ -1,4 +1,4 @@
-#  ![Logo](CareCritique/carecritique.jpg)
+#  ![Logo](https://github.com/srijon57/CareCritique/blob/development/carecritique.jpg)
 ---
 <div align="center">
   <h1>CareCritique</h1>
