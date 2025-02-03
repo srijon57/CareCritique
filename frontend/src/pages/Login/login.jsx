@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import the useNavigate hook
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const navigate = useNavigate(); // Use this hook for navigation
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -16,7 +18,7 @@ const LoginPage = () => {
                 <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Log in to Your Account</h2>
                 <form onSubmit={handleLogin}>
                     <div className="mb-4">
-                        <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+                        <label htmlFor="email" className="block text-gray-700 font-medium mb-2 ">
                             Email
                         </label>
                         <input
@@ -24,35 +26,39 @@ const LoginPage = () => {
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-600"
+                            placeholder="Enter your email"
+                            className="w-full px-4 py-2 border border-gray-400 rounded-md bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-700"
                             required
                         />
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
+                        <label htmlFor="password" className="block text-gray-700 font-medium mb-2 ">
                             Password
                         </label>
                         <input
                             type="password"
                             id="password"
                             value={password}
+                            placeholder="Enter your password"
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-600"
-                            required
+                            className="w-full px-4 py-2 border border-gray-400 rounded-lg bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-600"
                         />
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-cyan-600 text-white font-medium py-2 rounded-lg hover:bg-cyan-700 focus:outline-none"
+                        className="w-full bg-cyan-700 text-white font-medium py-2 rounded-full hover:bg-cyan-700 focus:outline-none"
                     >
                         Login
                     </button>
+                    <div className="mt-9"></div>
                 </form>
-                <div className="mt-4 text-center">
-                    <a href="/signup" className="text-cyan-600 hover:underline">
-                        New here? Sign up!
-                    </a>
-                </div>
+                <button
+                    type="button"
+                    onClick={() => navigate("/signUp")} // Navigate to the sign-up page
+                    className="w-full border-2 border-cyan-700 text-cyan-500 font-medium py-2 rounded-full hover:bg-cyan-700 hover:text-white transition duration-300"
+                >
+                    New Here? Sign Up!
+                </button>
             </div>
             <div className="mt-6">
                 <button
@@ -63,7 +69,6 @@ const LoginPage = () => {
                     <span className="ml-2">Call 999</span>
                 </button>
             </div>
-            
         </div>
     );
 };
