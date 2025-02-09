@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import the useNavigate hook
+import { useNavigate } from "react-router-dom"; 
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const navigate = useNavigate(); // Use this hook for navigation
+    const navigate = useNavigate(); 
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -54,7 +54,7 @@ const LoginPage = () => {
                 </form>
                 <button
                     type="button"
-                    onClick={() => navigate("/signUp")} // Navigate to the sign-up page
+                    onClick={() => navigate("/signUp")} 
                     className="w-full border-2 border-cyan-700 text-cyan-500 font-medium py-2 rounded-full hover:bg-cyan-700 hover:text-white transition duration-300"
                 >
                     New Here? Sign Up!

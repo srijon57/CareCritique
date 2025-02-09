@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const SignUpPage = () => {
     const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ const SignUpPage = () => {
     const [contactNumber, setContactNumber] = useState("");
     const [city, setCity] = useState("");
     const [state, setState] = useState("");
+    const navigate = useNavigate();
 
 
     const handleSignUp = (e) => {
@@ -106,17 +108,34 @@ const SignUpPage = () => {
 
                     <button
                         type="button"
-                        className="inline-block text-gray-200 font-medium px-4 py-2 rounded-md border border-red-500 text-red-500 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-400 mr-2"
+                        className="inline-block font-medium px-10 py-2 rounded-md border border-red-500 text-red-500 hover:bg-red-300 focus:outline-none focus:ring-2 focus:ring-red-400 mr-2"
                     >
                         Cancel
                     </button>
                     <button
                         type="submit"
-                        className="inline-block text-white font-medium mb-1 px-4 py-2 rounded-md bg-cyan-700 hover:bg-cyan-800 focus:outline-none" // Sign Up button styles - already inline-block
+                        className="inline-block text-white font-medium mb-1 px-10 py-2 rounded-md bg-cyan-700 hover:bg-cyan-800 focus:outline-none" // Sign Up button styles - already inline-block
                     >
                         Sign Up
                     </button>
                 </form>
+                <div className="mt-16 text-center">
+                    <div className="flex justify-center">
+                        <img src="https://cdn-icons-png.flaticon.com/512/4850/4850806.png"
+                            alt="Medical Provider Icon"
+                            className="w-12 h-12" />
+                    </div>
+                    <p className="text-gray-700 font-medium mt-2">
+                        MEDICAL PROVIDER OR ADMINISTRATOR?
+                    </p>
+                    <button
+                        className="mt-2 px-4 py-2 text-white bg-cyan-700 hover:bg-cyan-800 rounded-md"
+                        onClick={() => (window.location.href = "/DrSignUp")}
+                    >
+                        SIGNUP HERE
+                    </button>
+                </div>
+
             </div>
         </div>
     );
