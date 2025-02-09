@@ -83,7 +83,7 @@ const DrSignUpPage = () => {
     return (
         <div className="min-h-screen bg-gradient-to-r from-cyan-50 to-blue-50 flex flex-col justify-center items-center p-4">
             <div className="w-full max-w-4xl bg-white shadow-2xl rounded-2xl overflow-hidden">
-                <div className="bg-gradient-to-r from-cyan-600 to-blue-600 p-6">
+                <div className="bg-gradient-to-r from-cyan-400 to-cyan-800 p-6">
                     <h2 className="text-2xl font-bold text-white text-center">
                         Doctor Registration
                     </h2>
@@ -334,13 +334,13 @@ const DrSignUpPage = () => {
                         <div className="flex justify-left gap-4">
                             <button
                                 type="button"
-                                className="px-12 py-2 bg-red-500 text-black  rounded-lg hover:bg-red-600 transition-colors duration-300"
+                                className="px-12 py-2 bg-red-500 text-white  rounded-lg hover:bg-red-600 transition-colors duration-300"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
-                                className="px-12 py-2 bg-cyan-600 text-black rounded-lg hover:bg-cyan-700 transition-colors duration-300"
+                                className="px-12 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors duration-300"
                             >
                                 Save
                             </button>
