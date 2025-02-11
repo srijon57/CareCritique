@@ -2,20 +2,21 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Homepage from "./pages/home/homepage";
 import LoginPage from "./pages/Login/login";
 import Navbar from "./components/Navbar/navbar";
+import Footer from "./components/Footer/footer";
 import SignUpPage from "./pages/SignUp/SignUp";
 import DrSignUpPage from "./pages/DrSignUp/Drsignup";
 
 function App() {
   return (  
-    <> 
-    <Navbar/>
+    <><>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/login" element={<LoginPage/>} />
-        <Route path="/SignUp" element={<SignUpPage/>} />
-        <Route path="/DrSignUp" element={<DrSignUpPage/>} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/SignUp" element={<SignUpPage />} />
+        <Route path="/DrSignUp" element={<DrSignUpPage />} />
       </Routes>
-    </>
+    </><Footer /></>
   );
 }
 
