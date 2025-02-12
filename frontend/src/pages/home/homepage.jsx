@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Footer from "../../components/Footer/footer";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
@@ -141,8 +140,7 @@ const Homepage = () => {
                 </div>
             </section>
 
-            {/* Footer */}
-            <Footer />
+           
         </div>
     );
 }
