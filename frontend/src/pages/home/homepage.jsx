@@ -74,16 +74,16 @@ const Homepage = () => {
                 <div className="container mx-auto">
                     <Carousel showArrows={true} infiniteLoop={true} showThumbs={false} showStatus={false}>
                         <div className="p-6 text-center">
-                            <p className="text-gray-700 text-lg mb-4">``The best healthcare experience I've ever had. The doctors were very professional and caring.``</p>
-                            <p className="text-cyan-800 font-semibold">- John Doe</p>
+                            <p className="text-gray-700 text-lg mb-4">``আমার জীবনের সেরা স্বাস্থ্যসেবার অভিজ্ঞতা। ডাক্তাররা খুবই পেশাদার এবং যত্নশীল ছিলেন।``</p>
+                            <p className="text-cyan-800 font-semibold">- সাদিক রহমান</p>
                         </div>
                         <div className="p-6 text-center">
-                            <p className="text-gray-700 text-lg mb-4">``I found the perfect specialist for my condition. The service was excellent!``</p>
-                            <p className="text-cyan-800 font-semibold">- Jane Smith</p>
+                            <p className="text-gray-700 text-lg mb-4">``আমার অবস্থার জন্য আমি নিখুঁত বিশেষজ্ঞ খুঁজে পেয়েছি। পরিষেবাটি দুর্দান্ত ছিল!``</p>
+                            <p className="text-cyan-800 font-semibold">- কাজী কামরুদ্দিন আহমেদ</p>
                         </div>
                         <div className="p-6 text-center">
                             <p className="text-gray-700 text-lg mb-4">``Highly recommend this platform for finding top-notch healthcare providers.``</p>
-                            <p className="text-cyan-800 font-semibold">- Michael Johnson</p>
+                            <p className="text-cyan-800 font-semibold">- Srabani Mitra</p>
                         </div>
                     </Carousel>
                 </div>
