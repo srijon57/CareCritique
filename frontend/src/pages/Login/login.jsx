@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const navigate = useNavigate(); 
+    const [loginMethod, setLoginMethod] = useState("email");
+    const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -12,54 +14,100 @@ const LoginPage = () => {
         console.log("Password:", password);
     };
 
+    const loginVariants = {
+        hidden: { opacity: 0, x: -50 },
+        visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
+        exit: { opacity: 0, x: 50, transition: { duration: 0.3 } }
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
-            <div className="w-full max-w-sm bg-white shadow-lg rounded-lg p-6">
+            <div className="w-full max-w-sm bg-white shadow-lg rounded-lg p-6 relative overflow-hidden">
                 <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Log in to Your Account</h2>
-                <form onSubmit={handleLogin}>
-                    <div className="mb-4">
-                        <label htmlFor="email" className="block text-gray-700 font-medium mb-2 ">
-                            Email
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            placeholder="Enter your email"
-                            className="w-full px-4 py-2 border border-gray-400 rounded-md bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-700"
-                            required
-                        />
-                    </div>
-                    <div className="mb-6">
-                        <label htmlFor="password" className="block text-gray-700 font-medium mb-2 ">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            placeholder="Enter your password"
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-400 rounded-lg bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-600"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full bg-cyan-700 text-white font-medium py-2 rounded-full hover:bg-cyan-700 focus:outline-none"
-                    >
-                        Login
+                
+                <AnimatePresence mode="wait">
+                    {loginMethod === "email" && (
+                        <motion.form 
+                            key="email"
+                            onSubmit={handleLogin} 
+                            initial="hidden" 
+                            animate="visible" 
+                            exit="exit" 
+                            variants={loginVariants}
+                        >
+                            <div className="mb-4">
+                                <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
+                                    Email
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="Enter your email"
+                                    className="w-full px-4 py-2 border border-gray-400 rounded-md bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-700"
+                                    required
+                                />
+                            </div>
+                            <div className="mb-6">
+                                <label htmlFor="password" className="block text-gray-700 font-medium mb-2">
+                                    Password
+                                </label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="Enter your password"
+                                    className="w-full px-4 py-2 border border-gray-400 rounded-lg bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-600"
+                                    required
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                className="w-full bg-cyan-700 text-white font-medium py-2 rounded-full hover:bg-cyan-700 focus:outline-none"
+                            >
+                                Login
+                            </button>
+                        </motion.form>
+                    )}
+                    
+                    {loginMethod === "google" && (
+                        <motion.div 
+                            key="google"
+                            initial="hidden" 
+                            animate="visible" 
+                            exit="exit" 
+                            variants={loginVariants} 
+                            className="flex justify-center"
+                        >
+                            <button
+                                className="w-full bg-red-500 text-white font-medium py-2 rounded-full hover:bg-red-600 focus:outline-none"
+                            >
+                                Sign in with Google
+                            </button>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+                
+                <div className="flex justify-between mt-4">
+                    <button onClick={() => setLoginMethod("email")} className={`text-cyan-600 font-medium ${loginMethod === "email" ? "underline" : ""}`}>
+                        Email Login
                     </button>
-                    <div className="mt-9"></div>
-                </form>
+                    <button onClick={() => setLoginMethod("google")} className={`text-red-500 font-medium ${loginMethod === "google" ? "underline" : ""}`}>
+                        Google Login
+                    </button>
+                </div>
+                
                 <button
                     type="button"
-                    onClick={() => navigate("/signUp")} 
-                    className="w-full border-2 border-cyan-700 text-cyan-500 font-medium py-2 rounded-full hover:bg-cyan-700 hover:text-white transition duration-300"
+                    onClick={() => navigate("/signUp")}
+                    className="w-full border-2 border-cyan-700 text-cyan-500 font-medium py-2 rounded-full hover:bg-cyan-700 hover:text-white transition duration-300 mt-4"
                 >
                     New Here? Sign Up!
                 </button>
             </div>
+            
             <div className="mt-6">
                 <button
                     onClick={() => alert("Calling emergency service...")}

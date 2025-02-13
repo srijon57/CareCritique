@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import { FcGoogle } from "react-icons/fc"; 
 const FileUpload = () => {
     const [fileNames, setFileNames] = useState(["", "", ""]);
 
@@ -80,6 +80,10 @@ const DrSignUpPage = () => {
         });
     };
 
+    const handleGoogleSignUp = () => {
+        console.log("Signing up with Google...");
+    };
+
     return (
         <div className="min-h-screen bg-gradient-to-r from-cyan-50 to-blue-50 flex flex-col justify-center items-center p-4">
             <div className="w-full max-w-4xl bg-white shadow-2xl rounded-2xl overflow-hidden">
@@ -115,10 +119,10 @@ const DrSignUpPage = () => {
                                     required
                                 />
                             </div>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-1 gap-1">
-                            <div >
-                                <label className="block text-gray-700 font-medium mb-2" >
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-1 gap-1">
+                            <div>
+                                <label className="block text-gray-700 font-medium mb-2">
                                     Email
                                 </label>
                                 <input
@@ -126,7 +130,8 @@ const DrSignUpPage = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="w-full px-4 py-2 border  text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                    required placeholder="Enter your email"
+                                    required
+                                    placeholder="Enter your email"
                                 />
                             </div>
                             <div>
@@ -141,10 +146,9 @@ const DrSignUpPage = () => {
                                     required
                                 />
                             </div>
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-
                                 <label className="block text-gray-700 font-medium mb-2">
                                     Blood Group
                                 </label>
@@ -171,23 +175,22 @@ const DrSignUpPage = () => {
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
-                            </div>
+                        </div>
 
-                            <div>
-                                <label className="block text-gray-700 font-medium mb-2">
-                                    Contact Number
-                                </label>
-                                <input
-                                    type="tel"
-                                    value={contactNumber}
-                                    onChange={(e) => setContactNumber(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                    required
-                                />
-                            </div>
-                            
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-gray-700 font-medium mb-2">
+                                Contact Number
+                            </label>
+                            <input
+                                type="tel"
+                                value={contactNumber}
+                                onChange={(e) => setContactNumber(e.target.value)}
+                                className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                required
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label className="block text-gray-700 font-medium mb-2">
                                     City
@@ -224,7 +227,7 @@ const DrSignUpPage = () => {
                                     <option value="Khulna">Khulna</option>
                                 </select>
                             </div>
-                            
+
                             <div>
                                 <label className="block text-gray-700 font-medium mb-2">
                                     Hospital
@@ -297,13 +300,11 @@ const DrSignUpPage = () => {
                                     required
                                 />
                             </div>
-                            </div>
-                        
+                        </div>
 
-                        {/* Upload Certificates */}
                         <FileUpload />
 
-                        {/* Biography */}
+                    
                         <div className="mb-6">
                             <label className="block text-gray-700 font-medium mb-2">
                                 Biography
@@ -316,7 +317,6 @@ const DrSignUpPage = () => {
                             ></textarea>
                         </div>
 
-                        {/* Password */}
                         <div className="mb-6">
                             <label className="block text-gray-700 font-medium mb-2">
                                 Password
@@ -326,11 +326,21 @@ const DrSignUpPage = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                required placeholder="Enter password"
+                                required
+                                placeholder="Enter password"
                             />
                         </div>
 
-                        {/* Buttons */}
+
+                        <button
+                            type="button"
+                            onClick={handleGoogleSignUp}
+                            className="w-full flex items-center justify-center gap-2 mb-6 px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                        >
+                            <FcGoogle className="w-5 h-5" /> 
+                            <span>Sign up with Google</span>
+                        </button>
+
                         <div className="flex justify-left gap-4">
                             <button
                                 type="button"

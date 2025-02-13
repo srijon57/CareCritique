@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion"; 
+import { FcGoogle } from "react-icons/fc"; 
 
 const SignUpPage = () => {
     const [email, setEmail] = useState("");
@@ -13,7 +15,6 @@ const SignUpPage = () => {
     const [city, setCity] = useState("");
     const [state, setState] = useState("");
     const navigate = useNavigate();
-
 
     const handleSignUp = (e) => {
         e.preventDefault();
@@ -29,15 +30,24 @@ const SignUpPage = () => {
             state,
             password,
         });
+    };
 
+    const handleGoogleSignUp = () => {
+        // mock google output
+        console.log("Signing up with Google...");
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center">
-            <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-6"> { }
+        <motion.div
+            initial={{ opacity: 0, y: -50 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.5 }} 
+            className="min-h-screen bg-gray-50 flex flex-col justify-center items-center"
+        >
+            <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-6">
                 <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Create Your Account</h2>
                 <form onSubmit={handleSignUp}>
-                    <div className="grid grid-cols-2 gap-4"> { }
+                    <div className="grid grid-cols-2 gap-4">
                         <div className="mb-4">
                             <label htmlFor="firstName" className="block text-gray-700 font-medium mb-1">First Name</label>
                             <input type="text" id="firstName" value={firstName} onChange={(e) => setFirstName(e.target.value)} className="w-full px-4 py-2 border border-gray-400 rounded-md bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-700" required />
@@ -92,7 +102,6 @@ const SignUpPage = () => {
                                 <option value="Khulna">Barishal</option>
                                 <option value="Barishal">Sylhet</option>
                                 <option value="Sylhet">Rangpur</option>
-
                             </select>
                         </div>
                         <div className="mb-4">
@@ -106,24 +115,42 @@ const SignUpPage = () => {
                         <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" className="w-full px-4 py-2 border border-gray-400 rounded-lg bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-cyan-600" required />
                     </div>
 
-                    <button
+                    <motion.button
                         type="button"
-                        className="inline-block font-medium px-10 py-2 rounded-md border border-red-500 text-red-500 hover:bg-red-300 focus:outline-none focus:ring-2 focus:ring-red-400 mr-2"
+                        whileHover={{ scale: 1.05 }} 
+                        whileTap={{ scale: 0.95 }}
+                        onClick={handleGoogleSignUp}
+                        className="w-full flex items-center justify-center gap-2 mb-4 px-4 py-2 border border-gray-300 rounded-md bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
                     >
-                        Cancel
-                    </button>
-                    <button
-                        type="submit"
-                        className="inline-block text-white font-medium mb-1 px-10 py-2 rounded-md bg-cyan-700 hover:bg-cyan-800 focus:outline-none" // Sign Up button styles - already inline-block
-                    >
-                        Sign Up
-                    </button>
+                        <FcGoogle className="w-5 h-5" /> 
+                        <span>Sign up with Google</span>
+                    </motion.button>
+
+                    <div className="flex justify-start gap-4">
+                        <button
+                            type="button"
+                            className="inline-block font-medium px-10 py-2 rounded-md border border-red-500 text-red-500 hover:bg-red-300 focus:outline-none focus:ring-2 focus:ring-red-400"
+                        >
+                            Cancel
+                        </button>
+                        <motion.button
+                            type="submit"
+                            whileHover={{ scale: 1.05 }} 
+                            whileTap={{ scale: 0.95 }} 
+                            className="inline-block text-white font-medium px-10 py-2 rounded-md bg-cyan-700 hover:bg-cyan-800 focus:outline-none"
+                        >
+                            Sign Up
+                        </motion.button>
+                    </div>
                 </form>
+
                 <div className="mt-16 text-center">
                     <div className="flex justify-center">
-                        <img src="https://cdn-icons-png.flaticon.com/512/4850/4850806.png"
+                        <img
+                            src="https://cdn-icons-png.flaticon.com/512/4850/4850806.png"
                             alt="Medical Provider Icon"
-                            className="w-12 h-12" />
+                            className="w-12 h-12"
+                        />
                     </div>
                     <p className="text-gray-700 font-medium mt-2">
                         MEDICAL PROVIDER OR ADMINISTRATOR?
@@ -135,9 +162,8 @@ const SignUpPage = () => {
                         SIGNUP HERE
                     </button>
                 </div>
-
             </div>
-        </div>
+        </motion.div>
     );
 };
 
