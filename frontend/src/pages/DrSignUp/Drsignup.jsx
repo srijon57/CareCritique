@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc"; 
+import { FcGoogle } from "react-icons/fc";
+
 const FileUpload = () => {
     const [fileNames, setFileNames] = useState(["", "", ""]);
 
@@ -12,21 +13,22 @@ const FileUpload = () => {
 
     return (
         <div className="mb-6">
-            <label className="block text-gray-700 font-medium mb-2">
+            <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
+
                 Upload Valid Certificates
             </label>
             <div className="flex gap-4">
                 {fileNames.map((fileName, index) => (
                     <label
                         key={index}
-                        className="flex-1 border-2 border-dashed border-gray-300 rounded-lg p-4 text-center cursor-pointer hover:border-cyan-500 transition-colors duration-300"
+                        className="flex-1 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center cursor-pointer hover:border-cyan-500 dark:hover:border-cyan-600 transition-colors duration-300"
                     >
                         <input
                             type="file"
                             className="hidden"
                             onChange={(e) => handleFileChange(index, e)}
                         />
-                        <span className="text-sm text-gray-600">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
                             {fileName || "Click to upload"}
                         </span>
                     </label>
@@ -85,8 +87,8 @@ const DrSignUpPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-cyan-50 to-blue-50 flex flex-col justify-center items-center p-4">
-            <div className="w-full max-w-4xl bg-white shadow-2xl rounded-2xl overflow-hidden">
+        <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col justify-center items-center p-4">
+            <div className="w-full max-w-4xl bg-white dark:bg-gray-800 shadow-2xl rounded-2xl overflow-hidden">
                 <div className="bg-gradient-to-r from-cyan-400 to-cyan-800 p-6">
                     <h2 className="text-2xl font-bold text-white text-center">
                         Doctor Registration
@@ -96,78 +98,78 @@ const DrSignUpPage = () => {
                     <form onSubmit={handleSignUp}>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     First Name
                                 </label>
                                 <input
                                     type="text"
                                     value={firstName}
                                     onChange={(e) => setFirstName(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Last Name
                                 </label>
                                 <input
                                     type="text"
                                     value={lastName}
                                     onChange={(e) => setLastName(e.target.value)}
-                                    className="w-full px-4 py-2  text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 text-black dark:text-white border dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-1 gap-1">
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Email
                                 </label>
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full px-4 py-2 border  text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                     placeholder="Enter your email"
                                 />
                             </div>
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Address
                                 </label>
                                 <input
                                     type="text"
                                     value={address}
                                     onChange={(e) => setAddress(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Blood Group
                                 </label>
                                 <input
                                     type="text"
                                     value={bloodGroup}
                                     onChange={(e) => setBloodGroup(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Gender
                                 </label>
                                 <select
                                     value={gender}
                                     onChange={(e) => setGender(e.target.value)}
-                                    className="w-full px-4 py-2  text-black border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 text-black dark:text-white border dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 >
                                     <option value="Male">Male</option>
@@ -178,27 +180,27 @@ const DrSignUpPage = () => {
                         </div>
 
                         <div>
-                            <label className="block text-gray-700 font-medium mb-2">
+                            <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                 Contact Number
                             </label>
                             <input
                                 type="tel"
                                 value={contactNumber}
                                 onChange={(e) => setContactNumber(e.target.value)}
-                                className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                 required
                             />
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     City
                                 </label>
                                 <select
                                     value={city}
                                     onChange={(e) => setCity(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 >
                                     <option value="">Select a city</option>
@@ -210,13 +212,13 @@ const DrSignUpPage = () => {
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     State
                                 </label>
                                 <select
                                     value={state}
                                     onChange={(e) => setState(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 >
                                     <option value="">Select a state</option>
@@ -229,74 +231,74 @@ const DrSignUpPage = () => {
                             </div>
 
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Hospital
                                 </label>
                                 <input
                                     type="text"
                                     value={hospital}
                                     onChange={(e) => setHospital(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Specialty
                                 </label>
                                 <input
                                     type="text"
                                     value={specialty}
                                     onChange={(e) => setSpecialty(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Education
                                 </label>
                                 <input
                                     type="text"
                                     value={education}
                                     onChange={(e) => setEducation(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Experience
                                 </label>
                                 <input
                                     type="text"
                                     value={experience}
                                     onChange={(e) => setExperience(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Language
                                 </label>
                                 <input
                                     type="text"
                                     value={language}
                                     onChange={(e) => setLanguage(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
                             </div>
                             <div>
-                                <label className="block text-gray-700 font-medium mb-2">
+                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Availability
                                 </label>
                                 <input
                                     type="text"
                                     value={availability}
                                     onChange={(e) => setAvailability(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
                             </div>
@@ -304,53 +306,51 @@ const DrSignUpPage = () => {
 
                         <FileUpload />
 
-                    
                         <div className="mb-6">
-                            <label className="block text-gray-700 font-medium mb-2">
+                            <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                 Biography
                             </label>
                             <textarea
                                 value={biography}
                                 onChange={(e) => setBiography(e.target.value)}
-                                className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                 rows="4"
                             ></textarea>
                         </div>
 
                         <div className="mb-6">
-                            <label className="block text-gray-700 font-medium mb-2">
+                            <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                 Password
                             </label>
                             <input
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-2 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                 required
                                 placeholder="Enter password"
                             />
                         </div>
 
-
                         <button
                             type="button"
                             onClick={handleGoogleSignUp}
-                            className="w-full flex items-center justify-center gap-2 mb-6 px-4 py-2 border border-gray-300 rounded-lg bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                            className="w-full flex items-center justify-center gap-2 mb-6 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-200"
                         >
-                            <FcGoogle className="w-5 h-5" /> 
+                            <FcGoogle className="w-5 h-5" />
                             <span>Sign up with Google</span>
                         </button>
 
                         <div className="flex justify-left gap-4">
                             <button
                                 type="button"
-                                className="px-12 py-2 bg-red-500 text-white  rounded-lg hover:bg-red-600 transition-colors duration-300"
+                                className="px-12 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 dark:hover:bg-red-600 transition-colors duration-300"
                             >
                                 Cancel
                             </button>
                             <button
                                 type="submit"
-                                className="px-12 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors duration-300"
+                                className="px-12 py-2 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 dark:hover:bg-cyan-700 transition-colors duration-300"
                             >
                                 Save
                             </button>

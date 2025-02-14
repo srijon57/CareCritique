@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"; 
+import { Routes, Route } from "react-router-dom"; 
 import Homepage from "./pages/home/homepage";
 import LoginPage from "./pages/Login/login";
 import Navbar from "./components/Navbar/navbar";
@@ -8,7 +8,7 @@ import DrSignUpPage from "./pages/DrSignUp/Drsignup";
 
 function App() {
   return (  
-    <><>
+    <>
       <Navbar />
       <Routes>
         <Route path="/" element={<Homepage />} />
@@ -16,7 +16,8 @@ function App() {
         <Route path="/SignUp" element={<SignUpPage />} />
         <Route path="/DrSignUp" element={<DrSignUpPage />} />
       </Routes>
-    </><Footer /></>
+    <Footer />
+    </>
   );
 }
 
