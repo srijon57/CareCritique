@@ -1,24 +1,26 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { FcGoogle } from "react-icons/fc";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FcGoogle } from 'react-icons/fc';
 import api from '../../services/api';
+import { useSnackbar } from 'notistack';
 
 const SignUpPage = () => {
     const [formData, setFormData] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        address: "",
-        bloodGroup: "A+", // Default blood group
-        gender: "male",
-        contactNumber: "",
-        city: "",
-        state: "",
-        password: "",
+        firstName: '',
+        lastName: '',
+        email: '',
+        address: '',
+        bloodGroup: 'A+',
+        gender: 'male',
+        contactNumber: '',
+        city: '',
+        state: '',
+        password: '',
     });
 
     const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -29,32 +31,31 @@ const SignUpPage = () => {
         const registrationData = {
             email: formData.email,
             password: formData.password,
-            user_type: 'Patient', // or 'Doctor', depending on your logic
+            user_type: 'Patient',
             first_name: formData.firstName,
             last_name: formData.lastName,
             contact_number: formData.contactNumber,
             address: formData.address,
-            blood_group: formData.bloodGroup.toUpperCase(), // Ensure blood group is in uppercase
-            gender: formData.gender.charAt(0).toUpperCase() + formData.gender.slice(1), // Capitalize gender
+            blood_group: formData.bloodGroup.toUpperCase(),
+            gender: formData.gender.charAt(0).toUpperCase() + formData.gender.slice(1),
             city: formData.city,
             state: formData.state,
         };
-        console.log("Sign Up Data:", registrationData); // Log the data being sent
+
         try {
             const response = await api.post('/register', registrationData);
-            console.log("Registration successful:", response.data);
-            navigate('/login'); // Redirect to login page after successful registration
+            enqueueSnackbar('Registration successful!', { variant: 'success' });
+            navigate('/login');
         } catch (error) {
-            console.error("Registration failed:", error);
+            enqueueSnackbar('Registration failed. Please try again.', { variant: 'error' });
         }
     };
 
     const handleGoogleSignUp = () => {
-        console.log("Signing up with Google...");
+        console.log('Signing up with Google...');
     };
 
-    // Blood group options
-    const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+    const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
     return (
         <motion.div
@@ -71,13 +72,13 @@ const SignUpPage = () => {
                 <form onSubmit={handleSignUp}>
                     <div className="grid grid-cols-2 gap-4">
                         {Object.keys(formData).map((key) => (
-                            key !== "password" && key !== "gender" && key !== "bloodGroup" ? (
+                            key !== 'password' && key !== 'gender' && key !== 'bloodGroup' ? (
                                 <div key={key} className="mb-4">
                                     <label htmlFor={key} className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
                                         {key.charAt(0).toUpperCase() + key.slice(1)}
                                     </label>
                                     <input
-                                        type={key === "email" ? "email" : "text"}
+                                        type={key === 'email' ? 'email' : 'text'}
                                         id={key}
                                         value={formData[key]}
                                         onChange={handleChange}
@@ -149,7 +150,7 @@ const SignUpPage = () => {
                     <div className="flex justify-start gap-4">
                         <button
                             type="button"
-                            onClick={() => navigate("/")}
+                            onClick={() => navigate('/')}
                             className="inline-block font-medium px-10 py-2 rounded-md border border-red-500 text-red-500 dark:text-red-400 hover:bg-red-300 dark:hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-400"
                         >
                             Cancel
@@ -178,7 +179,7 @@ const SignUpPage = () => {
                     </p>
                     <button
                         className="mt-2 px-4 py-2 text-white bg-cyan-700 hover:bg-cyan-800 rounded-md"
-                        onClick={() => navigate("/DrSignUp")}
+                        onClick={() => navigate('/DrSignUp')}
                     >
                         SIGNUP HERE
                     </button>

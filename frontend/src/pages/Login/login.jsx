@@ -1,28 +1,31 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import api from '../../services/api'; 
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
+import { useSnackbar } from 'notistack';
 
 const LoginPage = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [loginMethod, setLoginMethod] = useState("email");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [loginMethod, setLoginMethod] = useState('email');
     const navigate = useNavigate();
+    const { login } = useAuth();
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await api.post('/login', { email, password });
-            console.log("Login successful:", response.data);
+            await login(email, password);
+            navigate('/');
         } catch (error) {
-            console.error("Login failed:", error);
+            enqueueSnackbar(error.message, { variant: 'error' });
         }
     };
 
     const loginVariants = {
         hidden: { opacity: 0, x: -50 },
         visible: { opacity: 1, x: 0, transition: { duration: 0.5 } },
-        exit: { opacity: 0, x: 50, transition: { duration: 0.3 } }
+        exit: { opacity: 0, x: 50, transition: { duration: 0.3 } },
     };
 
     return (
@@ -33,7 +36,7 @@ const LoginPage = () => {
                 </h2>
 
                 <AnimatePresence mode="wait">
-                    {loginMethod === "email" && (
+                    {loginMethod === 'email' && (
                         <motion.form
                             onSubmit={handleLogin}
                             initial="hidden"
@@ -81,7 +84,7 @@ const LoginPage = () => {
                         </motion.form>
                     )}
 
-                    {loginMethod === "google" && (
+                    {loginMethod === 'google' && (
                         <motion.div
                             initial="hidden"
                             animate="visible"
@@ -89,7 +92,7 @@ const LoginPage = () => {
                             variants={loginVariants}
                         >
                             <button
-                                onClick={() => console.log("Sign in with Google...")}
+                                onClick={() => console.log('Sign in with Google...')}
                                 className="w-full bg-red-500 dark:bg-red-600 text-white font-medium py-2 rounded-full
                                 hover:bg-red-600 dark:hover:bg-red-700 focus:outline-none transition-colors"
                             >
@@ -101,17 +104,17 @@ const LoginPage = () => {
 
                 <div className="flex justify-between mt-4">
                     <button
-                        onClick={() => setLoginMethod("email")}
+                        onClick={() => setLoginMethod('email')}
                         className={`text-cyan-600 dark:text-cyan-400 font-medium ${
-                            loginMethod === "email" ? "underline" : ""
+                            loginMethod === 'email' ? 'underline' : ''
                         }`}
                     >
                         Email Login
                     </button>
                     <button
-                        onClick={() => setLoginMethod("google")}
+                        onClick={() => setLoginMethod('google')}
                         className={`text-red-500 dark:text-red-400 font-medium ${
-                            loginMethod === "google" ? "underline" : ""
+                            loginMethod === 'google' ? 'underline' : ''
                         }`}
                     >
                         Google Login
@@ -120,7 +123,7 @@ const LoginPage = () => {
 
                 <button
                     type="button"
-                    onClick={() => navigate("/signUp")}
+                    onClick={() => navigate('/SignUp')}
                     className="w-full border-2 border-cyan-700 dark:border-cyan-400 text-cyan-500 dark:text-cyan-400
                     font-medium py-2 rounded-full hover:bg-cyan-700 dark:hover:bg-cyan-600 hover:text-white
                     transition duration-300 mt-4"
@@ -131,7 +134,7 @@ const LoginPage = () => {
 
             <div className="mt-6">
                 <button
-                    onClick={() => alert("Calling emergency service...")}
+                    onClick={() => alert('Calling emergency service...')}
                     className="bg-red-600 dark:bg-red-700 text-white font-medium px-6 py-2 rounded-lg shadow-lg
                     hover:bg-red-700 dark:hover:bg-red-800 focus:outline-none transition-colors"
                 >
