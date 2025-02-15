@@ -1,6 +1,6 @@
-import  { useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaBars, FaTimes, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaBars, FaTimes, FaChevronDown, FaChevronUp, FaUserCircle } from 'react-icons/fa';
 import logo from '../../assets/logo.svg';
 import ThemeToggle from '../ThemeToggle';
 import { useAuth } from '../../context/AuthContext';
@@ -52,12 +52,17 @@ const Navbar = () => {
                 </Link>
                 <div className="flex items-center space-x-4">
                     {isAuthenticated ? (
-                        <button
-                            onClick={logout}
-                            className="text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 text-center mr-4"
-                        >
-                            Logout
-                        </button>
+                        <>
+                            <Link to="/profile" className="text-white hover:text-gray-300">
+                                <FaUserCircle className="w-6 h-6" />
+                            </Link>
+                            <button
+                                onClick={logout}
+                                className="text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 text-center mr-4"
+                            >
+                                Logout
+                            </button>
+                        </>
                     ) : (
                         <Link
                             to="/login"

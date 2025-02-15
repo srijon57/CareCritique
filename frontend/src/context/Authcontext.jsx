@@ -10,6 +10,7 @@ export const AuthProvider = ({ children }) => {
     const [refreshToken, setRefreshToken] = useState(null);
     const { enqueueSnackbar } = useSnackbar();
 
+    // Initialize tokens from localStorage on app load
     useEffect(() => {
         const storedAccessToken = localStorage.getItem('accessToken');
         const storedRefreshToken = localStorage.getItem('refreshToken');
@@ -65,7 +66,7 @@ export const AuthProvider = ({ children }) => {
         if (isAuthenticated) {
             const interval = setInterval(() => {
                 refreshAccessToken();
-            }, 10 * 60 * 1000);
+            }, 10 * 60 * 1000); // Refresh token every 10 minutes
 
             return () => clearInterval(interval);
         }
