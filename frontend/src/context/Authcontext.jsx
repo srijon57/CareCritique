@@ -1,7 +1,7 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import  { createContext, useState, useEffect, useContext } from 'react';
 import api from '../services/api';
 import { useSnackbar } from 'notistack';
-
+import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState(null);
     const [refreshToken, setRefreshToken] = useState(null);
     const { enqueueSnackbar } = useSnackbar();
-
+    const navigate = useNavigate();
     // Initialize tokens from localStorage on app load
     useEffect(() => {
         const storedAccessToken = localStorage.getItem('accessToken');
@@ -44,6 +44,7 @@ export const AuthProvider = ({ children }) => {
         setRefreshToken(null);
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        navigate('/');
     };
 
     const refreshAccessToken = async () => {

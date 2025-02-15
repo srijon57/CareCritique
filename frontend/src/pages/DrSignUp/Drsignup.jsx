@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import api from '../../services/api';
 import { useSnackbar } from 'notistack';
-
+import { useNavigate } from 'react-router-dom';
 const FileUpload = () => {
     const [fileNames, setFileNames] = useState(['', '', '']);
 
@@ -61,7 +61,7 @@ const DrSignUpPage = () => {
         biography: '',
         password: '',
     });
-
+    const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
 
     const handleChange = (e) => {
@@ -76,7 +76,7 @@ const DrSignUpPage = () => {
         e.preventDefault();
 
         const availability = `${formData.availabilityStart.replace(' AM', 'am')} - ${formData.availabilityEnd.replace(' PM', 'pm')}`;
-
+        
         const registrationData = {
             user_type: formData.userType,
             first_name: formData.firstName,
@@ -104,6 +104,7 @@ const DrSignUpPage = () => {
         } catch (error) {
             enqueueSnackbar('Registration failed. Please try again.', { variant: 'error' });
         }
+        navigate('/login');
     };
 
     const handleGoogleSignUp = () => {

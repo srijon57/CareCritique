@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
+import { useSnackbar } from 'notistack';
 
 const Profile = () => {
     const { accessToken } = useAuth();
     const [profile, setProfile] = useState(null);
-    const [error, setError] = useState('');
+    const navigate = useNavigate();
+    const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
         const fetchProfile = async () => {
             try {
                 if (!accessToken) {
-                    setError('No access token found. Please log in again.');
+                   // enqueueSnackbar('No access token found. Please log in again.', { variant: 'error' });
                     return;
                 }
 
@@ -21,22 +24,20 @@ const Profile = () => {
                     },
                 });
                 setProfile(response.data.profile);
-                setError(''); // Clear any previous errors
             } catch (error) {
                 if (error.response?.status === 401) {
-                    // Token expired or invalid
-                    setError('Session expired. Please log in again.');
+                    enqueueSnackbar('Session expired. Please log in again.', { variant: 'error' });
                     localStorage.removeItem('accessToken');
                     localStorage.removeItem('refreshToken');
-                    window.location.href = '/login';
+                    navigate('/login');
                 } else {
-                    setError('Failed to fetch profile');
+                    enqueueSnackbar('Failed to fetch profile', { variant: 'error' });
                 }
             }
         };
 
         fetchProfile();
-    }, [accessToken]);
+    }, [accessToken, navigate, enqueueSnackbar]);
 
     if (!profile) {
         return <div className="bg-white dark:bg-gray-900 min-h-screen font-sans p-6">Loading...</div>;
@@ -45,9 +46,6 @@ const Profile = () => {
     return (
         <div className="bg-white dark:bg-gray-900 min-h-screen font-sans p-6">
             <h1 className="text-4xl font-bold text-cyan-800 mb-8 text-center dark:text-white">Profile</h1>
-            {error && <div className="text-red-500 text-center mb-4">{error}</div>}
-
-            {/* Common Fields for Both Patient and Doctor */}
             <div className="container mx-auto bg-gray-200 dark:bg-gray-800 shadow-lg rounded-lg p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -112,7 +110,6 @@ const Profile = () => {
                     </div>
                 </div>
 
-                {/* Additional Fields for Doctors */}
                 {profile.user_type === 'Doctor' && (
                     <div className="mt-8">
                         <h2 className="text-2xl font-bold text-cyan-800 mb-6 dark:text-white">Doctor Details</h2>
@@ -162,6 +159,13 @@ const Profile = () => {
                         </div>
                     </div>
                 )}
+
+                <button
+                    onClick={() => navigate('/editprofile')}
+                    className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                >
+                    Edit Profile
+                </button>
             </div>
         </div>
     );
