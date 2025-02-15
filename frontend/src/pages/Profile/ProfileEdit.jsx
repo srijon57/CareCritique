@@ -1,20 +1,23 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 import { useSnackbar } from 'notistack';
+import { useSpinner } from '../../components/SpinnerProvider'; 
 
 const EditProfile = () => {
     const { accessToken } = useAuth();
     const [profile, setProfile] = useState({});
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
+    const { setLoading } = useSpinner();
 
     useEffect(() => {
         const fetchProfile = async () => {
+            setLoading(true);
             try {
                 if (!accessToken) {
-                   // enqueueSnackbar('No access token found. Please log in again.', { variant: 'error' });
+                //    enqueueSnackbar('No access token found. Please log in again.', { variant: 'error' });
                     return;
                 }
 
@@ -33,11 +36,13 @@ const EditProfile = () => {
                 } else {
                     enqueueSnackbar('Failed to fetch profile', { variant: 'error' });
                 }
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchProfile();
-    }, [accessToken, navigate, enqueueSnackbar]);
+    }, [accessToken, navigate, enqueueSnackbar, setLoading]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -49,6 +54,7 @@ const EditProfile = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             const response = await api.put(
                 '/profile/update',
@@ -64,8 +70,9 @@ const EditProfile = () => {
             enqueueSnackbar('Profile updated successfully', { variant: 'success' });
         } catch (error) {
             enqueueSnackbar('Failed to update profile', { variant: 'error' });
+        } finally {
+            setLoading(false);
         }
-        navigate('/profile');
     };
 
     if (!profile) {

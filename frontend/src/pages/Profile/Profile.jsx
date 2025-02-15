@@ -1,20 +1,22 @@
-import { useState, useEffect } from 'react';
+import  { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 import { useSnackbar } from 'notistack';
-
+import { useSpinner } from '../../components/SpinnerProvider';
 const Profile = () => {
     const { accessToken } = useAuth();
     const [profile, setProfile] = useState(null);
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
+    const { setLoading } = useSpinner();
 
     useEffect(() => {
         const fetchProfile = async () => {
+            setLoading(true);
             try {
                 if (!accessToken) {
-                   // enqueueSnackbar('No access token found. Please log in again.', { variant: 'error' });
+                 //   enqueueSnackbar('No access token found. Please log in again.', { variant: 'error' });
                     return;
                 }
 
@@ -33,11 +35,13 @@ const Profile = () => {
                 } else {
                     enqueueSnackbar('Failed to fetch profile', { variant: 'error' });
                 }
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchProfile();
-    }, [accessToken, navigate, enqueueSnackbar]);
+    }, [accessToken, navigate, enqueueSnackbar, setLoading]);
 
     if (!profile) {
         return <div className="bg-white dark:bg-gray-900 min-h-screen font-sans p-6">Loading...</div>;
