@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FcGoogle } from "react-icons/fc";
+import api from '../../services/api';
 
 const SignUpPage = () => {
     const [formData, setFormData] = useState({
@@ -9,28 +10,51 @@ const SignUpPage = () => {
         lastName: "",
         email: "",
         address: "",
-        bloodGroup: "",
+        bloodGroup: "A+", // Default blood group
         gender: "male",
         contactNumber: "",
         city: "",
         state: "",
         password: "",
     });
-    
+
     const navigate = useNavigate();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.id]: e.target.value });
     };
 
-    const handleSignUp = (e) => {
+    const handleSignUp = async (e) => {
         e.preventDefault();
-        console.log("Sign Up Data:", formData);
+        const registrationData = {
+            email: formData.email,
+            password: formData.password,
+            user_type: 'Patient', // or 'Doctor', depending on your logic
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            contact_number: formData.contactNumber,
+            address: formData.address,
+            blood_group: formData.bloodGroup.toUpperCase(), // Ensure blood group is in uppercase
+            gender: formData.gender.charAt(0).toUpperCase() + formData.gender.slice(1), // Capitalize gender
+            city: formData.city,
+            state: formData.state,
+        };
+        console.log("Sign Up Data:", registrationData); // Log the data being sent
+        try {
+            const response = await api.post('/register', registrationData);
+            console.log("Registration successful:", response.data);
+            navigate('/login'); // Redirect to login page after successful registration
+        } catch (error) {
+            console.error("Registration failed:", error);
+        }
     };
 
     const handleGoogleSignUp = () => {
         console.log("Signing up with Google...");
     };
+
+    // Blood group options
+    const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
     return (
         <motion.div
@@ -47,7 +71,7 @@ const SignUpPage = () => {
                 <form onSubmit={handleSignUp}>
                     <div className="grid grid-cols-2 gap-4">
                         {Object.keys(formData).map((key) => (
-                            key !== "password" && (
+                            key !== "password" && key !== "gender" && key !== "bloodGroup" ? (
                                 <div key={key} className="mb-4">
                                     <label htmlFor={key} className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
                                         {key.charAt(0).toUpperCase() + key.slice(1)}
@@ -61,8 +85,54 @@ const SignUpPage = () => {
                                         required
                                     />
                                 </div>
-                            )
+                            ) : null
                         ))}
+                        <div className="mb-4">
+                            <label htmlFor="bloodGroup" className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
+                                Blood Group
+                            </label>
+                            <select
+                                id="bloodGroup"
+                                value={formData.bloodGroup}
+                                onChange={handleChange}
+                                className="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-700"
+                                required
+                            >
+                                {bloodGroups.map((group) => (
+                                    <option key={group} value={group}>
+                                        {group}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="gender" className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
+                                Gender
+                            </label>
+                            <select
+                                id="gender"
+                                value={formData.gender}
+                                onChange={handleChange}
+                                className="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-700"
+                                required
+                            >
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="password" className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
+                                Password
+                            </label>
+                            <input
+                                type="password"
+                                id="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                className="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-700"
+                                required
+                            />
+                        </div>
                     </div>
 
                     <motion.button

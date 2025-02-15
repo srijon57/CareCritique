@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import api from '../../services/api';
 
 const FileUpload = () => {
     const [fileNames, setFileNames] = useState(["", "", ""]);
@@ -14,7 +15,6 @@ const FileUpload = () => {
     return (
         <div className="mb-6">
             <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
-
                 Upload Valid Certificates
             </label>
             <div className="flex gap-4">
@@ -39,47 +39,73 @@ const FileUpload = () => {
 };
 
 const DrSignUpPage = () => {
-    const [userType, setUserType] = useState("Doctor");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [address, setAddress] = useState("");
-    const [bloodGroup, setBloodGroup] = useState("");
-    const [gender, setGender] = useState("Male");
-    const [contactNumber, setContactNumber] = useState("");
-    const [city, setCity] = useState("");
-    const [state, setState] = useState("");
-    const [hospital, setHospital] = useState("");
-    const [specialty, setSpecialty] = useState("");
-    const [education, setEducation] = useState("");
-    const [experience, setExperience] = useState("");
-    const [language, setLanguage] = useState("");
-    const [availability, setAvailability] = useState("");
-    const [biography, setBiography] = useState("");
-    const [password, setPassword] = useState("");
+    const [formData, setFormData] = useState({
+        userType: "Doctor",
+        firstName: "",
+        lastName: "",
+        email: "",
+        address: "",
+        bloodGroup: "",
+        gender: "Male",
+        contactNumber: "",
+        city: "",
+        state: "",
+        hospital: "",
+        specialty: "",
+        education: "",
+        experience: "",
+        languages: "Bengali",
+        availabilityStart: "1 AM",
+        availabilityEnd: "1 PM",
+        biography: "",
+        password: "",
+    });
 
-    const handleSignUp = (e) => {
-        e.preventDefault();
-        console.log("Sign Up Data:", {
-            userType,
-            firstName,
-            lastName,
-            email,
-            address,
-            bloodGroup,
-            gender,
-            contactNumber,
-            city,
-            state,
-            hospital,
-            specialty,
-            education,
-            experience,
-            language,
-            availability,
-            biography,
-            password,
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setFormData({
+            ...formData,
+            [id]: value,
         });
+    };
+
+    const handleSignUp = async (e) => {
+        e.preventDefault();
+
+        // Combine the availability times into a single string
+        const availability = `${formData.availabilityStart.replace(' AM', 'am')} - ${formData.availabilityEnd.replace(' PM', 'pm')}`;
+
+        // Map the formData to the desired format
+        const registrationData = {
+            user_type: formData.userType,
+            first_name: formData.firstName,
+            last_name: formData.lastName,
+            email: formData.email,
+            address: formData.address,
+            blood_group: formData.bloodGroup,
+            gender: formData.gender,
+            contact_number: formData.contactNumber,
+            city: formData.city,
+            state: formData.state,
+            hospital: formData.hospital,
+            specialty: formData.specialty,
+            education: formData.education,
+            experience: formData.experience,
+            languages: formData.languages,
+            availability: availability,
+            biography: formData.biography,
+            password: formData.password,
+        };
+
+        console.log("Sign Up Data:", registrationData); // Log the data being sent
+
+        try {
+            const response = await api.post('/register', registrationData);
+            console.log("Registration successful:", response.data);
+            // Redirect or show success message
+        } catch (error) {
+            console.error("Registration failed:", error);
+        }
     };
 
     const handleGoogleSignUp = () => {
@@ -103,8 +129,9 @@ const DrSignUpPage = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    value={firstName}
-                                    onChange={(e) => setFirstName(e.target.value)}
+                                    id="firstName"
+                                    value={formData.firstName}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
@@ -115,8 +142,9 @@ const DrSignUpPage = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    value={lastName}
-                                    onChange={(e) => setLastName(e.target.value)}
+                                    id="lastName"
+                                    value={formData.lastName}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 text-black dark:text-white border dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
@@ -129,8 +157,9 @@ const DrSignUpPage = () => {
                                 </label>
                                 <input
                                     type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    id="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                     placeholder="Enter your email"
@@ -142,8 +171,9 @@ const DrSignUpPage = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    value={address}
-                                    onChange={(e) => setAddress(e.target.value)}
+                                    id="address"
+                                    value={formData.address}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
@@ -154,27 +184,37 @@ const DrSignUpPage = () => {
                                 <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Blood Group
                                 </label>
-                                <input
-                                    type="text"
-                                    value={bloodGroup}
-                                    onChange={(e) => setBloodGroup(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                <select
+                                    id="bloodGroup"
+                                    value={formData.bloodGroup}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 text-black dark:text-white border dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
-                                />
+                                >
+                                    <option value="">Select blood group</option>
+                                    <option value="A+">A+</option>
+                                    <option value="A-">A-</option>
+                                    <option value="B+">B+</option>
+                                    <option value="B-">B-</option>
+                                    <option value="AB+">AB+</option>
+                                    <option value="AB-">AB-</option>
+                                    <option value="O+">O+</option>
+                                    <option value="O-">O-</option>
+                                </select>
                             </div>
                             <div>
                                 <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Gender
                                 </label>
                                 <select
-                                    value={gender}
-                                    onChange={(e) => setGender(e.target.value)}
+                                    id="gender"
+                                    value={formData.gender}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 text-black dark:text-white border dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 >
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
                                 </select>
                             </div>
                         </div>
@@ -185,8 +225,9 @@ const DrSignUpPage = () => {
                             </label>
                             <input
                                 type="tel"
-                                value={contactNumber}
-                                onChange={(e) => setContactNumber(e.target.value)}
+                                id="contactNumber"
+                                value={formData.contactNumber}
+                                onChange={handleChange}
                                 className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                 required
                             />
@@ -197,37 +238,27 @@ const DrSignUpPage = () => {
                                 <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     City
                                 </label>
-                                <select
-                                    value={city}
-                                    onChange={(e) => setCity(e.target.value)}
+                                <input
+                                    type="text"
+                                    id="city"
+                                    value={formData.city}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
-                                >
-                                    <option value="">Select a city</option>
-                                    <option value="Dhaka">Dhaka</option>
-                                    <option value="Khulna">Khulna</option>
-                                    <option value="Chittagong">Chittagong</option>
-                                    <option value="Rajshahi">Rajshahi</option>
-                                    <option value="Sylhet">Sylhet</option>
-                                </select>
+                                />
                             </div>
                             <div>
                                 <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     State
                                 </label>
-                                <select
-                                    value={state}
-                                    onChange={(e) => setState(e.target.value)}
+                                <input
+                                    type="text"
+                                    id="state"
+                                    value={formData.state}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
-                                >
-                                    <option value="">Select a state</option>
-                                    <option value="Dhaka">Dhaka</option>
-                                    <option value="Barishal">Barishal</option>
-                                    <option value="Chattogram">Chattogram</option>
-                                    <option value="Rajshahi">Rajshahi</option>
-                                    <option value="Khulna">Khulna</option>
-                                </select>
+                                />
                             </div>
 
                             <div>
@@ -236,8 +267,9 @@ const DrSignUpPage = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    value={hospital}
-                                    onChange={(e) => setHospital(e.target.value)}
+                                    id="hospital"
+                                    value={formData.hospital}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
@@ -246,13 +278,45 @@ const DrSignUpPage = () => {
                                 <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
                                     Specialty
                                 </label>
-                                <input
-                                    type="text"
-                                    value={specialty}
-                                    onChange={(e) => setSpecialty(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                <select
+                                    id="specialty"
+                                    value={formData.specialty}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 text-black dark:text-white border dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
-                                />
+                                >
+                                    <option value="">Select specialty</option>
+                                    <option value="Anesthesiology">Anesthesiology</option>
+                                    <option value="Cardiology">Cardiology</option>
+                                    <option value="Dermatology">Dermatology</option>
+                                    <option value="Emergency Medicine">Emergency Medicine</option>
+                                    <option value="Endocrinology">Endocrinology</option>
+                                    <option value="Family Medicine">Family Medicine</option>
+                                    <option value="Gastroenterology">Gastroenterology</option>
+                                    <option value="General Surgery">General Surgery</option>
+                                    <option value="Geriatrics">Geriatrics</option>
+                                    <option value="Hematology">Hematology</option>
+                                    <option value="Infectious Disease">Infectious Disease</option>
+                                    <option value="Internal Medicine">Internal Medicine</option>
+                                    <option value="Nephrology">Nephrology</option>
+                                    <option value="Neurology">Neurology</option>
+                                    <option value="Obstetrics and Gynecology">Obstetrics and Gynecology</option>
+                                    <option value="Oncology">Oncology</option>
+                                    <option value="Ophthalmology">Ophthalmology</option>
+                                    <option value="Orthopedic Surgery">Orthopedic Surgery</option>
+                                    <option value="Otolaryngology (ENT)">Otolaryngology (ENT)</option>
+                                    <option value="Pediatrics">Pediatrics</option>
+                                    <option value="Plastic Surgery">Plastic Surgery</option>
+                                    <option value="Podiatry">Podiatry</option>
+                                    <option value="Psychiatry">Psychiatry</option>
+                                    <option value="Pulmonology">Pulmonology</option>
+                                    <option value="Radiology">Radiology</option>
+                                    <option value="Rheumatology">Rheumatology</option>
+                                    <option value="Sports Medicine">Sports Medicine</option>
+                                    <option value="Surgical Oncology">Surgical Oncology</option>
+                                    <option value="Urology">Urology</option>
+                                    <option value="Vascular Surgery">Vascular Surgery</option>
+                                </select>
                             </div>
                             <div>
                                 <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
@@ -260,8 +324,9 @@ const DrSignUpPage = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    value={education}
-                                    onChange={(e) => setEducation(e.target.value)}
+                                    id="education"
+                                    value={formData.education}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
@@ -271,36 +336,79 @@ const DrSignUpPage = () => {
                                     Experience
                                 </label>
                                 <input
-                                    type="text"
-                                    value={experience}
-                                    onChange={(e) => setExperience(e.target.value)}
+                                    type="number"
+                                    id="experience"
+                                    value={formData.experience}
+                                    onChange={handleChange}
                                     className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
                                 />
                             </div>
                             <div>
                                 <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
-                                    Language
+                                    languages
                                 </label>
-                                <input
-                                    type="text"
-                                    value={language}
-                                    onChange={(e) => setLanguage(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                <select
+                                    id="languages"
+                                    value={formData.languages}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 text-black dark:text-white border dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                     required
-                                />
+                                >
+                                    <option value="Bengali">Bengali</option>
+                                    <option value="English">English</option>
+                                    <option value="Chinese">Chinese</option>
+                                    <option value="Japanese">Japanese</option>
+                                    <option value="Hindi">Hindi</option>
+                                    <option value="Spanish">Spanish</option>
+                                    <option value="French">French</option>
+                                    <option value="Arabic">Arabic</option>
+                                    <option value="Portuguese">Portuguese</option>
+                                    <option value="Russian">Russian</option>
+                                    <option value="Urdu">Urdu</option>
+                                    <option value="German">German</option>
+                                </select>
                             </div>
-                            <div>
-                                <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
-                                    Availability
-                                </label>
-                                <input
-                                    type="text"
-                                    value={availability}
-                                    onChange={(e) => setAvailability(e.target.value)}
-                                    className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
-                                    required
-                                />
+                            <div className="flex items-center justify-between">
+                                <div className="mr-2">
+                                    <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
+                                        Availability From
+                                    </label>
+                                    <select
+                                        id="availabilityStart"
+                                        value={formData.availabilityStart}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 text-black dark:text-white border dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                        required
+                                    >
+                                        {[...Array(12).keys()].map((num) => (
+                                            <option key={num + 1} value={`${num + 1} AM`}>
+                                                {num + 1} AM
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="mx-2 text-gray-700 dark:text-gray-200 font-medium">
+                                    to
+                                </div>
+                                <div className="ml-2">
+                                    <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
+                                        Availability To
+                                    </label>
+                                    <select
+                                        id="availabilityEnd"
+                                        value={formData.availabilityEnd}
+                                        onChange={handleChange}
+                                        className="w-full px-4 py-2 text-black dark:text-white border dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                                        required
+                                    >
+                                        {[...Array(12).keys()].map((num) => (
+                                            <option key={num + 1} value={`${num + 1} PM`}>
+                                                {num + 1} PM
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
@@ -311,8 +419,9 @@ const DrSignUpPage = () => {
                                 Biography
                             </label>
                             <textarea
-                                value={biography}
-                                onChange={(e) => setBiography(e.target.value)}
+                                id="biography"
+                                value={formData.biography}
+                                onChange={handleChange}
                                 className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                 rows="4"
                             ></textarea>
@@ -324,8 +433,9 @@ const DrSignUpPage = () => {
                             </label>
                             <input
                                 type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                id="password"
+                                value={formData.password}
+                                onChange={handleChange}
                                 className="w-full px-4 py-2 border text-black dark:text-white dark:border-gray-600 dark:bg-gray-700 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
                                 required
                                 placeholder="Enter password"
