@@ -22,20 +22,20 @@ class AuthService
             'email' => 'required|string|email',
             'password' => 'required|string'
         ]);
-
+    
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json(['error' => 'Validation failed', 'messages' => $validator->errors()], 422);
         }
-
+    
         $user = UserAccount::where('Email', $request->email)->first();
-
+    
         if (!$user || !Hash::check($request->password, $user->PasswordHash)) {
             return response()->json(['error' => 'Invalid credentials'], 401);
         }
-
+    
         $accessToken = $this->jwtService->generateToken($user, config('app.jwt_ttl'));
         $refreshToken = $this->jwtService->generateToken($user, config('app.jwt_refresh_ttl'));
-
+    
         return response()->json([
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken

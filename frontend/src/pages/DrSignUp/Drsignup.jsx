@@ -1,14 +1,15 @@
-import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
+import React, { useState } from 'react';
+import { FcGoogle } from 'react-icons/fc';
 import api from '../../services/api';
+import { useSnackbar } from 'notistack';
 
 const FileUpload = () => {
-    const [fileNames, setFileNames] = useState(["", "", ""]);
+    const [fileNames, setFileNames] = useState(['', '', '']);
 
     const handleFileChange = (index, event) => {
         const file = event.target.files[0];
         const newFileNames = [...fileNames];
-        newFileNames[index] = file ? file.name : "";
+        newFileNames[index] = file ? file.name : '';
         setFileNames(newFileNames);
     };
 
@@ -29,7 +30,7 @@ const FileUpload = () => {
                             onChange={(e) => handleFileChange(index, e)}
                         />
                         <span className="text-sm text-gray-600 dark:text-gray-400">
-                            {fileName || "Click to upload"}
+                            {fileName || 'Click to upload'}
                         </span>
                     </label>
                 ))}
@@ -40,26 +41,28 @@ const FileUpload = () => {
 
 const DrSignUpPage = () => {
     const [formData, setFormData] = useState({
-        userType: "Doctor",
-        firstName: "",
-        lastName: "",
-        email: "",
-        address: "",
-        bloodGroup: "",
-        gender: "Male",
-        contactNumber: "",
-        city: "",
-        state: "",
-        hospital: "",
-        specialty: "",
-        education: "",
-        experience: "",
-        languages: "Bengali",
-        availabilityStart: "1 AM",
-        availabilityEnd: "1 PM",
-        biography: "",
-        password: "",
+        userType: 'Doctor',
+        firstName: '',
+        lastName: '',
+        email: '',
+        address: '',
+        bloodGroup: '',
+        gender: 'Male',
+        contactNumber: '',
+        city: '',
+        state: '',
+        hospital: '',
+        specialty: '',
+        education: '',
+        experience: '',
+        languages: 'Bengali',
+        availabilityStart: '1 AM',
+        availabilityEnd: '1 PM',
+        biography: '',
+        password: '',
     });
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleChange = (e) => {
         const { id, value } = e.target;
@@ -72,10 +75,8 @@ const DrSignUpPage = () => {
     const handleSignUp = async (e) => {
         e.preventDefault();
 
-        // Combine the availability times into a single string
         const availability = `${formData.availabilityStart.replace(' AM', 'am')} - ${formData.availabilityEnd.replace(' PM', 'pm')}`;
 
-        // Map the formData to the desired format
         const registrationData = {
             user_type: formData.userType,
             first_name: formData.firstName,
@@ -97,19 +98,16 @@ const DrSignUpPage = () => {
             password: formData.password,
         };
 
-        console.log("Sign Up Data:", registrationData); // Log the data being sent
-
         try {
             const response = await api.post('/register', registrationData);
-            console.log("Registration successful:", response.data);
-            // Redirect or show success message
+            enqueueSnackbar('Registration successful!', { variant: 'success' });
         } catch (error) {
-            console.error("Registration failed:", error);
+            enqueueSnackbar('Registration failed. Please try again.', { variant: 'error' });
         }
     };
 
     const handleGoogleSignUp = () => {
-        console.log("Signing up with Google...");
+        console.log('Signing up with Google...');
     };
 
     return (
@@ -346,7 +344,7 @@ const DrSignUpPage = () => {
                             </div>
                             <div>
                                 <label className="block text-gray-700 dark:text-gray-200 font-medium mb-2">
-                                    languages
+                                    Languages
                                 </label>
                                 <select
                                     id="languages"
