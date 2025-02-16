@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "notistack": "^3.0.2",
+    "react-icons": "^5.4.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.2",
+    "tailwindcss": "^4.0.6"
+  },
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
+  }
+}
