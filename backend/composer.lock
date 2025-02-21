@@ -89,7 +89,8 @@
             "require-dev": {
                 "doctrine/dbal": "^3.7.0",
                 "nesbot/carbon": "^2.71.0 || ^3.0.0",
-                "phpunit/phpunit": "^10.3"
+                "phpunit/phpunit": "^10.3",
+                "phpmailer/phpmailer": "^6.9.2"
             },
             "type": "library",
             "autoload": {

@@ -22,7 +22,7 @@ class Doctor extends Model
         'Gender',
         'ContactNumber',
         'City',
-        'State',
+        'Area',
         'Hospital',
         'Specialty',
         'Education',

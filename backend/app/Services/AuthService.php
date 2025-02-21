@@ -17,30 +17,34 @@ class AuthService
     }
 
     public function login($request)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email',
-            'password' => 'required|string'
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|string|email',
+        'password' => 'required|string'
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json(['error' => 'Validation failed', 'messages' => $validator->errors()], 422);
-        }
-
-        $user = UserAccount::where('Email', $request->email)->first();
-
-        if (!$user || !Hash::check($request->password, $user->PasswordHash)) {
-            return response()->json(['error' => 'Invalid credentials'], 401);
-        }
-
-        $accessToken = $this->jwtService->generateToken($user, config('app.jwt_ttl'));
-        $refreshToken = $this->jwtService->generateToken($user, config('app.jwt_refresh_ttl'));
-
-        return response()->json([
-            'access_token' => $accessToken,
-            'refresh_token' => $refreshToken
-        ]);
+    if ($validator->fails()) {
+        return response()->json(['error' => 'Validation failed', 'messages' => $validator->errors()], 422);
     }
+
+    $user = UserAccount::where('Email', $request->email)->first();
+
+    if (!$user || !Hash::check($request->password, $user->PasswordHash)) {
+        return response()->json(['error' => 'Invalid credentials'], 401);
+    }
+
+    if (!$user->verified) {
+        return response()->json(['error' => 'Please verify your email first.'], 401);
+    }
+
+    $accessToken = $this->jwtService->generateToken($user, config('app.jwt_ttl'));
+    $refreshToken = $this->jwtService->generateToken($user, config('app.jwt_refresh_ttl'));
+
+    return response()->json([
+        'access_token' => $accessToken,
+        'refresh_token' => $refreshToken
+    ]);
+}
 
     public function refreshToken($request)
     {
@@ -108,19 +112,17 @@ class AuthService
                 'gender' => $patient->Gender,
                 'contact_number' => $patient->ContactNumber,
                 'city' => $patient->City,
-                'state' => $patient->State,
+                'area' => $patient->Area,
             ]);
-        } elseif ($user->UserType === 'Doctor') {
+        } 
+        elseif ($user->UserType === 'Doctor') {
             $doctor = $user->doctor;
             $profileData = array_merge($profileData, [
                 'first_name' => $doctor->FirstName,
                 'last_name' => $doctor->LastName,
                 'address' => $doctor->Address,
-                'blood_group' => $doctor->BloodGroup,
                 'gender' => $doctor->Gender,
-                'contact_number' => $doctor->ContactNumber,
-                'city' => $doctor->City,
-                'state' => $doctor->State,
+                'contact_number' => $doctor->ContactNumber,    
                 'hospital' => $doctor->Hospital,
                 'specialty' => $doctor->Specialty,
                 'education' => $doctor->Education,
@@ -128,7 +130,13 @@ class AuthService
                 'languages' => $doctor->Languages,
                 'availability' => $doctor->Availability,
                 'biography' => $doctor->Biography,
-                // Certificates are excluded as per the requirement
+            ]);
+        }
+        elseif ($user->UserType === 'Admin') {
+            $doctor = $user->doctor;
+            $profileData = array_merge($profileData, [
+                'first_name' => $doctor->FirstName,
+                'last_name' => $doctor->LastName, 
             ]);
         }
 
@@ -191,8 +199,8 @@ class AuthService
             if ($request->has('city')) {
                 $patient->City = $request->city;
             }
-            if ($request->has('state')) {
-                $patient->State = $request->state;
+            if ($request->has('area')) {
+                $patient->Area = $request->Area;
             }
             $patient->save();
         } elseif ($user->UserType === 'Doctor') {
@@ -203,14 +211,11 @@ class AuthService
             if ($request->has('last_name')) {
                 $doctor->LastName = $request->last_name;
             }
+            if ($request->has('contact_number')) {
+                $doctor->ContactNumber = $request->ContactNumber;
+            }
             if ($request->has('address')) {
                 $doctor->Address = $request->address;
-            }
-            if ($request->has('city')) {
-                $doctor->City = $request->city;
-            }
-            if ($request->has('state')) {
-                $doctor->State = $request->state;
             }
             if ($request->has('experience')) {
                 $doctor->Experience = $request->experience;
