@@ -13,11 +13,13 @@ class UserAccount extends Authenticatable
     protected $table = 'UserAccount';
     protected $primaryKey = 'UserID';
     public $timestamps = false;
-
+    
     protected $fillable = [
         'Email',
         'PasswordHash',
         'UserType',
+        'verified',
+        'otp_expires_at',
     ];
 
     protected $hidden = [

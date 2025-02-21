@@ -10,7 +10,6 @@ export const AuthProvider = ({ children }) => {
     const [refreshToken, setRefreshToken] = useState(null);
     const { enqueueSnackbar } = useSnackbar();
     const navigate = useNavigate();
-    // Initialize tokens from localStorage on app load
     useEffect(() => {
         const storedAccessToken = localStorage.getItem('accessToken');
         const storedRefreshToken = localStorage.getItem('refreshToken');
@@ -34,9 +33,10 @@ export const AuthProvider = ({ children }) => {
             enqueueSnackbar('Logged in successfully!', { variant: 'success' });
         } catch (error) {
             const errorMessage = error.response?.data?.error || 'Login failed. Please check your credentials.';
-            throw new Error(errorMessage);
+            throw new Error(errorMessage); 
         }
     };
+    
 
     const logout = () => {
         setIsAuthenticated(false);

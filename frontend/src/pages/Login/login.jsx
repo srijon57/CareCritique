@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
@@ -7,7 +7,7 @@ import { useSnackbar } from 'notistack';
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loginMethod, setLoginMethod] = useState('email');
+    const [loginMethod] = useState('email');
     const navigate = useNavigate();
     const { login } = useAuth();
     const { enqueueSnackbar } = useSnackbar();
@@ -18,9 +18,16 @@ const LoginPage = () => {
             await login(email, password);
             navigate('/');
         } catch (error) {
-            enqueueSnackbar(error.message, { variant: 'error' });
+            console.error('Error during login:', error);
+            if (error.message) {
+                enqueueSnackbar(error.message, { variant: 'error' });
+            } else {
+                enqueueSnackbar('Login failed. Please try again.', { variant: 'error' });
+            }
         }
     };
+    
+    
 
     const loginVariants = {
         hidden: { opacity: 0, x: -50 },
@@ -34,7 +41,6 @@ const LoginPage = () => {
                 <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">
                     Log in to Your Account
                 </h2>
-
                 <AnimatePresence mode="wait">
                     {loginMethod === 'email' && (
                         <motion.form
@@ -46,7 +52,7 @@ const LoginPage = () => {
                         >
                             <div className="mb-4">
                                 <label htmlFor="email" className="block text-gray-700 dark:text-gray-300 font-medium mb-2">
-                                    Email
+                                    Gmail
                                 </label>
                                 <input
                                     type="email"
@@ -82,45 +88,8 @@ const LoginPage = () => {
                                 Login
                             </button>
                         </motion.form>
-                    )}
-
-                    {loginMethod === 'google' && (
-                        <motion.div
-                            initial="hidden"
-                            animate="visible"
-                            exit="exit"
-                            variants={loginVariants}
-                        >
-                            <button
-                                onClick={() => console.log('Sign in with Google...')}
-                                className="w-full bg-red-500 dark:bg-red-600 text-white font-medium py-2 rounded-full
-                                hover:bg-red-600 dark:hover:bg-red-700 focus:outline-none transition-colors"
-                            >
-                                Sign in with Google
-                            </button>
-                        </motion.div>
-                    )}
+                    )}       
                 </AnimatePresence>
-
-                <div className="flex justify-between mt-4">
-                    <button
-                        onClick={() => setLoginMethod('email')}
-                        className={`text-cyan-600 dark:text-cyan-400 font-medium ${
-                            loginMethod === 'email' ? 'underline' : ''
-                        }`}
-                    >
-                        Email Login
-                    </button>
-                    <button
-                        onClick={() => setLoginMethod('google')}
-                        className={`text-red-500 dark:text-red-400 font-medium ${
-                            loginMethod === 'google' ? 'underline' : ''
-                        }`}
-                    >
-                        Google Login
-                    </button>
-                </div>
-
                 <button
                     type="button"
                     onClick={() => navigate('/SignUp')}
