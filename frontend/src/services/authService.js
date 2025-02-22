@@ -18,12 +18,3 @@ export const login = async (credentials) => {
         throw error.response.data;
     }
 };
-
-export const googleSignUp = async (token) => {
-    try {
-        const response = await axios.post('/auth/google', { token });
-        return response.data;
-    } catch (error) {
-        throw error.response.data;
-    }
-};

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FaBars, FaTimes, FaChevronDown, FaChevronUp, FaUserCircle } from 'react-icons/fa';
 import logo from '../../assets/logo.svg';
@@ -23,9 +23,9 @@ const Navbar = () => {
         { name: 'Home', href: '/' },
         {
             name: 'Find a Doctor',
-            href: '#',
             children: [
-                { name: 'General Physician', href: '#' },
+                { name: 'All Doctors', href: '/doctors' },
+                { name: 'Physician', href: '#' },
                 { name: 'Dentist', href: '#' },
                 { name: 'Pediatrician', href: '#' },
                 { name: 'Cardiologist', href: '#' },
@@ -33,8 +33,8 @@ const Navbar = () => {
         },
         {
             name: 'Find a Hospital',
-            href: '#',
             children: [
+                { name: 'All Hospitals', href: '/hospitals' },
                 { name: 'Multi-specialty', href: '#' },
                 { name: 'Cardiac Care', href: '#' },
                 { name: 'Maternity', href: '#' },

@@ -59,6 +59,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
+            <p className="text-center">&copy; 2025|CSE-3100|C1|Team-Care_Critique| All rights reserved.</p>
         </footer>
     );
 };
