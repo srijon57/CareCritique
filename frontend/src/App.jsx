@@ -10,6 +10,8 @@ import ProfileEdit from "./pages/Profile/ProfileEdit";
 import VerifyOtpPage from "./pages/VerifyOtpPage/VerifyOtpPage";
 import DoctorsList from "./pages/Doctors/DoctorsList";
 import DoctorDetails from "./pages/Doctors/DoctorDetails";
+import HospitalsList from "./pages/Hospitals/HospitalsList";
+import HospitalDetails from "./pages/Hospitals/HospitalDetails";
 
 function App() {
   return (  
@@ -25,6 +27,8 @@ function App() {
         <Route path="/verify-otp" element={<VerifyOtpPage/>}/>
         <Route path="/doctors" element={<DoctorsList/>}/>
         <Route path="/doctors/:id" element={<DoctorDetails/>}/>
+        <Route path="/hospitals" element={<HospitalsList/>}/>
+        <Route path="/hospitals/:id" element={<HospitalDetails/>}/>
       </Routes>
     <Footer />
     </>

@@ -2,6 +2,7 @@ import  { createContext, useState, useContext } from 'react';
 
 const SpinnerContext = createContext();
 
+// eslint-disable-next-line react/prop-types
 export const SpinnerProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
 
