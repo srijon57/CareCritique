@@ -8,6 +8,8 @@ import DrSignUpPage from "./pages/DrSignUp/Drsignup";
 import Profile from "./pages/Profile/Profile";
 import ProfileEdit from "./pages/Profile/ProfileEdit";
 import VerifyOtpPage from "./pages/VerifyOtpPage/VerifyOtpPage";
+import DoctorsList from "./pages/Doctors/DoctorsList";
+import DoctorDetails from "./pages/Doctors/DoctorDetails";
 
 function App() {
   return (  
@@ -21,6 +23,8 @@ function App() {
         <Route path="/Profile" element={<Profile/>}/>
         <Route path="/editprofile" element={<ProfileEdit/>}/>
         <Route path="/verify-otp" element={<VerifyOtpPage/>}/>
+        <Route path="/doctors" element={<DoctorsList/>}/>
+        <Route path="/doctors/:id" element={<DoctorDetails/>}/>
       </Routes>
     <Footer />
     </>
