@@ -105,6 +105,24 @@ INSERT INTO Hospital (Name, Address, ContactNumber, HospitalArea, HospitalCity) 
 ('Holy Family Red Crescent Medical College Hospital', '1 Eskaton Garden Rd, Dhaka 1000', '01819234567', 'Eskaton', 'Dhaka'),
 ('Bangabandhu Sheikh Mujib Medical University', 'Shahbagh, Dhaka 1000', '01711334455', 'Shahbagh', 'Dhaka');
 
+INSERT INTO UserAccount (Email, PasswordHash, UserType, verified) VALUES
+('dr.kamal@example.com', 'hashed_password1', 'Doctor', TRUE),
+('dr.nazneen@example.com', 'hashed_password2', 'Doctor', TRUE),
+('dr.raihan@example.com', 'hashed_password3', 'Doctor', TRUE),
+('dr.tasnim@example.com', 'hashed_password4', 'Doctor', TRUE);
+
+
+INSERT INTO Doctor (UserID, HospitalID, FirstName, LastName, Address, Gender, ContactNumber, Specialty, Education, Hospital, Experience, Languages, Availability, Biography, CertificatePath1, CertificatePath2, CertificatePath3)
+VALUES  
+((SELECT UserID FROM UserAccount WHERE Email = 'dr.kamal@example.com'), 1, 'Kamal', 'Hossain', 'House-10, Road-5, Dhanmondi, Dhaka', 'Male', '01711111111', 'Cardiologist', 'MBBS, FCPS (Cardiology)', 'Square Hospital', '15 years in cardiology', 'Bengali, English', 'Sun-Thu 9AM-4PM', 'Experienced in interventional cardiology and heart diseases.', 'certificates/kamal1.pdf', NULL, NULL),  
+
+((SELECT UserID FROM UserAccount WHERE Email = 'dr.nazneen@example.com'), 2, 'Nazneen', 'Akter', 'House-22, Road-7, Gulshan, Dhaka', 'Female', '01722222222', 'Gynecologist', 'MBBS, MS (Gynecology)', 'United Hospital', '12 years in obstetrics and gynecology', 'Bengali, English', 'Mon-Fri 10AM-5PM', 'Specialist in maternal health and fertility treatments.', 'certificates/nazneen1.pdf', 'certificates/nazneen2.pdf', NULL),  
+
+((SELECT UserID FROM UserAccount WHERE Email = 'dr.raihan@example.com'), 3, 'Raihan', 'Islam', 'House-8, Block-B, Bashundhara, Dhaka', 'Male', '01733333333', 'Neurologist', 'MBBS, MD (Neurology)', 'Apollo Hospital', '10 years in neurology', 'Bengali, English', 'Sat-Wed 8AM-3PM', 'Expert in treating stroke, epilepsy, and nerve disorders.', 'certificates/raihan1.pdf', 'certificates/raihan2.pdf', 'certificates/raihan3.pdf'),  
+
+((SELECT UserID FROM UserAccount WHERE Email = 'dr.tasnim@example.com'), 4, 'Tasnim', 'Rahman', 'House-15, Road-3, Dhanmondi, Dhaka', 'Female', '01744444444', 'Orthopedic Surgeon', 'MBBS, MS (Orthopedics)', 'Labaid Hospital', '8 years in orthopedic surgery', 'Bengali, English, Hindi', 'Sun-Thu 9AM-6PM', 'Specialist in joint replacements and spinal surgeries.', 'certificates/tasnim1.pdf', NULL, NULL);
+
+
 SELECT * FROM Doctor;
 SELECT * FROM UserAccount;
 SELECT * FROM Patient;
