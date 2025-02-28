@@ -20,5 +20,3 @@ Route::get('/doctors', [DoctorController::class, 'index']);
 Route::get('/doctors/{id}', [DoctorController::class, 'show']);
 Route::get('/hospitals', [HospitalController::class, 'index']);
 Route::get('/hospitals/{id}', [HospitalController::class, 'show']);
-Route::get('/hospitals/suggestions', [HospitalController::class, 'suggestions']); // Ensure this line is added
-Route::get('/api/doctors/suggestions', [DoctorController::class, 'getSearchSuggestions']);

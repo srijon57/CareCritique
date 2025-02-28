@@ -6,8 +6,6 @@ const DoctorsList = () => {
     const [doctors, setDoctors] = useState([]);
     const [error, setError] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
-    const [searchSuggestions, setSearchSuggestions] = useState([]);
-    const [activeSuggestionIndex, setActiveSuggestionIndex] = useState(-1);
 
     useEffect(() => {
         axios.get('http://127.0.0.1:8000/api/doctors')
@@ -38,87 +36,35 @@ const DoctorsList = () => {
             });
     }, []);
 
-    const fetchSearchSuggestions = async (query) => {
-        if (query.length > 2) {
-            try {
-                const response = await axios.get('http://127.0.0.1:8000/api/doctors/suggestions', {
-                    params: { query }
-                });
-                setSearchSuggestions(response.data);
-            } catch (error) {
-                console.error('Error fetching search suggestions:', error);
-            }
-        } else {
-            setSearchSuggestions([]);
-        }
-    };
-
     const handleSearchChange = (e) => {
-        const value = e.target.value;
-        setSearchQuery(value);
-        fetchSearchSuggestions(value);
+        setSearchQuery(e.target.value);
     };
 
-    const handleSearchKeyDown = (e) => {
-        if (e.key === "ArrowDown") {
-            setActiveSuggestionIndex((prevIndex) =>
-                prevIndex < searchSuggestions.length - 1 ? prevIndex + 1 : prevIndex
-            );
-        } else if (e.key === "ArrowUp") {
-            setActiveSuggestionIndex((prevIndex) =>
-                prevIndex > 0 ? prevIndex - 1 : 0
-            );
-        } else if (e.key === "Enter") {
-            if (activeSuggestionIndex >= 0 && searchSuggestions[activeSuggestionIndex]) {
-                const selectedSuggestion = searchSuggestions[activeSuggestionIndex];
-                setSearchQuery(selectedSuggestion.FirstName + " " + selectedSuggestion.LastName);
-                setSearchSuggestions([]);
-            }
-        }
-    };
-
-    const filteredDoctors = doctors.filter(doctor =>
-        doctor.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        doctor.specialty.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    if (error) {
-        return <div className="text-red-500 text-center">{error}</div>;
-    }
+    const filteredDoctors = doctors.filter(doctor => {
+        const firstName = doctor.firstName || '';
+        const lastName = doctor.lastName || '';
+        const specialty = doctor.specialty || '';
+    
+        return (
+            firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            specialty.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+    });
+    
 
     return (
         <div className="min-h-screen bg-gray-200 dark:bg-gray-900 text-black dark:text-white">
             <div className="container mx-auto p-6">
                 <h2 className="text-4xl font-bold mb-8 text-cyan-800 text-center dark:text-white">All Doctors</h2>
                 <div className="flex justify-center items-center my-8">
-    <input
-        type="text"
-        placeholder="Search by name or specialty"
-        className="w-full max-w-2xl p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
-        value={searchQuery}
-        onChange={handleSearchChange}
-        onKeyDown={handleSearchKeyDown}
-    />
-                    {searchSuggestions.length > 0 && (
-                        <ul className="absolute z-10 bg-white dark:bg-gray-800 w-full mt-1 rounded-lg shadow-lg">
-                            {searchSuggestions.map((suggestion, index) => (
-                                <li
-                                    key={index}
-                                    className={`p-2 cursor-pointer ${
-                                        index === activeSuggestionIndex
-                                            ? "bg-cyan-100 dark:bg-cyan-700"
-                                            : "hover:bg-cyan-50 dark:hover:bg-cyan-600"
-                                    }`}
-                                    onClick={() => {
-                                        setSearchQuery(suggestion.FirstName + " " + suggestion.LastName);
-                                        setSearchSuggestions([]);
-                                    }}
-                                >
-                                    {suggestion.FirstName} {suggestion.LastName} - {suggestion.Specialty}
-                                </li>
-                            ))}
-                        </ul>
-                    )}
+                    <input
+                        type="text"
+                        placeholder="Search by name or specialty"
+                        className="w-full max-w-2xl p-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                    />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-8">
                     {filteredDoctors.map(doctor => (
