@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\AuthService;
 use App\Services\OtpService;
+use App\Services\CloudinaryService;
 use App\Models\UserAccount;
 use App\Models\Patient;
 use App\Models\Doctor;
@@ -13,22 +14,24 @@ class AuthController extends Controller
 {
     protected $authService;
     protected $otpService;
+    protected $cloudinaryService;
 
-    public function __construct(AuthService $authService, OtpService $otpService)
+    public function __construct(AuthService $authService, OtpService $otpService, CloudinaryService $cloudinaryService)
     {
         $this->authService = $authService;
         $this->otpService = $otpService;
+        $this->cloudinaryService = $cloudinaryService;
     }
 
     public function register(Request $request)
     {
-        $userService = new \App\Services\UserService($this->otpService);
+        $userService = new \App\Services\UserService($this->otpService, $this->cloudinaryService);
         return $userService->register($request);
     }
 
     public function verifyOtp(Request $request)
     {
-        $userService = new \App\Services\UserService($this->otpService);
+        $userService = new \App\Services\UserService($this->otpService, $this->cloudinaryService);
         return $userService->verifyOtp($request);
     }
 
