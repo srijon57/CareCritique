@@ -2,25 +2,100 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; 
 import axios from "axios"; 
 import { useSpinner } from '../../components/SpinnerProvider';
+import { useAuth } from '../../context/Authcontext'
 
 const DoctorDetails = () => {
   const { id } = useParams();
   const [doctor, setDoctor] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
+  const [newReview, setNewReview] = useState({ rating: 0, comment: "" });
+  const [error, setError] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const { setLoading } = useSpinner();
-  
+  const { accessToken, isAuthenticated } = useAuth(); // Use AuthContext
+
+  // Fetch doctor details, reviews, and user profile
   useEffect(() => {
     setLoading(true);
-    axios.get(`http://127.0.0.1:8000/api/doctors/${id}`)
-      .then(response => {
-        setDoctor(response.data);
+    const fetchData = async () => {
+      try {
+        // Fetch doctor details
+        const doctorResponse = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}`);
+        setDoctor(doctorResponse.data);
+
+        // Fetch reviews (assuming this is now public or token is optional)
+        const reviewsResponse = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}/reviews`);
+        setReviews(reviewsResponse.data.reviews || []);
+        setAverageRating(reviewsResponse.data.average_rating || 0);
+
+        // Fetch user profile if authenticated
+        if (isAuthenticated && accessToken) {
+          const profileResponse = await axios.get(`http://127.0.0.1:8000/api/profile`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+          });
+          setUserProfile(profileResponse.data.profile);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        if (error.response?.status === 401) {
+          setError("Please log in to view additional details.");
+        }
+      } finally {
         setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching doctor details:', error);
-        setLoading(false);
-      });
-  }, [id, setLoading]);
-  
+      }
+    };
+    fetchData();
+  }, [id, setLoading, isAuthenticated, accessToken]);
+
+  // Handle star rating input
+  const handleStarClick = (rating) => {
+    setNewReview({ ...newReview, rating });
+  };
+
+  // Handle review comment input
+  const handleCommentChange = (e) => {
+    setNewReview({ ...newReview, comment: e.target.value });
+  };
+
+  // Handle review submission
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (newReview.rating === 0) {
+      setError("Please select a rating.");
+      return;
+    }
+
+    if (!isAuthenticated || !accessToken) {
+      setError("Please log in to submit a review.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:8000/api/doctors/${id}/reviews`,
+        { rating: newReview.rating, comment: newReview.comment },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+
+      setReviews([...reviews, response.data.review]);
+      setNewReview({ rating: 0, comment: "" });
+      setError(null);
+
+      // Refetch reviews to update average rating
+      const reviewsResponse = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}/reviews`);
+      setAverageRating(reviewsResponse.data.average_rating);
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      const errorMsg = error.response?.data?.error || "Failed to submit review.";
+      if (error.response?.status === 403 && errorMsg === "Only patients can submit reviews") {
+        setError("Only patients can submit reviews.");
+      } else {
+        setError(errorMsg);
+      }
+    }
+  };
+
   if (!doctor) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
@@ -28,10 +103,9 @@ const DoctorDetails = () => {
       </div>
     );
   }
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800 text-black dark:text-white p-4 md:p-6">
-      {/* Header with back button */}
       <div className="max-w-4xl mx-auto mb-6">
         <button 
           onClick={() => window.history.back()} 
@@ -43,14 +117,10 @@ const DoctorDetails = () => {
       </div>
       
       <div className="max-w-4xl mx-auto">
-        {/* Main card */}
         <div className="bg-white shadow-xl rounded-xl overflow-hidden dark:bg-gray-800 transition-all">
-          {/* Header banner */}
           <div className="h-32 bg-gradient-to-r from-cyan-500 to-blue-500"></div>
           
-          {/* Profile section */}
           <div className="px-8 pt-0 pb-8">
-            {/* Avatar */}
             <div className="flex flex-col md:flex-row md:items-end mb-6">
               <img
                 src="https://static.vecteezy.com/system/resources/thumbnails/024/585/326/small_2x/3d-happy-cartoon-doctor-cartoon-doctor-on-transparent-background-generative-ai-png.png"
@@ -64,22 +134,15 @@ const DoctorDetails = () => {
                 <p className="text-lg text-gray-500 dark:text-gray-400">{doctor.Specialty || 'General Practitioner'}</p>
               </div>
               
-              {/* Action buttons */}
               <div className="flex gap-2 mt-4 md:mt-0 md:ml-auto">
                 <button className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg flex items-center shadow-md transition-all">
                   <span className="mr-2">📅</span>
                   Book Appointment
                 </button>
-                <button className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg flex items-center shadow-md transition-all">
-                  <span className="mr-2">💬</span>
-                  Message
-                </button>
               </div>
             </div>
             
-            {/* Content area */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Left column - Info */}
               <div className="space-y-6">
                 <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6">
                   <h3 className="text-xl font-semibold mb-4 text-cyan-600 dark:text-cyan-400 border-b border-gray-200 dark:border-gray-600 pb-2">
@@ -106,7 +169,6 @@ const DoctorDetails = () => {
                 </div>
               </div>
               
-              {/* Right column - Biography */}
               <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 h-full">
                 <h3 className="text-xl font-semibold mb-4 text-cyan-600 dark:text-cyan-400 border-b border-gray-200 dark:border-gray-600 pb-2">
                   📜 Biography
@@ -117,24 +179,72 @@ const DoctorDetails = () => {
                   </p>
                 </div>
                 
-                {/* Reviews section */}
                 <div className="mt-8">
                   <h3 className="text-xl font-semibold mb-4 text-cyan-600 dark:text-cyan-400 border-b border-gray-200 dark:border-gray-600 pb-2">
                     Patient Reviews
                   </h3>
-                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
+                  <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm mb-4">
                     <div className="flex items-center mb-2">
                       <div className="flex text-yellow-400">
-                        ★★★★★
+                        {[...Array(5)].map((_, i) => (
+                          <span key={i}>{i < Math.round(averageRating) ? '★' : '☆'}</span>
+                        ))}
                       </div>
-                      <span className="ml-2 text-gray-600 dark:text-gray-400">5.0 (24 reviews)</span>
+                      <span className="ml-2 text-gray-600 dark:text-gray-400">
+                        {averageRating.toFixed(1)} ({reviews.length} reviews)
+                      </span>
                     </div>
-                    <p className="text-gray-700 dark:text-gray-300 italic">
-                      "Dr. {doctor.LastName} was very professional and thorough with my examination.
-                      I felt heard and cared for during my visit."
-                    </p>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">- John D., 2 weeks ago</p>
+                    {reviews.length > 0 ? (
+                      reviews.map((review) => (
+                        <div key={review.review_id} className="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
+                          <p className="text-gray-700 dark:text-gray-300 italic">{review.comment}</p>
+                          <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">
+                            - {review.patient.first_name} {review.patient.last_name}, {review.created_at ? new Date(review.created_at).toLocaleDateString() : 'N/A'}
+                          </p>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-500 dark:text-gray-400">No reviews yet.</p>
+                    )}
                   </div>
+
+                  {/* Conditionally render review form for patients only */}
+                  {isAuthenticated && userProfile && userProfile.user_type === 'Patient' ? (
+                    <div className="mt-4">
+                      <h4 className="text-lg font-medium mb-2">Submit a Review</h4>
+                      {error && <p className="text-red-500 mb-2">{error}</p>}
+                      <form onSubmit={handleSubmitReview}>
+                        <div className="flex mb-2">
+                          {[...Array(5)].map((_, i) => (
+                            <span
+                              key={i}
+                              className={`cursor-pointer text-2xl ${i < newReview.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                              onClick={() => handleStarClick(i + 1)}
+                            >
+                              ★
+                            </span>
+                          ))}
+                        </div>
+                        <textarea
+                          className="w-full p-2 border rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                          rows="3"
+                          placeholder="Write your review..."
+                          value={newReview.comment}
+                          onChange={handleCommentChange}
+                        />
+                        <button
+                          type="submit"
+                          className="mt-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg"
+                        >
+                          Submit Review
+                        </button>
+                      </form>
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 dark:text-gray-400">
+                      {isAuthenticated ? "Only patients can submit reviews." : "Please log in to submit a review."}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -145,7 +255,6 @@ const DoctorDetails = () => {
   );
 };
 
-// Using your original Info component
 const Info = ({ label, value }) => (
   <p className="flex items-center">
     <span className="font-semibold text-gray-900 dark:text-white">{label}:</span>
