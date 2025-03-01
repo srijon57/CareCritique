@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const DoctorsList = () => {
     const [doctors, setDoctors] = useState([]);
     const [error, setError] = useState(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const location = useLocation();
 
     useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const initialSearchQuery = queryParams.get('search') || "";
+        setSearchQuery(initialSearchQuery);
+
         axios.get('http://127.0.0.1:8000/api/doctors')
             .then(response => {
                 if (Array.isArray(response.data)) {
@@ -34,7 +39,7 @@ const DoctorsList = () => {
                 console.error('Error fetching doctors:', error.response ? error.response.data : error.message);
                 setError('Failed to fetch doctors. Please try again later.');
             });
-    }, []);
+    }, [location.search]);
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
@@ -44,14 +49,13 @@ const DoctorsList = () => {
         const firstName = doctor.firstName || '';
         const lastName = doctor.lastName || '';
         const specialty = doctor.specialty || '';
-    
+
         return (
             firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
             lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
             specialty.toLowerCase().includes(searchQuery.toLowerCase())
         );
     });
-    
 
     return (
         <div className="min-h-screen bg-gray-200 dark:bg-gray-900 text-black dark:text-white">
