@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react"; 
-import { useParams } from "react-router-dom"; 
-import axios from "axios"; 
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import { useSpinner } from '../../components/SpinnerProvider';
-import { useAuth } from '../../context/Authcontext'
+import { useAuth } from '../../context/AuthContext';
 
 const DoctorDetails = () => {
   const { id } = useParams();
@@ -10,26 +10,24 @@ const DoctorDetails = () => {
   const [reviews, setReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
   const [newReview, setNewReview] = useState({ rating: 0, comment: "" });
+  const [editingReview, setEditingReview] = useState(null); // State for editing a review
   const [error, setError] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const { setLoading } = useSpinner();
-  const { accessToken, isAuthenticated } = useAuth(); // Use AuthContext
+  const { accessToken, isAuthenticated } = useAuth();
 
   // Fetch doctor details, reviews, and user profile
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
       try {
-        // Fetch doctor details
         const doctorResponse = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}`);
         setDoctor(doctorResponse.data);
 
-        // Fetch reviews (assuming this is now public or token is optional)
         const reviewsResponse = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}/reviews`);
         setReviews(reviewsResponse.data.reviews || []);
         setAverageRating(reviewsResponse.data.average_rating || 0);
 
-        // Fetch user profile if authenticated
         if (isAuthenticated && accessToken) {
           const profileResponse = await axios.get(`http://127.0.0.1:8000/api/profile`, {
             headers: { Authorization: `Bearer ${accessToken}` }
@@ -48,17 +46,25 @@ const DoctorDetails = () => {
     fetchData();
   }, [id, setLoading, isAuthenticated, accessToken]);
 
-  // Handle star rating input
-  const handleStarClick = (rating) => {
-    setNewReview({ ...newReview, rating });
+  // Handle star rating input for new/edit review
+  const handleStarClick = (rating, isEditing = false) => {
+    if (isEditing) {
+      setEditingReview({ ...editingReview, rating });
+    } else {
+      setNewReview({ ...newReview, rating });
+    }
   };
 
-  // Handle review comment input
-  const handleCommentChange = (e) => {
-    setNewReview({ ...newReview, comment: e.target.value });
+  // Handle comment input for new/edit review
+  const handleCommentChange = (e, isEditing = false) => {
+    if (isEditing) {
+      setEditingReview({ ...editingReview, comment: e.target.value });
+    } else {
+      setNewReview({ ...newReview, comment: e.target.value });
+    }
   };
 
-  // Handle review submission
+  // Handle review submission (new review)
   const handleSubmitReview = async (e) => {
     e.preventDefault();
     if (newReview.rating === 0) {
@@ -82,17 +88,50 @@ const DoctorDetails = () => {
       setNewReview({ rating: 0, comment: "" });
       setError(null);
 
-      // Refetch reviews to update average rating
       const reviewsResponse = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}/reviews`);
       setAverageRating(reviewsResponse.data.average_rating);
     } catch (error) {
       console.error('Error submitting review:', error);
-      const errorMsg = error.response?.data?.error || "Failed to submit review.";
-      if (error.response?.status === 403 && errorMsg === "Only patients can submit reviews") {
-        setError("Only patients can submit reviews.");
-      } else {
-        setError(errorMsg);
-      }
+      setError(error.response?.data?.error || "Failed to submit review.");
+    }
+  };
+
+  // Handle initiating edit mode for a review
+  const handleEditReview = (review) => {
+    setEditingReview({ ...review });
+    setError(null);
+  };
+
+  // Handle canceling edit mode
+  const handleCancelEdit = () => {
+    setEditingReview(null);
+    setError(null);
+  };
+
+  // Handle updating an existing review
+  const handleUpdateReview = async (e) => {
+    e.preventDefault();
+    if (editingReview.rating === 0) {
+      setError("Please select a rating.");
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `http://127.0.0.1:8000/api/doctors/${id}/reviews/${editingReview.review_id}`,
+        { rating: editingReview.rating, comment: editingReview.comment },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+
+      setReviews(reviews.map(r => r.review_id === editingReview.review_id ? response.data.review : r));
+      setEditingReview(null);
+      setError(null);
+
+      const reviewsResponse = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}/reviews`);
+      setAverageRating(reviewsResponse.data.average_rating);
+    } catch (error) {
+      console.error('Error updating review:', error);
+      setError(error.response?.data?.error || "Failed to update review.");
     }
   };
 
@@ -138,6 +177,10 @@ const DoctorDetails = () => {
                 <button className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg flex items-center shadow-md transition-all">
                   <span className="mr-2">📅</span>
                   Book Appointment
+                </button>
+                <button className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-lg flex items-center shadow-md transition-all">
+                  <span className="mr-2">💬</span>
+                  Message
                 </button>
               </div>
             </div>
@@ -197,10 +240,65 @@ const DoctorDetails = () => {
                     {reviews.length > 0 ? (
                       reviews.map((review) => (
                         <div key={review.review_id} className="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
-                          <p className="text-gray-700 dark:text-gray-300 italic">{review.comment}</p>
-                          <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">
-                            - {review.patient.first_name} {review.patient.last_name}, {review.created_at ? new Date(review.created_at).toLocaleDateString() : 'N/A'}
-                          </p>
+                          {editingReview && editingReview.review_id === review.review_id ? (
+                            // Edit form
+                            <div>
+                              <div className="flex mb-2">
+                                {[...Array(5)].map((_, i) => (
+                                  <span
+                                    key={i}
+                                    className={`cursor-pointer text-2xl ${i < editingReview.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                                    onClick={() => handleStarClick(i + 1, true)}
+                                  >
+                                    ★
+                                  </span>
+                                ))}
+                              </div>
+                              <textarea
+                                className="w-full p-2 border rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                                rows="3"
+                                value={editingReview.comment}
+                                onChange={(e) => handleCommentChange(e, true)}
+                              />
+                              <div className="flex gap-2 mt-2">
+                                <button
+                                  onClick={handleUpdateReview}
+                                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg"
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  onClick={handleCancelEdit}
+                                  className="px-4 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-white rounded-lg"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            // Display review
+                            <div>
+                              <div className="flex items-center">
+                                <div className="flex text-yellow-400">
+                                  {[...Array(5)].map((_, i) => (
+                                    <span key={i}>{i < review.rating ? '★' : '☆'}</span>
+                                  ))}
+                                </div>
+                                {isAuthenticated && userProfile && userProfile.first_name === review.patient.first_name && userProfile.last_name === review.patient.last_name && (
+                                  <button
+                                    onClick={() => handleEditReview(review)}
+                                    className="ml-2 text-sm text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300"
+                                  >
+                                    Edit
+                                  </button>
+                                )}
+                              </div>
+                              <p className="text-gray-700 dark:text-gray-300 italic">{review.comment}</p>
+                              <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">
+                                - {review.patient.first_name} {review.patient.last_name}, {review.created_at ? new Date(review.created_at).toLocaleDateString() : 'N/A'}
+                              </p>
+                            </div>
+                          )}
                         </div>
                       ))
                     ) : (
@@ -208,8 +306,7 @@ const DoctorDetails = () => {
                     )}
                   </div>
 
-                  {/* Conditionally render review form for patients only */}
-                  {isAuthenticated && userProfile && userProfile.user_type === 'Patient' ? (
+                  {isAuthenticated && userProfile && userProfile.user_type === 'Patient' && !reviews.some(review => review.patient.first_name === userProfile.first_name && review.patient.last_name === userProfile.last_name) && (
                     <div className="mt-4">
                       <h4 className="text-lg font-medium mb-2">Submit a Review</h4>
                       {error && <p className="text-red-500 mb-2">{error}</p>}
@@ -230,7 +327,7 @@ const DoctorDetails = () => {
                           rows="3"
                           placeholder="Write your review..."
                           value={newReview.comment}
-                          onChange={handleCommentChange}
+                          onChange={(e) => handleCommentChange(e)}
                         />
                         <button
                           type="submit"
@@ -240,10 +337,6 @@ const DoctorDetails = () => {
                         </button>
                       </form>
                     </div>
-                  ) : (
-                    <p className="text-gray-500 dark:text-gray-400">
-                      {isAuthenticated ? "Only patients can submit reviews." : "Please log in to submit a review."}
-                    </p>
                   )}
                 </div>
               </div>

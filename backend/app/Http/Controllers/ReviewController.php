@@ -106,4 +106,69 @@ class ReviewController extends Controller
             'reviews' => $reviews,
         ], 200);
     }
+
+    /**
+     * Update an existing review for a doctor.
+     */
+    public function update(Request $request, $doctorId, $reviewId)
+    {
+        // Get the authenticated user from the JWT token
+        $user = $request->attributes->get('user');
+
+        // Ensure the user is a patient
+        if ($user->UserType !== 'Patient') {
+            return response()->json(['error' => 'Only patients can update reviews'], 403);
+        }
+
+        // Validate the doctor exists
+        $doctor = Doctor::find($doctorId);
+        if (!$doctor) {
+            return response()->json(['error' => 'Doctor not found'], 404);
+        }
+
+        // Get the patient associated with the user
+        $patient = Patient::where('UserID', $user->UserID)->first();
+        if (!$patient) {
+            return response()->json(['error' => 'Patient profile not found'], 404);
+        }
+
+        // Find the review
+        $review = Reviews::where('ReviewID', $reviewId)
+            ->where('DoctorID', $doctorId)
+            ->where('PatientID', $patient->PatientID)
+            ->first();
+
+        if (!$review) {
+            return response()->json(['error' => 'Review not found or you are not authorized to update this review'], 404);
+        }
+
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'rating' => 'required|integer|between:1,5',
+            'comment' => 'nullable|string|max:1000',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Validation failed', 'messages' => $validator->errors()], 422);
+        }
+
+        // Update the review
+        $review->Rating = $request->rating;
+        $review->Comment = $request->comment;
+        $review->save();
+
+        return response()->json([
+            'message' => 'Review updated successfully',
+            'review' => [
+                'review_id' => $review->ReviewID,
+                'rating' => $review->Rating,
+                'comment' => $review->Comment,
+                'patient' => [
+                    'first_name' => $patient->FirstName,
+                    'last_name' => $patient->LastName,
+                ],
+                'created_at' => $review->created_at,
+            ]
+        ], 200);
+    }
 }
