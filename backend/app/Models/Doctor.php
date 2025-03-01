@@ -33,6 +33,7 @@ class Doctor extends Model
         'CertificatePath1',
         'CertificatePath2',
         'CertificatePath3',
+        'ProfilePicture',
     ];
 
     public function userAccount()

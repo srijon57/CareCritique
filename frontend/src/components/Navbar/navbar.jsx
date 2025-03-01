@@ -78,7 +78,7 @@ const Navbar = () => {
                 </div>
             </div>
             {/* Mobile Menu */}
-            <div className={`fixed top-0 right-0 h-full w-64 bg-cyan-800 shadow-lg transform transition-transform duration-300 ease-in-out ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+            <div className={`fixed top-0 right-0 h-full w-64 bg-cyan-800 shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                 <div className="p-4">
                     <button onClick={toggleMenu} className="text-white focus:outline-none">
                         <FaTimes className="w-6 h-6" />
