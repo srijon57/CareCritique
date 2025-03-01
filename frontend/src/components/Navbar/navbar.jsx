@@ -24,23 +24,28 @@ const Navbar = () => {
         {
             name: 'Find a Doctor',
             children: [
-                { name: 'All Doctors', href: '/doctors' },
-                { name: 'Physician', href: '#' },
-                { name: 'Dentist', href: '#' },
-                { name: 'Pediatrician', href: '#' },
-                { name: 'Cardiologist', href: '#' },
+                { name: 'All Doctors', href: '/doctors/doctorsList' },
+                { name: 'Gynecologists', href: '/doctors/gynecologistslist' },
+                { name: 'Neurologists', href: '/doctors/neurologistslist' },
+                { name: 'Dentists', href: '/doctors/dentistslist' },
+                { name: 'Cardiologists', href: '/doctors/cardiologistslist' },
             ],
         },
         {
             name: 'Find a Hospital',
             children: [
                 { name: 'All Hospitals', href: '/hospitals' },
-                { name: 'Multi-specialty', href: '#' },
-                { name: 'Cardiac Care', href: '#' },
-                { name: 'Maternity', href: '#' },
+                { name: 'Motijhil', href: '/hospitals/motijhil' },
+                { name: 'Dhanmondi', href: '/hospitals/dhanmondi' },
+                { name: 'Shahbag', href: '/hospitals/shahbag' },
+                { name: 'Mirpur', href: '/hospitals/mirpur' },
+                { name: 'Uttora', href: '/hospitals/uttora' },
+                { name: 'Gulshan', href: '/hospitals/gulshan' },
+                { name: 'Bashundhara', href: '/hospitals/bashundhara' },
+                
             ],
         },
-        { name: 'News', href: '#' },
+        { name: 'News', href: '/news' },
     ];
 
     return (
@@ -58,7 +63,7 @@ const Navbar = () => {
                             </Link>
                             <button
                                 onClick={logout}
-                                className="text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 text-center mr-4"
+                                className="text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none font-medium rounded-lg text-sm px-4 py-2"
                             >
                                 Logout
                             </button>
@@ -66,17 +71,18 @@ const Navbar = () => {
                     ) : (
                         <Link
                             to="/login"
-                            className="text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none font-medium rounded-lg text-sm px-4 py-2 text-center mr-4"
+                            className="text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none font-medium rounded-lg text-sm px-4 py-2"
                         >
                             Login
                         </Link>
                     )}
-                    <button onClick={toggleMenu} className="text-white focus:outline-none ml-auto">
+                    <button onClick={toggleMenu} className="text-white focus:outline-none">
                         <FaBars className="w-6 h-6" />
                     </button>
                     <ThemeToggle />
                 </div>
             </div>
+
             {/* Mobile Menu */}
             <div className={`fixed top-0 right-0 h-full w-64 bg-cyan-800 shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                 <div className="p-4">
@@ -99,24 +105,18 @@ const Navbar = () => {
                                             <ul className="pl-4 mt-1 space-y-2">
                                                 {item.children.map((child, childIndex) => (
                                                     <li key={childIndex}>
-                                                        <a
-                                                            href={child.href}
-                                                            className="block text-white hover:text-gray-300"
-                                                        >
+                                                        <Link to={child.href} className="block text-white hover:text-gray-300">
                                                             {child.name}
-                                                        </a>
+                                                        </Link>
                                                     </li>
                                                 ))}
                                             </ul>
                                         )}
                                     </div>
                                 ) : (
-                                    <a
-                                        href={item.href}
-                                        className="block text-white hover:text-gray-300"
-                                    >
+                                    <Link to={item.href} className="block text-white hover:text-gray-300">
                                         {item.name}
-                                    </a>
+                                    </Link>
                                 )}
                             </li>
                         ))}
