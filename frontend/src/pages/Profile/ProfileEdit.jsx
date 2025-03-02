@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 import { useSnackbar } from 'notistack';
-import { useSpinner } from '../../components/SpinnerProvider'; 
+import { useSpinner } from '../../components/SpinnerProvider';
 
 const EditProfile = () => {
     const { accessToken } = useAuth();
@@ -17,7 +17,7 @@ const EditProfile = () => {
             setLoading(true);
             try {
                 if (!accessToken) {
-                //    enqueueSnackbar('No access token found. Please log in again.', { variant: 'error' });
+                    //enqueueSnackbar('No access token found. Please log in again.', { variant: 'error' });
                     return;
                 }
 
@@ -73,6 +73,7 @@ const EditProfile = () => {
         } finally {
             setLoading(false);
         }
+        navigate('/profile')
     };
 
     if (!profile) {
@@ -134,25 +135,120 @@ const EditProfile = () => {
                             className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
                         />
                     </div>
-                    <div>
-                        <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">State</label>
-                        <input
-                            type="text"
-                            name="state"
-                            value={profile.state || ''}
-                            onChange={handleInputChange}
-                            className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
-                        />
-                    </div>
+                    
+                    {profile.user_type === 'Patient' && (
+                        <>
+                            <div>
+                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Blood Group</label>
+                                <input
+                                    type="text"
+                                    name="blood_group"
+                                    value={profile.blood_group || ''}
+                                    onChange={handleInputChange}
+                                    className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Gender</label>
+                                <input
+                                    type="text"
+                                    name="gender"
+                                    value={profile.gender || ''}
+                                    onChange={handleInputChange}
+                                    className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Contact Number</label>
+                                <input
+                                    type="text"
+                                    name="contact_number"
+                                    value={profile.contact_number || ''}
+                                    onChange={handleInputChange}
+                                    className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Area</label>
+                                <input
+                                    type="text"
+                                    name="area"
+                                    value={profile.area || ''}
+                                    onChange={handleInputChange}
+                                    className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
+                                />
+                            </div>
+                        </>
+                    )}
 
                     {profile.user_type === 'Doctor' && (
                         <>
+                            <div>
+                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Gender</label>
+                                <input
+                                    type="text"
+                                    name="gender"
+                                    value={profile.gender || ''}
+                                    onChange={handleInputChange}
+                                    className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Contact Number</label>
+                                <input
+                                    type="text"
+                                    name="contact_number"
+                                    value={profile.contact_number || ''}
+                                    onChange={handleInputChange}
+                                    className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Specialty</label>
+                                <input
+                                    type="text"
+                                    name="specialty"
+                                    value={profile.specialty || ''}
+                                    onChange={handleInputChange}
+                                    className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Education</label>
+                                <input
+                                    type="text"
+                                    name="education"
+                                    value={profile.education || ''}
+                                    onChange={handleInputChange}
+                                    className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Hospital</label>
+                                <input
+                                    type="text"
+                                    name="hospital"
+                                    value={profile.hospital || ''}
+                                    onChange={handleInputChange}
+                                    className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
+                                />
+                            </div>
                             <div>
                                 <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Experience</label>
                                 <input
                                     type="text"
                                     name="experience"
                                     value={profile.experience || ''}
+                                    onChange={handleInputChange}
+                                    className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Languages</label>
+                                <input
+                                    type="text"
+                                    name="languages"
+                                    value={profile.languages || ''}
                                     onChange={handleInputChange}
                                     className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
                                 />
@@ -173,16 +269,6 @@ const EditProfile = () => {
                                     type="text"
                                     name="biography"
                                     value={profile.biography || ''}
-                                    onChange={handleInputChange}
-                                    className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Hospital</label>
-                                <input
-                                    type="text"
-                                    name="hospital"
-                                    value={profile.hospital || ''}
                                     onChange={handleInputChange}
                                     className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
                                 />

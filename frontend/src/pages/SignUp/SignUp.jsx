@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FcGoogle } from 'react-icons/fc';
 import api from '../../services/api';
 import { useSnackbar } from 'notistack';
 
@@ -10,12 +9,6 @@ const SignUpPage = () => {
         firstName: '',
         lastName: '',
         email: '',
-        address: '',
-        bloodGroup: 'A+',
-        gender: 'male',
-        contactNumber: '',
-        city: '',
-        state: '',
         password: '',
     });
 
@@ -34,28 +27,35 @@ const SignUpPage = () => {
             user_type: 'Patient',
             first_name: formData.firstName,
             last_name: formData.lastName,
-            contact_number: formData.contactNumber,
-            address: formData.address,
-            blood_group: formData.bloodGroup.toUpperCase(),
-            gender: formData.gender.charAt(0).toUpperCase() + formData.gender.slice(1),
-            city: formData.city,
-            state: formData.state,
         };
 
         try {
             const response = await api.post('/register', registrationData);
-            enqueueSnackbar('Registration successful!', { variant: 'success' });
-            navigate('/login');
+            if (response.data && response.data.message) {
+                enqueueSnackbar(response.data.message, { variant: 'success' });
+            } else {
+                enqueueSnackbar('Registration successful! Please verify your OTP.', { variant: 'success' });
+            }
+
+            navigate('/verify-otp', {
+                state: {
+                    email: formData.email,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
+                },
+            });
         } catch (error) {
-            enqueueSnackbar('Registration failed. Please try again.', { variant: 'error' });
+            if (error.response && error.response.data && error.response.data.error) {
+                enqueueSnackbar(error.response.data.error, { variant: 'error' });
+            } else if (error.response && error.response.data && error.response.data.messages) {
+                Object.values(error.response.data.messages).forEach(message => {
+                    enqueueSnackbar(message[0], { variant: 'error' });
+                });
+            } else {
+                enqueueSnackbar('Registration failed. Please try again.', { variant: 'error' });
+            }
         }
     };
-
-    const handleGoogleSignUp = () => {
-        console.log('Signing up with Google...');
-    };
-
-    const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
 
     return (
         <motion.div
@@ -66,86 +66,28 @@ const SignUpPage = () => {
         >
             <div className="w-full max-w-3xl bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
                 <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
-                    Create Your Account
+                    Create Your Account<br/>
+                    Gmail only
                 </h2>
 
                 <form onSubmit={handleSignUp}>
                     <div className="grid grid-cols-2 gap-4">
                         {Object.keys(formData).map((key) => (
-                            key !== 'password' && key !== 'gender' && key !== 'bloodGroup' ? (
-                                <div key={key} className="mb-4">
-                                    <label htmlFor={key} className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
-                                        {key.charAt(0).toUpperCase() + key.slice(1)}
-                                    </label>
-                                    <input
-                                        type={key === 'email' ? 'email' : 'text'}
-                                        id={key}
-                                        value={formData[key]}
-                                        onChange={handleChange}
-                                        className="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-700"
-                                        required
-                                    />
-                                </div>
-                            ) : null
+                            <div key={key} className="mb-4">
+                                <label htmlFor={key} className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
+                                    {key.charAt(0).toUpperCase() + key.slice(1)}
+                                </label>
+                                <input
+                                    type={key === 'email' ? 'email' : 'text'}
+                                    id={key}
+                                    value={formData[key]}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-700"
+                                    required
+                                />
+                            </div>
                         ))}
-                        <div className="mb-4">
-                            <label htmlFor="bloodGroup" className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
-                                Blood Group
-                            </label>
-                            <select
-                                id="bloodGroup"
-                                value={formData.bloodGroup}
-                                onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-700"
-                                required
-                            >
-                                {bloodGroups.map((group) => (
-                                    <option key={group} value={group}>
-                                        {group}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="gender" className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
-                                Gender
-                            </label>
-                            <select
-                                id="gender"
-                                value={formData.gender}
-                                onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-700"
-                                required
-                            >
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                            </select>
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="password" className="block text-gray-700 dark:text-gray-300 font-medium mb-1">
-                                Password
-                            </label>
-                            <input
-                                type="password"
-                                id="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                className="w-full px-4 py-2 border border-gray-400 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-700"
-                                required
-                            />
-                        </div>
                     </div>
-
-                    <motion.button
-                        type="button"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={handleGoogleSignUp}
-                        className="w-full flex items-center justify-center gap-2 mb-4 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-                    >
-                        <FcGoogle className="w-5 h-5" />
-                        <span className="text-white">Sign up with Google</span>
-                    </motion.button>
 
                     <div className="flex justify-start gap-4">
                         <button

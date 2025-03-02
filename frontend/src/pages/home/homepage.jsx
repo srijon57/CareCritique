@@ -1,14 +1,96 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const Homepage = () => {
     const [searchQuery, setSearchQuery] = useState("");
-    const [location, setLocation] = useState("");
+    const [area, setArea] = useState("");
+    const [activeSearchSuggestionIndex, setActiveSearchSuggestionIndex] = useState(-1);
+    const [activeAreaSuggestionIndex, setActiveAreaSuggestionIndex] = useState(-1);
+    const navigate = useNavigate();
 
+    // Mock data for search and area suggestions
+    const searchSuggestionsData = [
+        { Name: "Cardiology" },
+        { Name: "Dermatology" },
+        { Name: "Pediatrics" },
+        { Name: "Orthopedics" },
+    ];
+
+    const areaSuggestionsData = [
+        { HospitalArea: "Dhanmondi" },
+        { HospitalArea: "Gulshan" },
+        { HospitalArea: "Banani" },
+        { HospitalArea: "Mirpur" },
+    ];
+
+    // Handle search input change for doctors
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchQuery(value);
+    };
+
+    // Handle area input change for hospitals
+    const handleAreaChange = (e) => {
+        const value = e.target.value;
+        setArea(value);
+    };
+
+    // Handle keyboard navigation for search suggestions
+    const handleSearchKeyDown = (e) => {
+        const filteredSuggestions = searchSuggestionsData.filter(suggestion =>
+            suggestion.Name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+        if (e.key === "ArrowDown") {
+            setActiveSearchSuggestionIndex((prevIndex) =>
+                prevIndex < filteredSuggestions.length - 1 ? prevIndex + 1 : prevIndex
+            );
+        } else if (e.key === "ArrowUp") {
+            setActiveSearchSuggestionIndex((prevIndex) =>
+                prevIndex > 0 ? prevIndex - 1 : 0
+            );
+        } else if (e.key === "Enter") {
+            if (activeSearchSuggestionIndex >= 0 && filteredSuggestions[activeSearchSuggestionIndex]) {
+                const selectedSuggestion = filteredSuggestions[activeSearchSuggestionIndex];
+                setSearchQuery(selectedSuggestion.Name);
+                navigate(`/doctors?search=${selectedSuggestion.Name}`);
+            }
+        }
+    };
+
+    // Handle keyboard navigation for area suggestions
+    const handleAreaKeyDown = (e) => {
+        const filteredSuggestions = areaSuggestionsData.filter(suggestion =>
+            suggestion.HospitalArea.toLowerCase().includes(area.toLowerCase())
+        );
+
+        if (e.key === "ArrowDown") {
+            setActiveAreaSuggestionIndex((prevIndex) =>
+                prevIndex < filteredSuggestions.length - 1 ? prevIndex + 1 : prevIndex
+            );
+        } else if (e.key === "ArrowUp") {
+            setActiveAreaSuggestionIndex((prevIndex) =>
+                prevIndex > 0 ? prevIndex - 1 : 0
+            );
+        } else if (e.key === "Enter") {
+            if (activeAreaSuggestionIndex >= 0 && filteredSuggestions[activeAreaSuggestionIndex]) {
+                const selectedSuggestion = filteredSuggestions[activeAreaSuggestionIndex];
+                setArea(selectedSuggestion.HospitalArea);
+                navigate(`/hospitals?area=${selectedSuggestion.HospitalArea}`);
+            }
+        }
+    };
+
+    // Handle search button click
     const handleSearch = () => {
-        // Handle search logic here
-        console.log("Searching for:", searchQuery, "in", location);
+        if (searchQuery) {
+            navigate(`/doctors?search=${searchQuery}`);
+        }
+        if (area) {
+            navigate(`/hospitals?area=${area}`);
+        }
     };
 
     return (
@@ -19,21 +101,75 @@ const Homepage = () => {
                     <h1 className="text-5xl font-bold mb-4">Find the Best Healthcare Providers</h1>
                     <p className="text-xl mb-8">Your health is our priority. Search for doctors, hospitals, and specialists near you.</p>
                     <div className="flex justify-center items-center gap-4">
-                        <input 
-                            type="text" 
-                            placeholder="Specialty, Condition or Procedure" 
-                            className="p-3 border-2 border-white rounded w-1/3 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white dark:bg-gray-700 dark:text-white dark:border-gray-600" 
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                        <input 
-                            type="text" 
-                            placeholder="Lalbag, Dhaka" 
-                            className="p-3 border-2 border-white rounded w-1/3 focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white dark:bg-gray-700 dark:text-white dark:border-gray-600" 
-                            value={location}
-                            onChange={(e) => setLocation(e.target.value)}
-                        />
-                        <button 
+                        <div className="relative w-1/3">
+                            <input
+                                type="text"
+                                placeholder="Specialty, Condition or Procedure"
+                                className="p-3 border-2 border-white rounded w-full focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                                onKeyDown={handleSearchKeyDown}
+                            />
+                            {searchQuery.length > 2 && (
+                                <ul className="absolute z-10 bg-white dark:bg-gray-800 w-full mt-1 rounded-lg shadow-lg">
+                                    {searchSuggestionsData
+                                        .filter(suggestion =>
+                                            suggestion.Name.toLowerCase().includes(searchQuery.toLowerCase())
+                                        )
+                                        .map((suggestion, index) => (
+                                            <li
+                                                key={index}
+                                                className={`p-2 cursor-pointer ${
+                                                    index === activeSearchSuggestionIndex
+                                                        ? "bg-cyan-100 dark:bg-cyan-700"
+                                                        : "hover:bg-cyan-50 dark:hover:bg-cyan-600"
+                                                }`}
+                                                onClick={() => {
+                                                    setSearchQuery(suggestion.Name);
+                                                    navigate(`/doctors?search=${suggestion.Name}`);
+                                                }}
+                                            >
+                                                {suggestion.Name}
+                                            </li>
+                                        ))}
+                                </ul>
+                            )}
+                        </div>
+                        <div className="flex justify-center items-center gap-4">
+                            <input
+                                type="text"
+                                placeholder="Dhanmondi, Dhaka"
+                                className="p-3 border-2 border-white rounded w-full focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                                value={area}
+                                onChange={handleAreaChange}
+                                onKeyDown={handleAreaKeyDown}
+                            />
+                            {area.length > 2 && (
+                                <ul className="absolute z-10 bg-white dark:bg-gray-800 w-full mt-1 rounded-lg shadow-lg">
+                                    {areaSuggestionsData
+                                        .filter(suggestion =>
+                                            suggestion.HospitalArea.toLowerCase().includes(area.toLowerCase())
+                                        )
+                                        .map((suggestion, index) => (
+                                            <li
+                                                key={index}
+                                                className={`p-2 cursor-pointer ${
+                                                    index === activeAreaSuggestionIndex
+                                                        ? "bg-cyan-100 dark:bg-cyan-700"
+                                                        : "hover:bg-cyan-50 dark:hover:bg-cyan-600"
+                                                }`}
+                                                onClick={() => {
+                                                    setArea(suggestion.HospitalArea);
+                                                    navigate(`/hospitals?area=${suggestion.HospitalArea}`);
+                                                }}
+                                            >
+                                                {suggestion.HospitalArea}
+                                            </li>
+                                        ))}
+                                </ul>
+                            )}
+                        </div>
+                        <button
                             className="bg-white text-cyan-800 py-3 px-6 rounded hover:bg-cyan-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
                             onClick={handleSearch}
                         >

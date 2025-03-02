@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { FaFacebook, FaTwitter } from "react-icons/fa";
 
 const Footer = () => {
@@ -23,27 +24,24 @@ const Footer = () => {
                 <div>
                     <h3 className="font-bold text-lg mb-4">Top Specialties</h3>
                     <ul className="space-y-2">
-                        <li><a href="#" className="hover:underline">Family G.P.</a></li>
-                        <li><a href="#" className="hover:underline">Gynecologist/OBGYN</a></li>
-                        <li><a href="#" className="hover:underline">Dentist</a></li>
-                        <li><a href="#" className="hover:underline">Orthopedics/Sports</a></li>
-                        <li><a href="#" className="hover:underline">Cosmetic Surgeon</a></li>
-                        <li><a href="#" className="hover:underline">Dermatologist</a></li>
-                        <li><a href="#" className="hover:underline">Gastroenterologist</a></li>
-                        <li><a href="#" className="hover:underline">View all specialties</a></li>
+                    <li><Link to="/doctors" className="hover:underline">All Doctors</Link></li>
+                    <li><Link to="/gynecologistslist" className="hover:underline">Gynecologists</Link></li>
+                    <li><Link to="/neurologistslist" className="hover:underline">Neurologists</Link></li>
+                    <li><Link to="/dentistslist" className="hover:underline">Dentists</Link></li>
+                    <li><Link to="/cardiologistslist" className="hover:underline">Cardiologists</Link></li>    
                     </ul>
                 </div>
 
                 <div>
                     <h3 className="font-bold text-lg mb-4">Top Local Doctors</h3>
                     <ul className="space-y-2">
-                        <li><a href="#" className="hover:underline">Motijhil</a></li>
-                        <li><a href="#" className="hover:underline">Hatirjhil</a></li>
-                        <li><a href="#" className="hover:underline">Dhanmondi</a></li>
-                        <li><a href="#" className="hover:underline">Mirpur</a></li>
-                        <li><a href="#" className="hover:underline">Uttara</a></li>
-                        <li><a href="#" className="hover:underline">Shahbag</a></li>
-                        <li><a href="#" className="hover:underline">Farmgate</a></li>
+                        <li><Link to="/hospitals/Motijhil" className="hover:underline">Motijhil</Link></li>
+                        <li><Link to="/hospitals/uttora" className="hover:underline">Uttora</Link></li>
+                        <li><Link to="/hospitals/dhanmondi" className="hover:underline">Dhanmondi</Link></li>
+                        <li><Link to="/hospitals/Mirpur" className="hover:underline">Mirpur</Link></li>
+                        <li><Link to="/hospitals/shahbag" className="hover:underline">Shahbag</Link></li>
+                        <li><Link to="/hospitals/gulshan" className="hover:underline">Gulshan</Link></li>
+                        <li><Link to="/hospitals/bashundhara" className="hover:underline">Bashundhara</Link></li>
                     </ul>
                 </div>
 
@@ -59,6 +57,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
+            <p className="text-center">&copy; 2025|CSE-3100|C1|Team-Care_Critique| All rights reserved.</p>
         </footer>
     );
 };
