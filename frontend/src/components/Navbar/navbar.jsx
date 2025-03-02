@@ -24,11 +24,11 @@ const Navbar = () => {
         {
             name: 'Find a Doctor',
             children: [
-                { name: 'All Doctors', href: '/doctors/doctorsList' },
-                { name: 'Gynecologists', href: '/doctors/gynecologistslist' },
-                { name: 'Neurologists', href: '/doctors/neurologistslist' },
-                { name: 'Dentists', href: '/doctors/dentistslist' },
-                { name: 'Cardiologists', href: '/doctors/cardiologistslist' },
+                { name: 'All Doctors', href: '/doctors' },
+                { name: 'Gynecologists', href: '/gynecologistslist' },
+                { name: 'Neurologists', href: '/neurologistslist' },
+                { name: 'Dentists', href: '/dentistslist' },
+                { name: 'Cardiologists', href: '/cardiologistslist' },
             ],
         },
         {
