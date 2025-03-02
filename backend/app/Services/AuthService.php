@@ -17,34 +17,34 @@ class AuthService
     }
 
     public function login($request)
-{
-    $validator = Validator::make($request->all(), [
-        'email' => 'required|string|email',
-        'password' => 'required|string'
-    ]);
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email',
+            'password' => 'required|string'
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['error' => 'Validation failed', 'messages' => $validator->errors()], 422);
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Validation failed', 'messages' => $validator->errors()], 422);
+        }
+
+        $user = UserAccount::where('Email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->PasswordHash)) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
+        }
+
+        if (!$user->verified) {
+            return response()->json(['error' => 'Please verify your email first.'], 401);
+        }
+
+        $accessToken = $this->jwtService->generateToken($user, config('app.jwt_ttl'));
+        $refreshToken = $this->jwtService->generateToken($user, config('app.jwt_refresh_ttl'));
+
+        return response()->json([
+            'access_token' => $accessToken,
+            'refresh_token' => $refreshToken
+        ]);
     }
-
-    $user = UserAccount::where('Email', $request->email)->first();
-
-    if (!$user || !Hash::check($request->password, $user->PasswordHash)) {
-        return response()->json(['error' => 'Invalid credentials'], 401);
-    }
-
-    if (!$user->verified) {
-        return response()->json(['error' => 'Please verify your email first.'], 401);
-    }
-
-    $accessToken = $this->jwtService->generateToken($user, config('app.jwt_ttl'));
-    $refreshToken = $this->jwtService->generateToken($user, config('app.jwt_refresh_ttl'));
-
-    return response()->json([
-        'access_token' => $accessToken,
-        'refresh_token' => $refreshToken
-    ]);
-}
 
     public function refreshToken($request)
     {
@@ -114,15 +114,14 @@ class AuthService
                 'city' => $patient->City,
                 'area' => $patient->Area,
             ]);
-        } 
-        elseif ($user->UserType === 'Doctor') {
+        } elseif ($user->UserType === 'Doctor') {
             $doctor = $user->doctor;
             $profileData = array_merge($profileData, [
                 'first_name' => $doctor->FirstName,
                 'last_name' => $doctor->LastName,
                 'address' => $doctor->Address,
                 'gender' => $doctor->Gender,
-                'contact_number' => $doctor->ContactNumber,    
+                'contact_number' => $doctor->ContactNumber,
                 'hospital' => $doctor->Hospital,
                 'specialty' => $doctor->Specialty,
                 'education' => $doctor->Education,
@@ -130,13 +129,7 @@ class AuthService
                 'languages' => $doctor->Languages,
                 'availability' => $doctor->Availability,
                 'biography' => $doctor->Biography,
-            ]);
-        }
-        elseif ($user->UserType === 'Admin') {
-            $doctor = $user->doctor;
-            $profileData = array_merge($profileData, [
-                'first_name' => $doctor->FirstName,
-                'last_name' => $doctor->LastName, 
+                'profile_picture' => $doctor->ProfilePicture,
             ]);
         }
 
@@ -164,9 +157,16 @@ class AuthService
             'first_name' => 'sometimes|required|string|max:255',
             'last_name' => 'sometimes|required|string|max:255',
             'address' => 'nullable|string',
+            'blood_group' => 'nullable|string',
+            'gender' => 'nullable|string',
+            'contact_number' => 'nullable|string',
             'city' => 'nullable|string',
-            'state' => 'nullable|string',
+            'area' => 'nullable|string',
+            'specialty' => 'nullable|string',
+            'education' => 'nullable|string',
+            'hospital' => 'nullable|string',
             'experience' => 'nullable|string',
+            'languages' => 'nullable|string',
             'availability' => 'nullable|string',
             'biography' => 'nullable|string',
         ]);
@@ -196,11 +196,20 @@ class AuthService
             if ($request->has('address')) {
                 $patient->Address = $request->address;
             }
+            if ($request->has('blood_group')) {
+                $patient->BloodGroup = $request->blood_group;
+            }
+            if ($request->has('gender')) {
+                $patient->Gender = $request->gender;
+            }
+            if ($request->has('contact_number')) {
+                $patient->ContactNumber = $request->contact_number;
+            }
             if ($request->has('city')) {
                 $patient->City = $request->city;
             }
             if ($request->has('area')) {
-                $patient->Area = $request->Area;
+                $patient->Area = $request->area;
             }
             $patient->save();
         } elseif ($user->UserType === 'Doctor') {
@@ -212,13 +221,28 @@ class AuthService
                 $doctor->LastName = $request->last_name;
             }
             if ($request->has('contact_number')) {
-                $doctor->ContactNumber = $request->ContactNumber;
+                $doctor->ContactNumber = $request->contact_number;
             }
             if ($request->has('address')) {
                 $doctor->Address = $request->address;
             }
+            if ($request->has('gender')) {
+                $doctor->Gender = $request->gender;
+            }
+            if ($request->has('specialty')) {
+                $doctor->Specialty = $request->specialty;
+            }
+            if ($request->has('education')) {
+                $doctor->Education = $request->education;
+            }
+            if ($request->has('hospital')) {
+                $doctor->Hospital = $request->hospital;
+            }
             if ($request->has('experience')) {
                 $doctor->Experience = $request->experience;
+            }
+            if ($request->has('languages')) {
+                $doctor->Languages = $request->languages;
             }
             if ($request->has('availability')) {
                 $doctor->Availability = $request->availability;
