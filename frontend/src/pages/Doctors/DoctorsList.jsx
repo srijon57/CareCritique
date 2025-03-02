@@ -13,12 +13,19 @@ const DoctorsList = () => {
         const initialSearchQuery = queryParams.get('search') || "";
         setSearchQuery(initialSearchQuery);
 
+
+        
+          
+             
+                 
+
         const fetchDoctorsAndReviews = async () => {
             try {
                 // Fetch the list of doctors
                 const doctorsResponse = await axios.get('http://127.0.0.1:8000/api/doctors');
                 if (Array.isArray(doctorsResponse.data)) {
                     const doctorList = doctorsResponse.data.map(doctor => ({
+
                         id: doctor.DoctorID,
                         firstName: doctor.FirstName,
                         lastName: doctor.LastName,
@@ -65,10 +72,14 @@ const DoctorsList = () => {
             } catch (error) {
                 console.error('Error fetching doctors:', error.response ? error.response.data : error.message);
                 setError('Failed to fetch doctors. Please try again later.');
+
+
+
             }
         };
 
         fetchDoctorsAndReviews();
+
     }, [location.search]);
 
     const handleSearchChange = (e) => {
