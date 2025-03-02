@@ -130,3 +130,4 @@ SELECT * FROM Hospital;
 SELECT * FROM Admin;
 SELECT * FROM Appointment;
 SELECT * FROM Reviews;
+ALTER TABLE Doctor ADD COLUMN ProfilePicture VARCHAR(255) NULL;
