@@ -10,13 +10,12 @@ const DoctorDetails = () => {
   const [reviews, setReviews] = useState([]);
   const [averageRating, setAverageRating] = useState(0);
   const [newReview, setNewReview] = useState({ rating: 0, comment: "" });
-  const [editingReview, setEditingReview] = useState(null); // State for editing a review
+  const [editingReview, setEditingReview] = useState(null);
   const [error, setError] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const { setLoading } = useSpinner();
   const { accessToken, isAuthenticated } = useAuth();
 
-  // Fetch doctor details, reviews, and user profile
   useEffect(() => {
     setLoading(true);
     const fetchData = async () => {
@@ -25,8 +24,13 @@ const DoctorDetails = () => {
         setDoctor(doctorResponse.data);
 
         const reviewsResponse = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}/reviews`);
-        setReviews(reviewsResponse.data.reviews || []);
-        setAverageRating(reviewsResponse.data.average_rating || 0);
+        const fetchedReviews = reviewsResponse.data.reviews || [];
+        setReviews(fetchedReviews);
+
+        // Calculate average rating
+        const totalRating = fetchedReviews.reduce((sum, review) => sum + review.rating, 0);
+        const average = fetchedReviews.length ? totalRating / fetchedReviews.length : 0;
+        setAverageRating(average);
 
         if (isAuthenticated && accessToken) {
           const profileResponse = await axios.get(`http://127.0.0.1:8000/api/profile`, {
@@ -46,7 +50,6 @@ const DoctorDetails = () => {
     fetchData();
   }, [id, setLoading, isAuthenticated, accessToken]);
 
-  // Handle star rating input for new/edit review
   const handleStarClick = (rating, isEditing = false) => {
     if (isEditing) {
       setEditingReview({ ...editingReview, rating });
@@ -55,7 +58,6 @@ const DoctorDetails = () => {
     }
   };
 
-  // Handle comment input for new/edit review
   const handleCommentChange = (e, isEditing = false) => {
     if (isEditing) {
       setEditingReview({ ...editingReview, comment: e.target.value });
@@ -64,7 +66,6 @@ const DoctorDetails = () => {
     }
   };
 
-  // Handle review submission (new review)
   const handleSubmitReview = async (e) => {
     e.preventDefault();
     if (newReview.rating === 0) {
@@ -78,37 +79,36 @@ const DoctorDetails = () => {
     }
 
     try {
+      setLoading(true); // Show spinner during submission
       const response = await axios.post(
         `http://127.0.0.1:8000/api/doctors/${id}/reviews`,
         { rating: newReview.rating, comment: newReview.comment },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
 
-      setReviews([...reviews, response.data.review]);
+      // Instead of updating state manually, we'll trigger a refresh
       setNewReview({ rating: 0, comment: "" });
       setError(null);
 
-      const reviewsResponse = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}/reviews`);
-      setAverageRating(reviewsResponse.data.average_rating);
+      // Trigger a full page refresh to fetch updated data
+      window.location.reload(); // This will trigger useEffect to fetch fresh data
     } catch (error) {
       console.error('Error submitting review:', error);
       setError(error.response?.data?.error || "Failed to submit review.");
+      setLoading(false); // Hide spinner on error
     }
   };
 
-  // Handle initiating edit mode for a review
   const handleEditReview = (review) => {
     setEditingReview({ ...review });
     setError(null);
   };
 
-  // Handle canceling edit mode
   const handleCancelEdit = () => {
     setEditingReview(null);
     setError(null);
   };
 
-  // Handle updating an existing review
   const handleUpdateReview = async (e) => {
     e.preventDefault();
     if (editingReview.rating === 0) {
@@ -117,21 +117,46 @@ const DoctorDetails = () => {
     }
 
     try {
+      setLoading(true); // Show spinner during update
       const response = await axios.put(
         `http://127.0.0.1:8000/api/doctors/${id}/reviews/${editingReview.review_id}`,
         { rating: editingReview.rating, comment: editingReview.comment },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
 
-      setReviews(reviews.map(r => r.review_id === editingReview.review_id ? response.data.review : r));
       setEditingReview(null);
       setError(null);
 
-      const reviewsResponse = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}/reviews`);
-      setAverageRating(reviewsResponse.data.average_rating);
+      // Trigger a full page refresh to fetch updated data
+      window.location.reload();
     } catch (error) {
       console.error('Error updating review:', error);
       setError(error.response?.data?.error || "Failed to update review.");
+      setLoading(false); // Hide spinner on error
+    }
+  };
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!isAuthenticated || !accessToken) {
+      setError("Please log in to delete a review.");
+      return;
+    }
+
+    try {
+      setLoading(true); // Show spinner during deletion
+      await axios.delete(
+        `http://127.0.0.1:8000/api/doctors/${id}/reviews/${reviewId}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+
+      setError(null);
+
+      // Trigger a full page refresh to fetch updated data
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting review:', error);
+      setError(error.response?.data?.error || "Failed to delete review.");
+      setLoading(false); // Hide spinner on error
     }
   };
 
@@ -237,7 +262,6 @@ const DoctorDetails = () => {
                       reviews.map((review) => (
                         <div key={review.review_id} className="border-t border-gray-200 dark:border-gray-600 pt-2 mt-2">
                           {editingReview && editingReview.review_id === review.review_id ? (
-                            // Edit form
                             <div>
                               <div className="flex mb-2">
                                 {[...Array(5)].map((_, i) => (
@@ -272,7 +296,6 @@ const DoctorDetails = () => {
                               </div>
                             </div>
                           ) : (
-                            // Display review
                             <div>
                               <div className="flex items-center">
                                 <div className="flex text-yellow-400">
@@ -280,18 +303,27 @@ const DoctorDetails = () => {
                                     <span key={i}>{i < review.rating ? '★' : '☆'}</span>
                                   ))}
                                 </div>
-                                {isAuthenticated && userProfile && userProfile.first_name === review.patient.first_name && userProfile.last_name === review.patient.last_name && (
-                                  <button
-                                    onClick={() => handleEditReview(review)}
-                                    className="ml-2 text-sm text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300"
-                                  >
-                                    Edit
-                                  </button>
+                                {isAuthenticated && userProfile && review.patient && review.patient.first_name === userProfile.first_name && review.patient.last_name === userProfile.last_name && (
+                                  <>
+                                    <button
+                                      onClick={() => handleEditReview(review)}
+                                      className="ml-2 text-sm text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300"
+                                    >
+                                      Edit
+                                    </button>
+                                    <button
+                                      onClick={() => handleDeleteReview(review.review_id)}
+                                      className="ml-2 text-sm text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                                    >
+                                      Delete
+                                    </button>
+                                  </>
                                 )}
                               </div>
                               <p className="text-gray-700 dark:text-gray-300 italic">{review.comment}</p>
                               <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">
-                                - {review.patient.first_name} {review.patient.last_name}, {review.created_at ? new Date(review.created_at).toLocaleDateString() : 'N/A'}
+                                - {review.patient ? `${review.patient.first_name} ${review.patient.last_name}` : 'Unknown'}
+                                {review.created_at ? `, ${new Date(review.created_at).toLocaleDateString()}` : ''}
                               </p>
                             </div>
                           )}
@@ -302,7 +334,7 @@ const DoctorDetails = () => {
                     )}
                   </div>
 
-                  {isAuthenticated && userProfile && userProfile.user_type === 'Patient' && !reviews.some(review => review.patient.first_name === userProfile.first_name && review.patient.last_name === userProfile.last_name) && (
+                  {isAuthenticated && userProfile && userProfile.user_type === 'Patient' && !reviews.some(review => review.patient && review.patient.first_name === userProfile.first_name && review.patient.last_name === userProfile.last_name) && (
                     <div className="mt-4">
                       <h4 className="text-lg font-medium mb-2">Submit a Review</h4>
                       {error && <p className="text-red-500 mb-2">{error}</p>}

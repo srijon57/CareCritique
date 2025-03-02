@@ -29,7 +29,7 @@ const DoctorsList = () => {
                         experience: doctor.Experience,
                         availability: doctor.Availability,
                         rating: 0,
-                        totalReviews: 0, 
+                        totalReviews: 0,
                         profilePicture: doctor.ProfilePicture || null
                     }));
 
@@ -38,10 +38,13 @@ const DoctorsList = () => {
                         doctorList.map(async (doctor) => {
                             try {
                                 const reviewsResponse = await axios.get(`http://127.0.0.1:8000/api/doctors/${doctor.id}/reviews`);
+                                const reviews = reviewsResponse.data.reviews || [];
+                                const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+                                const averageRating = reviews.length ? totalRating / reviews.length : 0;
                                 return {
                                     ...doctor,
-                                    rating: reviewsResponse.data.average_rating || 0,
-                                    totalReviews: reviewsResponse.data.total_reviews || 0
+                                    rating: averageRating,
+                                    totalReviews: reviews.length
                                 };
                             } catch (err) {
                                 console.error(`Error fetching reviews for doctor ${doctor.id}:`, err);

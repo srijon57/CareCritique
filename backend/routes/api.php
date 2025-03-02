@@ -23,5 +23,6 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/profile/update', [AuthController::class, 'updateProfile']);
     Route::post('/doctors/{doctorId}/reviews', [ReviewController::class, 'store']);
-    Route::put('/doctors/{doctorId}/reviews/{reviewId}', [ReviewController::class, 'update']); // New route for updating reviews
+    Route::put('/doctors/{doctorId}/reviews/{reviewId}', [ReviewController::class, 'update']);
+    Route::delete('/doctors/{doctorId}/reviews/{reviewId}', [ReviewController::class, 'destroy']);
 });
