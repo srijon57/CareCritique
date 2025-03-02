@@ -81,6 +81,30 @@ class UserService
         return response()->json(['message' => 'OTP sent to your email. Please verify to complete registration.'], 201);
     }
 
+    public function updateProfile($request, $user)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'sometimes|required|string|email|max:255|unique:UserAccount,Email,' . $user->UserID . ',UserID',
+            'password' => 'nullable|string|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        if ($request->has('email')) {
+            $user->Email = $request->email;
+        }
+
+        if ($request->has('password')) {
+            $user->PasswordHash = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return response()->json(['message' => 'Profile updated successfully'], 200);
+    }
+
     public function verifyOtp($request)
     {
         $validator = Validator::make($request->all(), [
@@ -132,27 +156,5 @@ class UserService
     }
     
 
-    public function updateProfile($request, $user)
-    {
-        $validator = Validator::make($request->all(), [
-            'email' => 'sometimes|required|string|email|max:255|unique:UserAccount,Email,' . $user->UserID . ',UserID',
-            'password' => 'nullable|string|min:6',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
-
-        if ($request->has('email')) {
-            $user->Email = $request->email;
-        }
-
-        if ($request->has('password')) {
-            $user->PasswordHash = Hash::make($request->password);
-        }
-
-        $user->save();
-
-        return response()->json(['message' => 'Profile updated successfully'], 200);
-    }
+    
 }
