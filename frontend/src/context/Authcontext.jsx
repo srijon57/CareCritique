@@ -1,6 +1,10 @@
+
 import  { createContext, useState, useEffect, useContext } from 'react';
+
 import api from '../services/api';
+
 import { useSnackbar } from 'notistack';
+
 import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext();
 
@@ -76,9 +80,7 @@ export const AuthProvider = ({ children }) => {
     }, [isAuthenticated]);
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout, accessToken
-            ,user
-         }}>
+        <AuthContext.Provider value={{ isAuthenticated, login, logout, accessToken }}>
             {children}
         </AuthContext.Provider>
     );
