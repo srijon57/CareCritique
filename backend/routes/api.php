@@ -19,6 +19,7 @@ Route::get('/hospitals/{id}', [HospitalController::class, 'show']);
 Route::get('/doctors/{doctorId}/reviews', [ReviewController::class, 'index']);
 
 Route::middleware(['auth.jwt'])->group(function () {
+    Route::post('/verify-admin/{userId}', [AuthController::class, 'verifyAdmin']);
     Route::get('/profile', [AuthController::class, 'getProfile']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/profile/update', [AuthController::class, 'updateProfile']);
