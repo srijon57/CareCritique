@@ -10,7 +10,7 @@ const Footer = () => {
                     <h3 className="font-bold text-lg mb-4">About Care Critique</h3>
                     <ul className="space-y-2">
                         <li><a href="/aboutus" className="hover:underline">About</a></li>
-                        <li><a href="#" className="hover:underline">News</a></li>
+                        <li><a href="/news" className="hover:underline">News</a></li>
                         
                     </ul>
                 </div>
