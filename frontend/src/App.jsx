@@ -1,4 +1,4 @@
-// App.jsx
+
 import { Routes } from "react-router-dom";
 import Navbar from "./components/Navbar/navbar";
 import Footer from "./components/Footer/footer";
