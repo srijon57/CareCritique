@@ -122,6 +122,92 @@ VALUES
 
 ((SELECT UserID FROM UserAccount WHERE Email = 'dr.tasnim@example.com'), 4, 'Tasnim', 'Rahman', 'House-15, Road-3, Dhanmondi, Dhaka', 'Female', '01744444444', 'Orthopedic Surgeon', 'MBBS, MS (Orthopedics)', 'Labaid Hospital', '8 years in orthopedic surgery', 'Bengali, English, Hindi', 'Sun-Thu 9AM-6PM', 'Specialist in joint replacements and spinal surgeries.', 'certificates/tasnim1.pdf', NULL, NULL);
 
+CREATE OR REPLACE VIEW CardiologistInDhaka AS
+SELECT 
+    d.DoctorID, 
+    d.FirstName, 
+    d.LastName, 
+    d.Specialty, 
+    d.HospitalID, 
+    h.Name AS HospitalName, 
+    h.HospitalCity
+FROM 
+    Doctor d
+JOIN 
+    Hospital h ON d.HospitalID = h.HospitalID
+WHERE 
+    d.Specialty = 'Cardiologist'
+    AND h.HospitalCity = 'Dhaka';
+CREATE TABLE Reviews (
+    ReviewID INT AUTO_INCREMENT PRIMARY KEY,
+    PatientID INT NOT NULL,
+    DoctorID INT NOT NULL,
+    Rating INT NOT NULL CHECK (Rating >= 1 AND Rating <= 5),
+    Comment TEXT,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (PatientID) REFERENCES Patient(PatientID) ON DELETE CASCADE,
+    FOREIGN KEY (DoctorID) REFERENCES Doctor(DoctorID) ON DELETE CASCADE
+);
+ALTER TABLE Doctor
+ADD COLUMN verified INT DEFAULT 0;
+UPDATE UserAccount
+SET UserType = 'Admin'
+WHERE UserID=14;
+
+CREATE TRIGGER prevent_duplicate_reviews
+BEFORE INSERT ON Reviews
+FOR EACH ROW
+BEGIN
+    IF (SELECT COUNT(*) FROM Reviews WHERE PatientID = NEW.PatientID AND DoctorID = NEW.DoctorID) > 0 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'A patient can only leave one review per doctor.';
+    END IF;
+END;
+
+
+CREATE PROCEDURE GetDoctorDetails(IN doctorID INT)
+BEGIN
+    SELECT * FROM Doctor WHERE DoctorID = doctorID;
+END;
+CALL GetDoctorDetails(30);
+
+CREATE PROCEDURE GetDoctorsByMiddleLetters(IN middlePart VARCHAR(255))
+BEGIN
+    SELECT * FROM Doctor WHERE FirstName LIKE CONCAT('%', middlePart, '%');
+end
+
+CALL GetDoctorsByMiddleLetters('ri');
+
+CREATE PROCEDURE GetDoctorsByLastLetter(IN suffix VARCHAR(255))
+BEGIN
+    SELECT * FROM Doctor WHERE FirstName LIKE CONCAT('%', suffix);
+END
+
+CALL GetDoctorsByLastLetter('h');
+
+CREATE PROCEDURE GetDoctorsByFirstLetter(IN prefix VARCHAR(255))
+BEGIN
+    SELECT * FROM Doctor WHERE FirstName LIKE CONCAT(prefix, '%');
+end
+
+CALL GetDoctorsByFirstLetter('A');
+
+CREATE PROCEDURE GetDoctorAverageRating(doctorID INT)
+BEGIN
+    SELECT 
+        d.FirstName, 
+        d.LastName, 
+        d.Specialty, 
+        AVG(r.Rating) AS AverageRating, 
+        COUNT(r.ReviewID) AS TotalReviews
+    FROM Doctor d
+    JOIN Reviews r ON d.DoctorID = r.DoctorID
+    WHERE d.DoctorID = doctorID
+    GROUP BY d.FirstName, d.LastName, d.Specialty;
+END 
+
+call GetDoctorAverageRating(31);
 
 SELECT * FROM Doctor;
 SELECT * FROM UserAccount;
