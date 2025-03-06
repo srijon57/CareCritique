@@ -7,6 +7,7 @@ import Profile from "../pages/Profile/Profile";
 import ProfileEdit from "../pages/Profile/ProfileEdit";
 import VerifyOtpPage from "../pages/VerifyOtpPage/VerifyOtpPage";
 import AboutUs from "../pages/AboutUs";
+import NewsApp from "../components/NewsApp";
 
 const mainRoutes = [
     <Route key="home" path="/" element={<Homepage />} />,
@@ -17,6 +18,7 @@ const mainRoutes = [
     <Route key="edit-profile" path="/editprofile" element={<ProfileEdit />} />,
     <Route key="verify-otp" path="/verify-otp" element={<VerifyOtpPage />} />,
     <Route key="aboutus" path="/aboutus" element={<AboutUs/>} />,
+    <Route key="news" path="/news" element={<NewsApp/>} />,
 ];
 
 export default mainRoutes;

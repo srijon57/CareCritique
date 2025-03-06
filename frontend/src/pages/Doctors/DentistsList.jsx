@@ -23,8 +23,7 @@ const DentistsList = () => {
                             languages: doctor.Languages,
                             experience: doctor.Experience,
                             availability: doctor.Availability,
-                            rating: 5.0, // Mock data
-                            reviews: 866 // Mock data
+                            
                         }));
                     setDentists(filteredDoctors);
                 } else {

@@ -15,7 +15,7 @@ Route::get('/doctors', [DoctorController::class, 'index']);
 Route::get('/doctors/{id}', [DoctorController::class, 'show']);
 Route::get('/hospitals', [HospitalController::class, 'index']);
 Route::get('/hospitals/{id}', [HospitalController::class, 'show']);
-
+Route::get('/hospitals/{hospitalId}/doctors', [DoctorController::class, 'showDoctorsByHospital']);
 Route::get('/doctors/{doctorId}/reviews', [ReviewController::class, 'index']);
 
 Route::middleware(['auth.jwt'])->group(function () {
