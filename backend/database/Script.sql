@@ -376,3 +376,5 @@ INSERT INTO Reviews (PatientID, DoctorID, Rating, Comment) VALUES
 ((SELECT PatientID FROM Patient WHERE UserID = (SELECT UserID FROM UserAccount WHERE Email = 'patient4@example.com')),
  (SELECT DoctorID FROM Doctor WHERE UserID = (SELECT UserID FROM UserAccount WHERE Email = 'dr.arif@example.com')),
  4, 'Very attentive and skilled doctor. Will visit again.');
+ALTER TABLE Doctor
+ADD COLUMN isVerified BOOLEAN DEFAULT FALSE;

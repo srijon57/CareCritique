@@ -34,6 +34,7 @@ class Doctor extends Model
         'CertificatePath2',
         'CertificatePath3',
         'ProfilePicture',
+        'isVerified',
     ];
 
     public function userAccount()

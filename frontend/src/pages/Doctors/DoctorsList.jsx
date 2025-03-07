@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoMdStar, IoMdStarHalf, IoMdStarOutline } from "react-icons/io";
+import { MdVerified } from "react-icons/md";
+import { VscUnverified } from "react-icons/vsc";
+
 const DoctorsList = () => {
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -43,6 +46,7 @@ const DoctorsList = () => {
                     rating: 0,
                     totalReviews: 0,
                     profilePicture: doctor.ProfilePicture || null,
+                    isVerified: doctor.isVerified || false, // Add verification status
                 }));
 
                 // Extract unique specialties for filter dropdown
@@ -376,8 +380,13 @@ const DoctorsList = () => {
                                         alt={`${doctor.firstName} ${doctor.lastName}`}
                                         className="rounded-full w-28 h-28 object-cover border-4 border-white dark:border-gray-600 shadow-md"
                                     />
-                                    <h3 className="font-bold text-lg mt-4 text-center text-gray-900 dark:text-white">
+                                    <h3 className="font-bold text-lg mt-4 text-center text-gray-900 dark:text-white flex items-center">
                                         Dr. {doctor.firstName} {doctor.lastName}
+                                        {doctor.isVerified ? (
+                                            <MdVerified className="ml-2 text-blue-500" />
+                                        ) : (
+                                            <VscUnverified className="ml-2 text-red-500" />
+                                        )}
                                     </h3>
                                     <p className="text-cyan-600 dark:text-cyan-400 font-medium text-center">
                                         {doctor.specialty || "Specialist"}
