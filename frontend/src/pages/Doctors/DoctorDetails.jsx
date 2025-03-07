@@ -15,6 +15,8 @@ const DoctorDetails = () => {
   const [editingReview, setEditingReview] = useState(null);
   const [error, setError] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
+  const [appointment, setAppointment] = useState({ date: '', time: '' });
+  const [showAppointmentForm, setShowAppointmentForm] = useState(false);
   const { setLoading } = useSpinner();
   const { accessToken, isAuthenticated } = useAuth();
 
@@ -162,6 +164,10 @@ const DoctorDetails = () => {
     }
   };
 
+
+
+
+
   const handleToggleVerification = async () => {
     if (!isAuthenticated || !accessToken || userProfile?.user_type !== 'Admin') {
       setError("Only admins can toggle doctor verification.");
@@ -187,6 +193,41 @@ const DoctorDetails = () => {
       setLoading(false); // Hide spinner on error
     }
   };
+
+  const handleBookAppointment = async (e) => {
+    e.preventDefault();
+    if (!isAuthenticated || !accessToken) {
+      setError("Please log in to book an appointment.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        'http://127.0.0.1:8000/api/appointments',
+        {
+          doctor_id: id,
+          date: appointment.date,
+          time: appointment.time
+        },
+        {
+          headers: { Authorization: `Bearer ${accessToken}` }
+        }
+      );
+
+      setError(null);
+      setAppointment({ date: '', time: '' });
+      setShowAppointmentForm(false);
+      alert('Appointment booked successfully!');
+    } catch (error) {
+      console.error('Error booking appointment:', error);
+      setError(error.response?.data?.error || "Failed to book appointment.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
 
   if (!doctor) {
     return (
@@ -232,7 +273,10 @@ const DoctorDetails = () => {
               </div>
 
               <div className="flex gap-2 mt-4 md:mt-0 md:ml-auto">
-                <button className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg flex items-center shadow-md transition-all">
+                <button
+                  onClick={() => setShowAppointmentForm(true)}
+                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg flex items-center shadow-md transition-all"
+                >
                   <span className="mr-2">📅</span>
                   Book Appointment
                 </button>
@@ -247,6 +291,41 @@ const DoctorDetails = () => {
                 )}
               </div>
             </div>
+
+            {showAppointmentForm && (
+              <form onSubmit={handleBookAppointment} className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <h3 className="text-xl font-semibold mb-4 text-cyan-600 dark:text-cyan-400 border-b border-gray-200 dark:border-gray-600 pb-2">
+                  Book an Appointment
+                </h3>
+                {error && <p className="text-red-500 mb-2">{error}</p>}
+                <div className="mb-4">
+                  <label className="block text-gray-700 dark:text-gray-300">Date</label>
+                  <input
+                    type="date"
+                    className="w-full p-2 border rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                    value={appointment.date}
+                    onChange={(e) => setAppointment({ ...appointment, date: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 dark:text-gray-300">Time</label>
+                  <input
+                    type="time"
+                    className="w-full p-2 border rounded-lg dark:bg-gray-800 dark:text-white dark:border-gray-600"
+                    value={appointment.time}
+                    onChange={(e) => setAppointment({ ...appointment, time: e.target.value })}
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg"
+                >
+                  Book Appointment
+                </button>
+              </form>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-6">
