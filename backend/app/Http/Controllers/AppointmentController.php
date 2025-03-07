@@ -121,7 +121,7 @@ class AppointmentController extends Controller
         $dayOfWeek = Carbon::parse($date)->format('D');
         $time = Carbon::parse($time);
 
-        // Parse availability string (e.g., "Sun-Thu 9AM-4PM")
+        // Parse availability string
         if (!$doctor->Availability) {
             return [
                 'available' => false,
