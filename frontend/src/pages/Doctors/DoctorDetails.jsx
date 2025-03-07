@@ -243,6 +243,24 @@ const DoctorDetails = () => {
                   </p>
                 </div>
 
+                {userProfile && userProfile.user_type === 'Admin' && (
+                  <div className="mt-8">
+                    <h3 className="text-xl font-semibold mb-4 text-cyan-600 dark:text-cyan-400 border-b border-gray-200 dark:border-gray-600 pb-2">
+                      Admin-Only Details
+                    </h3>
+                    <div className="space-y-4">
+                      <Info label="🆔 Doctor ID" value={doctor.DoctorID} />
+                      <Info label="🆔 User ID" value={doctor.UserID} />
+                      <Info label="🏨 Hospital ID" value={doctor.HospitalID} />
+                      <div className="space-y-2">
+                        <Info label="📜 Certificate 1" value={doctor.CertificatePath1 ? <img src={doctor.CertificatePath1} alt="Certificate 1" className="w-full h-auto rounded-lg" /> : 'N/A'} />
+                        <Info label="📜 Certificate 2" value={doctor.CertificatePath2 ? <img src={doctor.CertificatePath2} alt="Certificate 2" className="w-full h-auto rounded-lg" /> : 'N/A'} />
+                        <Info label="📜 Certificate 3" value={doctor.CertificatePath3 ? <img src={doctor.CertificatePath3} alt="Certificate 3" className="w-full h-auto rounded-lg" /> : 'N/A'} />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div className="mt-8">
                   <h3 className="text-xl font-semibold mb-4 text-cyan-600 dark:text-cyan-400 border-b border-gray-200 dark:border-gray-600 pb-2">
                     Patient Reviews

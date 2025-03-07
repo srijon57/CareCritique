@@ -19,11 +19,8 @@ const Profile = () => {
                 if (!accessToken) {
                     return;
                 }
-
                 const response = await api.get('/profile', {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
+                    headers: { Authorization: `Bearer ${accessToken}` },
                 });
                 setProfile(response.data.profile);
             } catch (error) {
@@ -39,79 +36,64 @@ const Profile = () => {
                 setLoading(false);
             }
         };
-
         fetchProfile();
     }, [accessToken, navigate, enqueueSnackbar, setLoading]);
 
     if (!profile) {
-        return <div className="bg-gray-100 dark:bg-gray-900 min-h-screen flex items-center justify-center">Loading...</div>;
+        return <div className="min-h-screen flex items-center justify-center text-xl text-gray-600 dark:text-gray-300">Loading...</div>;
     }
 
     return (
-        <div className="bg-gray-100 dark:bg-gray-900 min-h-screen font-sans p-4 sm:p-6 lg:p-8">
-            <h1 className="text-4xl font-bold text-cyan-800 mb-8 text-center dark:text-white">Profile</h1>
-            <div className="max-w-6xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {Object.entries(profile).map(([key, value]) => key !== "hospital" &&
-                        key !== "specialty" && key !== "education" && key !== "experience" &&
-                        key !== "languages" && key !== "availability" && key !== "biography" &&
-                        key !== "profile_picture" ? (
-                            <div key={key} className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg shadow">
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2 capital">{key.replace(/_/g, ' ').toUpperCase()}</label>
-                                <p className="bg-gray-100 dark:bg-gray-600 p-3 rounded-lg text-gray-700 dark:text-gray-300">{value || 'N/A'}</p>
-                            </div>
-                        ) : null
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-6 lg:px-24 flex flex-col items-center">
+            <div className="max-w-4xl w-full bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-8">
+                <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white text-center mb-8">Profile</h1>
+                <div className="flex flex-col items-center">
+                    {profile.profile_picture && (
+                        <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-cyan-600 shadow-md">
+                            <img src={profile.profile_picture} alt="Profile" className="w-full h-full object-cover" />
+                        </div>
                     )}
+                    <p className="text-gray-600 dark:text-gray-400">{profile.email || 'N/A'}</p>
                 </div>
-            
+
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {Object.entries(profile).map(([key, value]) => {
+                        if (['user_id', 'profile_picture', 'hospital', 'specialty', 'education', 'experience', 'languages', 'availability', 'biography'].includes(key)) {
+                            return null;
+                        }
+                        return (
+                            <div key={key} className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md">
+                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 capitalize">{key.replace(/_/g, ' ')}</label>
+                                <p className="text-gray-800 dark:text-gray-200 mt-1">{value || 'N/A'}</p>
+                            </div>
+                        );
+                    })}
+                </div>
+
                 {profile.user_type === 'Doctor' && (
                     <div className="mt-8">
-                        <h2 className="text-2xl font-bold text-cyan-800 mb-6 dark:text-white">Doctor Details</h2>
+                        <h2 className="text-2xl font-semibold text-cyan-800 dark:text-cyan-400 text-center mb-6">Doctor Details</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg shadow">
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Hospital</label>
-                                <p className="bg-gray-100 dark:bg-gray-600 p-3 rounded-lg text-gray-700 dark:text-gray-300">{profile.hospital}</p>
-                            </div>
-                            <div className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg shadow">
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Specialty</label>
-                                <p className="bg-gray-100 dark:bg-gray-600 p-3 rounded-lg text-gray-700 dark:text-gray-300">{profile.specialty}</p>
-                            </div>
-                            <div className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg shadow">
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Education</label>
-                                <p className="bg-gray-100 dark:bg-gray-600 p-3 rounded-lg text-gray-700 dark:text-gray-300">{profile.education}</p>
-                            </div>
-                            <div className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg shadow">
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Experience</label>
-                                <p className="bg-gray-100 dark:bg-gray-600 p-3 rounded-lg text-gray-700 dark:text-gray-300">{profile.experience}</p>
-                            </div>
-                            <div className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg shadow">
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Languages</label>
-                                <p className="bg-gray-100 dark:bg-gray-600 p-3 rounded-lg text-gray-700 dark:text-gray-300">{profile.languages}</p>
-                            </div>
-                            <div className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg shadow">
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Availability</label>
-                                <p className="bg-gray-100 dark:bg-gray-600 p-3 rounded-lg text-gray-700 dark:text-gray-300">{profile.availability}</p>
-                            </div>
-                            <div className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg shadow">
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Biography</label>
-                                <p className="bg-gray-100 dark:bg-gray-600 p-3 rounded-lg text-gray-700 dark:text-gray-300">{profile.biography}</p>
-                            </div>
-                            {profile.profile_picture && (
-                                <div className="bg-gray-200 dark:bg-gray-700 p-4 rounded-lg shadow">
-                                    <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Profile Picture</label>
-                                    <img src={profile.profile_picture} alt="Profile" className="w-full h-auto rounded-lg" />
-                                </div>
+                            {['hospital', 'specialty', 'education', 'experience', 'languages', 'availability', 'biography'].map((field) =>
+                                profile[field] ? (
+                                    <div key={field} className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md">
+                                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 capitalize">{field.replace(/_/g, ' ')}</label>
+                                        <p className="text-gray-800 dark:text-gray-200 mt-1">{profile[field]}</p>
+                                    </div>
+                                ) : null
                             )}
                         </div>
                     </div>
                 )}
 
-                <button
-                    onClick={() => navigate('/editprofile')}
-                    className="mt-6 w-full sm:w-auto bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors duration-200"
-                >
-                    Edit Profile
-                </button>
+                <div className="mt-8 text-center">
+                    <button
+                        onClick={() => navigate('/editprofile')}
+                        className="w-full sm:w-auto bg-cyan-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-cyan-700 transition-all duration-200"
+                    >
+                        Edit Profile
+                    </button>
+                </div>
             </div>
         </div>
     );
