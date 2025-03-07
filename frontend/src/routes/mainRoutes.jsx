@@ -8,6 +8,7 @@ import ProfileEdit from "../pages/Profile/ProfileEdit";
 import VerifyOtpPage from "../pages/VerifyOtpPage/VerifyOtpPage";
 import AboutUs from "../pages/AboutUs";
 import NewsApp from "../components/NewsApp";
+import Appointments from "../pages/Appointments/Appointments";
 
 const mainRoutes = [
     <Route key="home" path="/" element={<Homepage />} />,
@@ -19,6 +20,7 @@ const mainRoutes = [
     <Route key="verify-otp" path="/verify-otp" element={<VerifyOtpPage />} />,
     <Route key="aboutus" path="/aboutus" element={<AboutUs/>} />,
     <Route key="news" path="/news" element={<NewsApp/>} />,
+    <Route key="appointments" path="/appointments" element={<Appointments />} />, // New route
 ];
 
 export default mainRoutes;

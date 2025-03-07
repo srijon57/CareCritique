@@ -8,7 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(null);
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated, logout, userType } = useAuth();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -42,10 +42,10 @@ const Navbar = () => {
                 { name: 'Uttora', href: '/hospitals/uttora' },
                 { name: 'Gulshan', href: '/hospitals/gulshan' },
                 { name: 'Bashundhara', href: '/hospitals/bashundhara' },
-                
             ],
         },
         { name: 'News', href: '/news' },
+        ...(isAuthenticated && userType === 'Patient'||userType === 'Doctor' ? [{ name: 'Appointments', href: '/appointments' }] : []),
     ];
 
     return (
@@ -83,7 +83,6 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Mobile Menu */}
             <div className={`fixed top-0 right-0 h-full w-64 bg-cyan-800 shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                 <div className="p-4">
                     <button onClick={toggleMenu} className="text-white focus:outline-none">

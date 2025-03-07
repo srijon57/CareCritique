@@ -30,4 +30,5 @@ Route::middleware(['auth.jwt'])->group(function () {
     Route::post('/appointments', [AppointmentController::class, 'store']);
     Route::get('/patient/appointments', [AppointmentController::class, 'getPatientAppointments']);
     Route::get('/doctor/appointments', [AppointmentController::class, 'getDoctorAppointments']);
+    Route::post('/doctors/{doctorId}/verify', [AuthController::class, 'toggleDoctorVerification']);
 });
