@@ -1,8 +1,10 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { useSpinner } from '../../components/SpinnerProvider';
 import { useAuth } from '../../context/AuthContext';
+import { MdVerified } from "react-icons/md";
+import { VscUnverified } from "react-icons/vsc";
 
 const DoctorDetails = () => {
   const { id } = useParams();
@@ -160,6 +162,32 @@ const DoctorDetails = () => {
     }
   };
 
+  const handleToggleVerification = async () => {
+    if (!isAuthenticated || !accessToken || userProfile?.user_type !== 'Admin') {
+      setError("Only admins can toggle doctor verification.");
+      return;
+    }
+
+    try {
+      setLoading(true); // Show spinner during verification toggle
+      const response = await axios.post(
+        `http://127.0.0.1:8000/api/doctors/${id}/verify`,
+        { is_verified: !doctor.isVerified },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+
+      setDoctor({ ...doctor, isVerified: !doctor.isVerified });
+      setError(null);
+
+      // Trigger a full page refresh to fetch updated data
+      window.location.reload();
+    } catch (error) {
+      console.error('Error toggling verification:', error);
+      setError(error.response?.data?.error || "Failed to toggle verification.");
+      setLoading(false); // Hide spinner on error
+    }
+  };
+
   if (!doctor) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
@@ -192,8 +220,13 @@ const DoctorDetails = () => {
                 className="rounded-full w-32 h-32 object-cover border-4 border-white dark:border-gray-800 shadow-md transition-all"
               />
               <div className="md:ml-6 mt-4 md:mt-0">
-                <h2 className="text-3xl font-semibold text-gray-900 dark:text-white">
+                <h2 className="text-3xl font-semibold text-gray-900 dark:text-white flex items-center">
                   Dr. {doctor.FirstName} {doctor.LastName}
+                  {doctor.isVerified ? (
+                    <MdVerified className="ml-2 text-blue-500" />
+                  ) : (
+                    <VscUnverified className="ml-2 text-red-500" />
+                  )}
                 </h2>
                 <p className="text-lg text-gray-500 dark:text-gray-400">{doctor.Specialty || 'General Practitioner'}</p>
               </div>
@@ -203,6 +236,15 @@ const DoctorDetails = () => {
                   <span className="mr-2">📅</span>
                   Book Appointment
                 </button>
+                {userProfile?.user_type === 'Admin' && (
+                  <button
+                    onClick={handleToggleVerification}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center shadow-md transition-all"
+                  >
+                    <span className="mr-2">{doctor.isVerified ? '✔️' : '❌'}</span>
+                    {doctor.isVerified ? 'Unverify' : 'Verify'} Doctor
+                  </button>
+                )}
               </div>
             </div>
 

@@ -87,4 +87,37 @@ class AuthController extends Controller
     {
         return $this->authService->updateProfile($request);
     }
+    public function toggleDoctorVerification(Request $request, $doctorId)
+    {
+        // Retrieve the authenticated user from request attributes instead of auth()
+        $verifier = $request->attributes->get('user');
+
+        // Check if verifier exists and is an Admin with UserID 14
+        if (!$verifier || $verifier->UserType !== 'Admin') {
+            return response()->json(['error' => 'Unauthorized: Only Admin with UserID 14 can verify doctors'], 403);
+        }
+
+        // Find the doctor
+        $doctor = Doctor::find($doctorId);
+
+        if (!$doctor) {
+            return response()->json(['error' => 'Doctor not found'], 404);
+        }
+
+        // Validate the request
+        $validator = Validator::make($request->all(), [
+            'is_verified' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => 'Validation failed', 'messages' => $validator->errors()], 422);
+        }
+
+        // Toggle the verification status
+        $doctor->isVerified = $request->input('is_verified');
+        $doctor->save();
+
+        $status = $doctor->isVerified ? 'verified' : 'unverified';
+        return response()->json(['message' => "Doctor {$status} successfully"]);
+    }
 }
