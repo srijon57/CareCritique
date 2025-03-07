@@ -165,6 +165,9 @@ const DoctorDetails = () => {
   };
 
 
+
+
+
   const handleToggleVerification = async () => {
     if (!isAuthenticated || !accessToken || userProfile?.user_type !== 'Admin') {
       setError("Only admins can toggle doctor verification.");
@@ -190,6 +193,7 @@ const DoctorDetails = () => {
       setLoading(false); // Hide spinner on error
     }
   };
+
   const handleBookAppointment = async (e) => {
     e.preventDefault();
     if (!isAuthenticated || !accessToken) {
@@ -222,6 +226,9 @@ const DoctorDetails = () => {
       setLoading(false);
     }
   };
+
+
+
   if (!doctor) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
