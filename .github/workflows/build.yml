@@ -34,12 +34,14 @@ jobs:
           extensions: mbstring, bcmath, pdo, pdo_mysql
 
       - name: Install Composer Dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress
+        working-directory: ./backend
 
       - name: Set up Environment
         run: |
           cp .env.example .env
           php artisan key:generate
+        working-directory: ./backend
 
       - name: Run Migrations
         env:
@@ -50,9 +52,11 @@ jobs:
           DB_USERNAME: user
           DB_PASSWORD: password
         run: php artisan migrate --force
+        working-directory: ./backend
 
       - name: Run Tests
         run: php artisan test
+        working-directory: ./backend
 
   frontend:
     name: React Frontend CI
