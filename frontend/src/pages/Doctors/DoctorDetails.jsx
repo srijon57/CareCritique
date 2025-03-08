@@ -1,8 +1,9 @@
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSpinner } from '../../components/SpinnerProvider';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/Authcontext';
 import { MdVerified } from "react-icons/md";
 import { VscUnverified } from "react-icons/vsc";
 
@@ -515,6 +516,7 @@ const DoctorDetails = () => {
   );
 };
 
+// eslint-disable-next-line react/prop-types
 const Info = ({ label, value }) => (
   <p className="flex items-center">
     <span className="font-semibold text-gray-900 dark:text-white">{label}:</span>

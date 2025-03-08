@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/Authcontext';
 import api from '../../services/api';
 import { useSnackbar } from 'notistack';
 import { useSpinner } from '../../components/SpinnerProvider';

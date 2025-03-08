@@ -1,34 +1,40 @@
 <?php
-
 namespace Tests\Feature\Auth;
 
-use App\Models\User;
+use App\Models\UserAccount;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     public function test_users_can_authenticate_using_the_login_screen(): void
     {
-        $user = User::factory()->create();
-
-        $response = $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'password',
+        $user = UserAccount::factory()->create([
+            'password' => bcrypt('password'),
+            'verified' => true,
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertNoContent();
+        $response = $this->post('/api/login', [
+            'email' => $user->Email,
+            'password' => '111111',
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertAuthenticatedAs($user);
     }
 
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
-        $user = User::factory()->create();
+        $user = UserAccount::factory()->create([
+            'password' => bcrypt('password'),
+            'verified' => true,
+        ]);
 
-        $this->post('/login', [
-            'email' => $user->email,
+        $this->post('/api/login', [
+            'email' => $user->Email,
             'password' => 'wrong-password',
         ]);
 

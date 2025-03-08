@@ -75,10 +75,16 @@ jobs:
         run: npm install
         working-directory: frontend
 
+      - name: Run Lint
+        run: npm run lint
+        working-directory: frontend
+      
+      - name: Run React Dev Server
+        run: npm run dev
+        working-directory: frontend
+
       - name: Build React App
         run: npm run build
         working-directory: frontend
 
-      - name: Run React Dev Server
-        run: npm run dev
-        working-directory: frontend
+

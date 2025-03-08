@@ -165,7 +165,7 @@ const GynecologistsList = () => {
             <div className="bg-gradient-to-r from-cyan-700 to-blue-900 dark:from-gray-800 dark:to-gray-900">
                 <div className="container mx-auto px-4 py-12">
                     <h1 className="text-4xl font-bold text-white text-center mb-4">
-                        Women's Health Specialists
+                        Women`s Health Specialists
                     </h1>
                     <p className="text-cyan-100 dark:text-gray-300 text-center mb-8 max-w-2xl mx-auto">
                         Find experienced gynecologists dedicated to your reproductive health and wellness.

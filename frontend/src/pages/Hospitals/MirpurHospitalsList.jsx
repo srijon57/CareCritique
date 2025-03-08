@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const MirpurHospitalsList = () => {
     const [hospitals, setHospitals] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
 
     useEffect(() => {
         fetchHospitals();

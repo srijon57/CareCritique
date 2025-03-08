@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/Authcontext';
 import api from '../../services/api';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
@@ -22,6 +22,7 @@ const Appointments = () => {
         if (isAuthenticated) {
             fetchAppointments();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated, userType, navigate, enqueueSnackbar, loading]);
 
     const fetchAppointments = async () => {
@@ -32,6 +33,7 @@ const Appointments = () => {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
             setAppointments(response.data.appointments);
+        // eslint-disable-next-line no-unused-vars
         } catch (error) {
             enqueueSnackbar('Failed to fetch appointments', { variant: 'error' });
         } finally {

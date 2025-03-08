@@ -1,4 +1,3 @@
-// src/services/authService.js
 import axios from './utils/axios';
 
 export const signUp = async (userData) => {

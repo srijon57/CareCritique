@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/Authcontext';
 import api from '../../services/api';
 import { useSnackbar } from 'notistack';
 import { useSpinner } from '../../components/SpinnerProvider';
@@ -73,6 +73,7 @@ const EditProfile = () => {
             : profile.availability || '';
 
         try {
+            // eslint-disable-next-line no-unused-vars
             const response = await api.put(
                 '/profile/update',
                 {
@@ -86,6 +87,7 @@ const EditProfile = () => {
                 }
             );
             enqueueSnackbar('Profile updated successfully', { variant: 'success' });
+        // eslint-disable-next-line no-unused-vars
         } catch (error) {
             enqueueSnackbar('Failed to update profile', { variant: 'error' });
         } finally {

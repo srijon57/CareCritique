@@ -1,8 +1,7 @@
 <?php
-
 namespace Tests\Feature\Auth;
 
-use App\Models\User;
+use App\Models\UserAccount;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
@@ -16,9 +15,9 @@ class PasswordResetTest extends TestCase
     {
         Notification::fake();
 
-        $user = User::factory()->create();
+        $user = UserAccount::factory()->create();
 
-        $this->post('/forgot-password', ['email' => $user->email]);
+        $this->post('/forgot-password', ['email' => $user->Email]);
 
         Notification::assertSentTo($user, ResetPassword::class);
     }
@@ -27,19 +26,24 @@ class PasswordResetTest extends TestCase
     {
         Notification::fake();
 
-        $user = User::factory()->create();
+        $user = UserAccount::factory()->create();
 
-        $this->post('/forgot-password', ['email' => $user->email]);
+        $this->post('/forgot-password', ['email' => $user->Email]);
 
-        Notification::assertSentTo($user, ResetPassword::class, function (object $notification) use ($user) {
-            $response = $this->post('/reset-password', [
-                'token' => $notification->token,
-                'email' => $user->email,
-                'password' => 'password',
-                'password_confirmation' => 'password',
+        Notification::assertSentTo($user, ResetPassword::class, function ($notification) use ($user) {
+            $token = $notification->token;
+
+            $this->post('/reset-password', [
+                'email' => $user->Email,
+                'token' => $token,
+                'password' => 'new-password',
+                'password_confirmation' => 'new-password',
             ]);
 
-            $response->assertSessionHasNoErrors();
+            $this->assertDatabaseHas('UserAccount', [
+                'Email' => $user->Email,
+                'PasswordHash' => bcrypt('new-password'),
+            ]);
 
             return true;
         });
