@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaBars, FaTimes, FaChevronDown, FaChevronUp, FaUserCircle } from 'react-icons/fa';
 import logo from '../../assets/logo.svg';
 import ThemeToggle from '../ThemeToggle';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/Authcontext';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
