@@ -87,7 +87,7 @@ ALTER TABLE UserAccount
 ADD COLUMN otp_expires_at TIMESTAMP NULL AFTER verified;
 
 INSERT INTO UserAccount (Email, PasswordHash, UserType, verified)
-VALUES ('admin@example.com', 'hashed_password_here', 'Admin', TRUE);
+VALUES ('admin@example.com', '$2y$10$eSA/4E6KhO0OpnrvTxlCuu9hGYRnsshgYR9TPqmmaN0hD2AVuQ3Zq', 'Admin', TRUE);
 
 INSERT INTO Admin (UserID, FirstName, LastName)
 VALUES (LAST_INSERT_ID(), 'Admin', 'User');
@@ -106,10 +106,10 @@ INSERT INTO Hospital (Name, Address, ContactNumber, HospitalArea, HospitalCity) 
 ('Bangabandhu Sheikh Mujib Medical University', 'Shahbagh, Dhaka 1000', '01711334455', 'Shahbagh', 'Dhaka');
 
 INSERT INTO UserAccount (Email, PasswordHash, UserType, verified) VALUES
-('dr.kamal@example.com', 'hashed_password1', 'Doctor', TRUE),
-('dr.nazneen@example.com', 'hashed_password2', 'Doctor', TRUE),
-('dr.raihan@example.com', 'hashed_password3', 'Doctor', TRUE),
-('dr.tasnim@example.com', 'hashed_password4', 'Doctor', TRUE);
+('dr.kamal@example.com', '$2y$10$eSA/4E6KhO0OpnrvTxlCuu9hGYRnsshgYR9TPqmmaN0hD2AVuQ3Zq', 'Doctor', TRUE),
+('dr.nazneen@example.com', '$2y$10$eSA/4E6KhO0OpnrvTxlCuu9hGYRnsshgYR9TPqmmaN0hD2AVuQ3Zq', 'Doctor', TRUE),
+('dr.raihan@example.com', '$2y$10$eSA/4E6KhO0OpnrvTxlCuu9hGYRnsshgYR9TPqmmaN0hD2AVuQ3Zq', 'Doctor', TRUE),
+('dr.tasnim@example.com', '$2y$10$eSA/4E6KhO0OpnrvTxlCuu9hGYRnsshgYR9TPqmmaN0hD2AVuQ3Zq', 'Doctor', TRUE);
 
 
 INSERT INTO Doctor (UserID, HospitalID, FirstName, LastName, Address, Gender, ContactNumber, Specialty, Education, Hospital, Experience, Languages, Availability, Biography, CertificatePath1, CertificatePath2, CertificatePath3)
@@ -378,3 +378,20 @@ INSERT INTO Reviews (PatientID, DoctorID, Rating, Comment) VALUES
  4, 'Very attentive and skilled doctor. Will visit again.');
 ALTER TABLE Doctor
 ADD COLUMN isVerified BOOLEAN DEFAULT FALSE;
+UPDATE Doctor d
+JOIN UserAccount ua ON d.UserID = ua.UserID
+SET d.isVerified = TRUE
+WHERE ua.Email IN (
+    'dr.kamal@example.com',
+    'dr.nazneen@example.com',
+    'dr.raihan@example.com',
+    'dr.tasnim@example.com',
+    'dr.arif@example.com',
+    'dr.farhana@example.com',
+    'dr.sajid@example.com',
+    'dr.tahmina@example.com',
+    'dr.shahid@example.com',
+    'dr.nadia@example.com',
+    'dr.rafiq@example.com',
+    'dr.sumaiya@example.com'
+);

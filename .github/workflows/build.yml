@@ -43,17 +43,6 @@ jobs:
           php artisan key:generate
         working-directory: ./backend
 
-      - name: Run Migrations
-        env:
-          DB_CONNECTION: mysql
-          DB_HOST: 127.0.0.1
-          DB_PORT: 3306
-          DB_DATABASE: test_db
-          DB_USERNAME: user
-          DB_PASSWORD: password
-        run: php artisan migrate --force
-        working-directory: ./backend
-
       - name: Serve Laravel Application
         run: php artisan serve &
         working-directory: ./backend
@@ -79,10 +68,6 @@ jobs:
         run: npm run lint
         working-directory: frontend
       
-      - name: Run React Dev Server
-        run: npm run dev
-        working-directory: frontend
-
       - name: Build React App
         run: npm run build
         working-directory: frontend

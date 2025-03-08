@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\UserAccount;
+use App\Models\Doctor;
 use App\Services\JwtService;
 
 class AuthService
@@ -24,27 +25,28 @@ class AuthService
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => 'Validation failed', 'messages' => $validator->errors()], 422);
+            return ['error' => 'Validation failed', 'messages' => $validator->errors(), 'status' => 422];
         }
 
         $user = UserAccount::where('Email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->PasswordHash)) {
-            return response()->json(['error' => 'Invalid credentials'], 401);
+            return ['error' => 'Invalid credentials', 'status' => 401];
         }
 
         if (!$user->verified) {
-            return response()->json(['error' => 'Please verify your email first.'], 401);
+            return ['error' => 'Please verify your email first.', 'status' => 401];
         }
 
         $accessToken = $this->jwtService->generateToken($user, config('app.jwt_ttl'));
         $refreshToken = $this->jwtService->generateToken($user, config('app.jwt_refresh_ttl'));
 
-        return response()->json([
+        return [
             'access_token' => $accessToken,
             'refresh_token' => $refreshToken,
-            'user_type' => $user->UserType
-        ]);
+            'user_type' => $user->UserType,
+            'status' => 200,
+        ];
     }
 
     public function refreshToken($request)
@@ -52,19 +54,19 @@ class AuthService
         $tokenString = $request->header('Authorization');
 
         if (!$this->jwtService->validateToken($tokenString)) {
-            return response()->json(['error' => 'Invalid token'], 401);
+            return ['error' => 'Invalid token', 'status' => 401];
         }
 
         $payload = $this->jwtService->getPayload($tokenString);
         $user = UserAccount::find($payload->get('uid'));
 
         if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
+            return ['error' => 'User not found', 'status' => 404];
         }
 
         $newAccessToken = $this->jwtService->generateToken($user, config('app.jwt_ttl'));
 
-        return response()->json(['access_token' => $newAccessToken]);
+        return ['access_token' => $newAccessToken, 'status' => 200];
     }
 
     public function logout($request)
@@ -72,14 +74,14 @@ class AuthService
         $tokenString = $request->header('Authorization');
 
         if (!$this->jwtService->validateToken($tokenString)) {
-            return response()->json(['error' => 'Invalid token'], 401);
+            return ['error' => 'Invalid token', 'status' => 401];
         }
 
         $payload = $this->jwtService->getPayload($tokenString);
         $tokenId = $payload->get('jti');
         \Cache::put('invalidated_token_' . $tokenId, true, now()->addMinutes(60));
 
-        return response()->json(['message' => 'Logged out successfully']);
+        return ['message' => 'Logged out successfully', 'status' => 200];
     }
 
     public function getProfile($request)
@@ -87,14 +89,14 @@ class AuthService
         $tokenString = $request->header('Authorization');
 
         if (!$this->jwtService->validateToken($tokenString)) {
-            return response()->json(['error' => 'Invalid token'], 401);
+            return ['error' => 'Invalid token', 'status' => 401];
         }
 
         $payload = $this->jwtService->getPayload($tokenString);
         $user = UserAccount::find($payload->get('uid'));
 
         if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
+            return ['error' => 'User not found', 'status' => 404];
         }
 
         $profileData = [
@@ -134,7 +136,7 @@ class AuthService
             ]);
         }
 
-        return response()->json(['success' => true, 'profile' => $profileData]);
+        return ['success' => true, 'profile' => $profileData, 'status' => 200];
     }
 
     public function updateProfile($request)
@@ -142,14 +144,14 @@ class AuthService
         $tokenString = $request->header('Authorization');
 
         if (!$this->jwtService->validateToken($tokenString)) {
-            return response()->json(['error' => 'Invalid token'], 401);
+            return ['error' => 'Invalid token', 'status' => 401];
         }
 
         $payload = $this->jwtService->getPayload($tokenString);
         $user = UserAccount::find($payload->get('uid'));
 
         if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
+            return ['error' => 'User not found', 'status' => 404];
         }
 
         $validator = Validator::make($request->all(), [
@@ -173,7 +175,7 @@ class AuthService
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return ['error' => $validator->errors(), 'status' => 422];
         }
 
         if ($request->has('email')) {
@@ -254,6 +256,58 @@ class AuthService
             $doctor->save();
         }
 
-        return response()->json(['message' => 'Profile updated successfully'], 200);
+        return ['message' => 'Profile updated successfully', 'status' => 200];
+    }
+
+    public function verifyAdmin($userId, $verifier)
+    {
+        // Check if verifier is UserID 14
+        if ($verifier->UserID != 14) {
+            return ['error' => 'Unauthorized', 'status' => 403];
+        }
+
+        // Find the user to verify
+        $user = UserAccount::find($userId);
+
+        if (!$user || $user->UserType != 'Admin') {
+            return ['error' => 'Admin not found', 'status' => 404];
+        }
+
+        // Update verification status
+        $user->verified = 1;
+        $user->save();
+
+        return ['message' => 'Admin verified successfully', 'status' => 200];
+    }
+
+    public function toggleDoctorVerification($doctorId, $request, $verifier)
+    {
+        // Check if verifier exists and is an Admin
+        if (!$verifier || $verifier->UserType !== 'Admin') {
+            return ['error' => 'Unauthorized: Only Admin can verify doctors', 'status' => 403];
+        }
+
+        // Find the doctor
+        $doctor = Doctor::find($doctorId);
+
+        if (!$doctor) {
+            return ['error' => 'Doctor not found', 'status' => 404];
+        }
+
+        // Validate the request
+        $validator = Validator::make($request->all(), [
+            'is_verified' => 'required|boolean',
+        ]);
+
+        if ($validator->fails()) {
+            return ['error' => 'Validation failed', 'messages' => $validator->errors(), 'status' => 422];
+        }
+
+        // Toggle the verification status
+        $doctor->isVerified = $request->input('is_verified');
+        $doctor->save();
+
+        $status = $doctor->isVerified ? 'verified' : 'unverified';
+        return ['message' => "Doctor {$status} successfully", 'status' => 200];
     }
 }
