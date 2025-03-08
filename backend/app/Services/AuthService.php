@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\UserAccount;
 use App\Models\Doctor;
 use App\Services\JwtService;
-
+use Illuminate\Http\Request;
 class AuthService
 {
     protected $jwtService;

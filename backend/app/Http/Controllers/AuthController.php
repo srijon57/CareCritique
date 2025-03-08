@@ -21,9 +21,9 @@ class AuthController extends Controller
         $this->cloudinaryService = $cloudinaryService;
     }
 
-    public function verifyAdmin($userId)
+    public function verifyAdmin(Request $request, $userId)
     {
-        $verifier = $this->getVerifier();
+        $verifier = $this->getVerifier($request);
         $result = $this->authService->verifyAdmin($userId, $verifier);
 
         if (isset($result['error'])) {
@@ -102,7 +102,7 @@ class AuthController extends Controller
 
     public function toggleDoctorVerification(Request $request, $doctorId)
     {
-        $verifier = $this->getVerifier();
+        $verifier = $this->getVerifier($request);
         $result = $this->authService->toggleDoctorVerification($doctorId, $request, $verifier);
 
         if (isset($result['error'])) {
@@ -112,7 +112,7 @@ class AuthController extends Controller
         return response()->json($result['message'], $result['status']);
     }
 
-    private function getVerifier()
+    private function getVerifier(Request $request)
     {
         return $request->attributes->get('user');
     }
