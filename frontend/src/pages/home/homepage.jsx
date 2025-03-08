@@ -226,14 +226,14 @@ const Homepage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     {doctors.map(doctor => (
                         <div key={doctor.id} className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800 dark:text-white dark:hover:shadow-2xl">
-                            <img src="https://static.vecteezy.com/system/resources/thumbnails/024/585/326/small_2x/3d-happy-cartoon-doctor-cartoon-doctor-on-transparent-background-generative-ai-png.png" alt={`${doctor.firstName} ${doctor.lastName}`} className="mx-auto mb-4 rounded-full w-32 h-32 object-cover" />
+                            <img src="https://i.pinimg.com/originals/53/e1/f9/53e1f9601fd784835e67a54f858d0c5e.png" alt={`${doctor.firstName} ${doctor.lastName}`} className="mx-auto mb-4 rounded-full w-32 h-32 object-cover" />
                             <h4 className="text-xl font-bold text-cyan-800 dark:text-white">{doctor.firstName} {doctor.lastName}</h4>
                             <p className="text-gray-500 dark:text-gray-400">{doctor.specialty}</p>
                             <button
                                 className="bg-cyan-800 text-white py-2 px-4 mt-4 rounded hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-cyan-700 dark:hover:bg-cyan-600"
                                 onClick={() => handleDoctorLearnMore(doctor.id)}
                             >
-                                Learn More
+                                View Profile
                             </button>
                         </div>
                     ))}
