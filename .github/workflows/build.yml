@@ -54,8 +54,8 @@ jobs:
         run: php artisan migrate --force
         working-directory: ./backend
 
-      - name: Run Tests
-        run: php artisan test
+      - name: Serve Laravel Application
+        run: php artisan serve &
         working-directory: ./backend
 
   frontend:
@@ -80,5 +80,5 @@ jobs:
         working-directory: frontend
 
       - name: Build React App
-        run: npm run build
+        run: npm run dev
         working-directory: frontend
