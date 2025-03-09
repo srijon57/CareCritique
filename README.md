@@ -1,3 +1,4 @@
+
 #  ![Logo](https://github.com/srijon57/CareCritique/blob/development/carecritique.jpg)
 ---
 <div align="center">
@@ -91,25 +92,28 @@ vi. **Top hospitals and doctors near user**
 
 ### Milestone 1: Initial Setup and Basic Features
 
-- [ ] Set up backend and frontend.
-- [ ] Implement user authentication (registration and login).
-- [ ] Create API endpoints for doctors and hospitals.
-- [ ] Basic UI for login, registration & homepage.
+- [x] Set up backend and frontend.
+- [x] Implement user authentication (registration and login).
+- [x] Create API endpoints for doctors and hospitals.
+- [x] Doctor, Admin & Patient profile.
+- [x] Basic UI for login, registration & homepage.
 
 ### Milestone 2: Advanced Features and Interactions
 
-- [ ] Implement review and rating system.
-- [ ] Add search and filter functionality.
-- [ ] Enable reporting abusive reviews.
-- [ ] Notification system for updates (reviews and reports).
-- [ ] UI for review interactions, search functionality & viewing doctor/hospital details.
+- [x] Implement review and rating system.
+- [x] Add search and filter functionality.
+- [x] Add latest health news 
+- [x] UI for review interactions, search functionality & viewing doctor/hospital details.
+- [x] Cloudinary implementation for images.
 
 ### Milestone 3: Final Touches and Deployment
 
-- [ ] Implement geolocation-based search for top hospitals and doctors.
-- [ ] Admin panel for managing reports and user profiles.
-- [ ] Complete testing and bug fixes.
-- [ ] Deployment to Vercel.
+- [x] Appointment system for patient.
+- [x] Implement geolocation-based search for top hospitals and doctors.
+- [x] Admin panel for managing doctor verification.
+- [x] Complete testing and bug fixes.
+- [x] CI pipelining.
+- [ ] CD deployment in web.
 
 ## 💻 Technologies Used <a id="technologies-used"></a>
 
@@ -127,10 +131,12 @@ vi. **Top hospitals and doctors near user**
 
 ### Prerequisites
 
-- PHP >= 8.4.0
+- PHP (Laravel) >= 8.4.0
 - Composer
 - Node.js
 - MySQL
+- Cloudinary
+
 
 <details>
 <summary>Backend (Laravel)</summary>
@@ -139,13 +145,54 @@ vi. **Top hospitals and doctors near user**
     ```bash
     git clone https://github.com/srijon57/CareCritique.git
     ```
+1. Navigate to the backend directory:
+    ```bash
+    cd ../backend
+    ```
 
-2. Install dependencies:
+3. create a `.env` file with placeholder values.
+    ```bash
+	APP_NAME=CareCritique
+	APP_ENV=local
+	APP_KEY= your_app_key
+	APP_DEBUG=true
+	APP_URL=http://localhost
+	FRONTEND_URL=http://localhost:5173
+	LOG_LEVEL=debug
+
+	#Database Settings
+	DB_CONNECTION=mysql
+	DB_HOST=127.0.0.1
+	DB_PORT=3306
+	DB_DATABASE=your_database_name
+	DB_USERNAME=your_database_user
+	DB_PASSWORD=your_database_password
+	DB_TIMEZONE=+06:00
+
+	#JWT Authentication
+	JWT_SECRET=your_jwt_secret
+
+	#Mail Settings
+	MAIL_MAILER=smtp
+	MAIL_HOST=smtp.gmail.com
+	MAIL_PORT=587
+	MAIL_USERNAME=your_email@gmail.com
+	MAIL_PASSWORD=your_email_password
+	MAIL_ENCRYPTION=tls
+	MAIL_FROM_ADDRESS="your_email@gmail.com"
+	MAIL_FROM_NAME="your mail form name"
+
+	#Cloudinary Settings
+	CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+	CLOUDINARY_API_KEY=your_cloudinary_api_key
+	CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+    ```
+4. Install dependencies:
     ```bash
     composer install
     ```
 
-3. Start the Laravel development server:
+5. Start the Laravel development server:
     ```bash
     php artisan serve
     ```
