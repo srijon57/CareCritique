@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { FaBars, FaTimes, FaChevronDown, FaChevronUp, FaUserCircle } from 'react-icons/fa';
 import logo from '../../assets/logo.svg';
 import ThemeToggle from '../ThemeToggle';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/Authcontext';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(null);
-    const { isAuthenticated, logout } = useAuth();
+    const { isAuthenticated, logout, userType } = useAuth();
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -24,11 +24,11 @@ const Navbar = () => {
         {
             name: 'Find a Doctor',
             children: [
-                { name: 'All Doctors', href: '/doctors/doctorsList' },
-                { name: 'Gynecologists', href: '/doctors/gynecologistslist' },
-                { name: 'Neurologists', href: '/doctors/neurologistslist' },
-                { name: 'Dentists', href: '/doctors/dentistslist' },
-                { name: 'Cardiologists', href: '/doctors/cardiologistslist' },
+                { name: 'All Doctors', href: '/doctors' },
+                { name: 'Gynecologists', href: '/gynecologistslist' },
+                { name: 'Neurologists', href: '/neurologistslist' },
+                { name: 'Dentists', href: '/dentistslist' },
+                { name: 'Cardiologists', href: '/cardiologistslist' },
             ],
         },
         {
@@ -42,10 +42,10 @@ const Navbar = () => {
                 { name: 'Uttora', href: '/hospitals/uttora' },
                 { name: 'Gulshan', href: '/hospitals/gulshan' },
                 { name: 'Bashundhara', href: '/hospitals/bashundhara' },
-                
             ],
         },
         { name: 'News', href: '/news' },
+        ...(isAuthenticated && userType === 'Patient'||userType === 'Doctor' ? [{ name: 'Appointments', href: '/appointments' }] : []),
     ];
 
     return (
@@ -83,7 +83,6 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {/* Mobile Menu */}
             <div className={`fixed top-0 right-0 h-full w-64 bg-cyan-800 shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                 <div className="p-4">
                     <button onClick={toggleMenu} className="text-white focus:outline-none">

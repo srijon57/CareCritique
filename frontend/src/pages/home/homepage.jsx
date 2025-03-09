@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import axios from "axios";
 
 const Homepage = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [area, setArea] = useState("");
     const [activeSearchSuggestionIndex, setActiveSearchSuggestionIndex] = useState(-1);
     const [activeAreaSuggestionIndex, setActiveAreaSuggestionIndex] = useState(-1);
+    const [doctors, setDoctors] = useState([]);
+    const [hospitals, setHospitals] = useState([]);
     const navigate = useNavigate();
 
-    // Mock data for search and area suggestions
     const searchSuggestionsData = [
         { Name: "Cardiology" },
         { Name: "Dermatology" },
@@ -25,19 +27,50 @@ const Homepage = () => {
         { HospitalArea: "Mirpur" },
     ];
 
-    // Handle search input change for doctors
+    // Fetch doctors and hospitals
+    useEffect(() => {
+        // Fetch doctors
+        axios.get("http://127.0.0.1:8000/api/doctors")
+            .then(response => {
+                if (Array.isArray(response.data)) {
+                    const filteredDoctors = response.data
+                        .map(doctor => ({
+                            id: doctor.DoctorID,
+                            firstName: doctor.FirstName,
+                            lastName: doctor.LastName,
+                            specialty: doctor.Specialty,
+                            hospital: doctor.Hospital,
+                        }))
+                        .slice(0, 3); // Take first 3 doctors
+                    setDoctors(filteredDoctors);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching doctors:", error);
+            });
+
+        // Fetch hospitals
+        axios.get("http://127.0.0.1:8000/api/hospitals")
+            .then(response => {
+                if (Array.isArray(response.data)) {
+                    setHospitals(response.data.slice(0, 4)); // Take first 4 hospitals
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching hospitals:", error);
+            });
+    }, []);
+
     const handleSearchChange = (e) => {
         const value = e.target.value;
         setSearchQuery(value);
     };
 
-    // Handle area input change for hospitals
     const handleAreaChange = (e) => {
         const value = e.target.value;
         setArea(value);
     };
 
-    // Handle keyboard navigation for search suggestions
     const handleSearchKeyDown = (e) => {
         const filteredSuggestions = searchSuggestionsData.filter(suggestion =>
             suggestion.Name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -60,7 +93,6 @@ const Homepage = () => {
         }
     };
 
-    // Handle keyboard navigation for area suggestions
     const handleAreaKeyDown = (e) => {
         const filteredSuggestions = areaSuggestionsData.filter(suggestion =>
             suggestion.HospitalArea.toLowerCase().includes(area.toLowerCase())
@@ -83,7 +115,6 @@ const Homepage = () => {
         }
     };
 
-    // Handle search button click
     const handleSearch = () => {
         if (searchQuery) {
             navigate(`/doctors?search=${searchQuery}`);
@@ -91,6 +122,16 @@ const Homepage = () => {
         if (area) {
             navigate(`/hospitals?area=${area}`);
         }
+    };
+
+    // Handle navigation to doctor detail page
+    const handleDoctorLearnMore = (doctorId) => {
+        navigate(`/doctors/${doctorId}`);
+    };
+
+    // Handle navigation to hospital detail page
+    const handleHospitalLearnMore = (hospitalId) => {
+        navigate(`/hospitals/${hospitalId}`);
     };
 
     return (
@@ -183,24 +224,19 @@ const Homepage = () => {
             <section className="container mx-auto p-6">
                 <h2 className="text-4xl font-bold mb-8 text-cyan-800 text-center dark:text-white">Featured Doctors</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800 dark:text-white dark:hover:shadow-2xl">
-                        <img src="https://static.vecteezy.com/system/resources/thumbnails/024/585/326/small_2x/3d-happy-cartoon-doctor-cartoon-doctor-on-transparent-background-generative-ai-png.png" alt="Dr. Karl Smith" className="mx-auto mb-4 rounded-full w-32 h-32 object-cover" />
-                        <h4 className="text-xl font-bold text-cyan-800 dark:text-white">Dr. Mashrur Rahman Fahim</h4>
-                        <p className="text-gray-500 dark:text-gray-400">Neurologist</p>
-                        <button className="bg-cyan-800 text-white py-2 px-4 mt-4 rounded hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-cyan-700 dark:hover:bg-cyan-600">Learn More</button>
-                    </div>
-                    <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800 dark:text-white dark:hover:shadow-2xl">
-                        <img src="https://static.vecteezy.com/system/resources/thumbnails/024/585/358/small_2x/3d-happy-cartoon-doctor-cartoon-doctor-on-transparent-background-generative-ai-png.png" alt="Lisa Thomas" className="mx-auto mb-4 rounded-full w-32 h-32 object-cover" />
-                        <h4 className="text-xl font-bold text-cyan-800 dark:text-white">Dr. Aspia Amir</h4>
-                        <p className="text-gray-500 dark:text-gray-400">Medical Team</p>
-                        <button className="bg-cyan-800 text-white py-2 px-4 mt-4 rounded hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-cyan-700 dark:hover:bg-cyan-600">Learn More</button>
-                    </div>
-                    <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800 dark:text-white dark:hover:shadow-2xl">
-                        <img src="https://static.vecteezy.com/system/resources/thumbnails/024/585/326/small_2x/3d-happy-cartoon-doctor-cartoon-doctor-on-transparent-background-generative-ai-png.png" alt="Janne Doe" className="mx-auto mb-4 rounded-full w-32 h-32 object-cover" />
-                        <h4 className="text-xl font-bold text-cyan-800 dark:text-white">Dr. Abdullah Ishtiaq Sakib</h4>
-                        <p className="text-gray-500 dark:text-gray-400">Doctor</p>
-                        <button className="bg-cyan-800 text-white py-2 px-4 mt-4 rounded hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-cyan-700 dark:hover:bg-cyan-600">Learn More</button>
-                    </div>
+                    {doctors.map(doctor => (
+                        <div key={doctor.id} className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800 dark:text-white dark:hover:shadow-2xl">
+                            <img src="https://i.pinimg.com/originals/53/e1/f9/53e1f9601fd784835e67a54f858d0c5e.png" alt={`${doctor.firstName} ${doctor.lastName}`} className="mx-auto mb-4 rounded-full w-32 h-32 object-cover" />
+                            <h4 className="text-xl font-bold text-cyan-800 dark:text-white">{doctor.firstName} {doctor.lastName}</h4>
+                            <p className="text-gray-500 dark:text-gray-400">{doctor.specialty}</p>
+                            <button
+                                className="bg-cyan-800 text-white py-2 px-4 mt-4 rounded hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-cyan-700 dark:hover:bg-cyan-600"
+                                onClick={() => handleDoctorLearnMore(doctor.id)}
+                            >
+                                View Profile
+                            </button>
+                        </div>
+                    ))}
                 </div>
             </section>
 
@@ -253,26 +289,18 @@ const Homepage = () => {
             <section className="container mx-auto p-6">
                 <h2 className="text-4xl font-bold mb-8 text-cyan-800 text-center dark:text-white">Top Hospitals</h2>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800 dark:text-white dark:hover:shadow-2xl">
-                        <img src="https://static.vecteezy.com/system/resources/previews/038/252/707/non_2x/hospital-building-illustration-medical-clinic-isolated-on-white-background-vector.jpg" alt="Popular Hospital" className="mx-auto mb-4 rounded-lg w-full h-48 object-cover" />
-                        <h5 className="text-xl font-semibold text-cyan-800 dark:text-white">Popular Medical College Hospital</h5>
-                        <button className="bg-cyan-800 text-white py-2 px-4 mt-4 rounded hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-cyan-700 dark:hover:bg-cyan-600">Learn More</button>
-                    </div>
-                    <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800 dark:text-white dark:hover:shadow-2xl">
-                        <img src="https://static.vecteezy.com/system/resources/previews/038/252/707/non_2x/hospital-building-illustration-medical-clinic-isolated-on-white-background-vector.jpg" alt="Central Hospital" className="mx-auto mb-4 rounded-lg w-full h-48 object-cover" />
-                        <h5 className="text-xl font-semibold text-cyan-800 dark:text-white">Central Hospital Ltd</h5>
-                        <button className="bg-cyan-800 text-white py-2 px-4 mt-4 rounded hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-cyan-700 dark:hover:bg-cyan-600">Learn More</button>
-                    </div>
-                    <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800 dark:text-white dark:hover:shadow-2xl">
-                        <img src="https://static.vecteezy.com/system/resources/previews/038/252/707/non_2x/hospital-building-illustration-medical-clinic-isolated-on-white-background-vector.jpg" alt="Labaid Hospital" className="mx-auto mb-4 rounded-lg w-full h-48 object-cover" />
-                        <h5 className="text-xl font-semibold text-cyan-800 dark:text-white">Labaid Specialized Hospital</h5>
-                        <button className="bg-cyan-800 text-white py-2 px-4 mt-4 rounded hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-cyan-700 dark:hover:bg-cyan-600">Learn More</button>
-                    </div>
-                    <div className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800 dark:text-white dark:hover:shadow-2xl">
-                        <img src="https://static.vecteezy.com/system/resources/previews/038/252/707/non_2x/hospital-building-illustration-medical-clinic-isolated-on-white-background-vector.jpg" alt="Dhaka Medical" className="mx-auto mb-4 rounded-lg w-full h-48 object-cover" />
-                        <h5 className="text-xl font-semibold text-cyan-800 dark:text-white">Dhaka Medical College Hospital</h5>
-                        <button className="bg-cyan-800 text-white py-2 px-4 mt-4 rounded hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-cyan-700 dark:hover:bg-cyan-600">Learn More</button>
-                    </div>
+                    {hospitals.map(hospital => (
+                        <div key={hospital.HospitalID} className="bg-white shadow-lg rounded-lg p-6 text-center hover:shadow-xl transition-shadow duration-300 dark:bg-gray-800 dark:text-white dark:hover:shadow-2xl">
+                            <img src="https://static.vecteezy.com/system/resources/previews/038/252/707/non_2x/hospital-building-illustration-medical-clinic-isolated-on-white-background-vector.jpg" alt={hospital.Name} className="mx-auto mb-4 rounded-lg w-full h-48 object-cover" />
+                            <h5 className="text-xl font-semibold text-cyan-800 dark:text-white">{hospital.Name}</h5>
+                            <button
+                                className="bg-cyan-800 text-white py-2 px-4 mt-4 rounded hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:bg-cyan-700 dark:hover:bg-cyan-600"
+                                onClick={() => handleHospitalLearnMore(hospital.HospitalID)}
+                            >
+                                Learn More
+                            </button>
+                        </div>
+                    ))}
                 </div>
             </section>
         </div>

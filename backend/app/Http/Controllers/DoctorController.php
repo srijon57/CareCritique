@@ -23,4 +23,8 @@ class DoctorController extends Controller
     {
         return $this->doctorServices->getDoctorById($id);
     }
+    public function showDoctorsByHospital($hospitalId)
+    {
+        return $this->doctorServices->getDoctorsByHospitalId($hospitalId);
+    }
 }

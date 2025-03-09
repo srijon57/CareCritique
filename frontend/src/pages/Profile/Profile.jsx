@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/Authcontext';
 import api from '../../services/api';
 import { useSnackbar } from 'notistack';
 import { useSpinner } from '../../components/SpinnerProvider';
@@ -17,14 +17,10 @@ const Profile = () => {
             setLoading(true);
             try {
                 if (!accessToken) {
-                  //  enqueueSnackbar('No access token found. Please log in again.', { variant: 'error' });
                     return;
                 }
-
                 const response = await api.get('/profile', {
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`,
-                    },
+                    headers: { Authorization: `Bearer ${accessToken}` },
                 });
                 setProfile(response.data.profile);
             } catch (error) {
@@ -40,141 +36,60 @@ const Profile = () => {
                 setLoading(false);
             }
         };
-
         fetchProfile();
     }, [accessToken, navigate, enqueueSnackbar, setLoading]);
 
     if (!profile) {
-        return <div className="bg-white dark:bg-gray-900 min-h-screen font-sans p-6">Loading...</div>;
+        return <div className="min-h-screen flex items-center justify-center text-xl text-gray-600 dark:text-gray-300">Loading...</div>;
     }
 
     return (
-        <div className="bg-white dark:bg-gray-900 min-h-screen font-sans p-6">
-            <h1 className="text-4xl font-bold text-cyan-800 mb-8 text-center dark:text-white">Profile</h1>
-            <div className="container mx-auto bg-gray-200 dark:bg-gray-800 shadow-lg rounded-lg p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Email</label>
-                        <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                            {profile.email}
-                        </p>
-                    </div>
-                    <div>
-                        <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">User Type</label>
-                        <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                            {profile.user_type}
-                        </p>
-                    </div>
-                    <div>
-                        <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">First Name</label>
-                        <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                            {profile.first_name}
-                        </p>
-                    </div>
-                    <div>
-                        <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Last Name</label>
-                        <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                            {profile.last_name}
-                        </p>
-                    </div>
-                    <div>
-                        <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Address</label>
-                        <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                            {profile.address}
-                        </p>
-                    </div>
-                    {profile.user_type === 'Patient' && (
-                        <>
-                            <div>
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Blood Group</label>
-                                <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                                    {profile.blood_group}
-                                </p>
-                            </div>
-                            <div>
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Gender</label>
-                                <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                                    {profile.gender}
-                                </p>
-                            </div>
-                            <div>
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Contact Number</label>
-                                <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                                    {profile.contact_number}
-                                </p>
-                            </div>
-                            <div>
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">City</label>
-                                <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                                    {profile.city}
-                                </p>
-                            </div>
-                            <div>
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Area</label>
-                                <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                                    {profile.area}
-                                </p>
-                            </div>
-                        </>
-                    )}
-
-                    {profile.user_type === 'Doctor' && (
-                        <div className="mt-8">
-                            <h2 className="text-2xl font-bold text-cyan-800 mb-6 dark:text-white">Doctor Details</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Hospital</label>
-                                    <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                                        {profile.hospital}
-                                    </p>
-                                </div>
-                                <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Specialty</label>
-                                    <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                                        {profile.specialty}
-                                    </p>
-                                </div>
-                                <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Education</label>
-                                    <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                                        {profile.education}
-                                    </p>
-                                </div>
-                                <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Experience</label>
-                                    <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                                        {profile.experience}
-                                    </p>
-                                </div>
-                                <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Languages</label>
-                                    <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                                        {profile.languages}
-                                    </p>
-                                </div>
-                                <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Availability</label>
-                                    <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                                        {profile.availability}
-                                    </p>
-                                </div>
-                                <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Biography</label>
-                                    <p className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300">
-                                        {profile.biography}
-                                    </p>
-                                </div>
-                                <div>
-                                    <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Profile Picture</label>
-                                    <img src={profile.profile_picture} alt="Profile" className="w-full h-auto rounded-lg" />
-                                </div>
-                            </div>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12 px-6 lg:px-24 flex flex-col items-center">
+            <div className="max-w-4xl w-full bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-8">
+                <h1 className="text-3xl font-extrabold text-gray-900 dark:text-white text-center mb-8">Profile</h1>
+                <div className="flex flex-col items-center">
+                    {profile.profile_picture && (
+                        <div className="w-36 h-36 rounded-full overflow-hidden border-4 border-cyan-600 shadow-md">
+                            <img src={profile.profile_picture} alt="Profile" className="w-full h-full object-cover" />
                         </div>
                     )}
+                    <p className="text-gray-600 dark:text-gray-400">{profile.email || 'N/A'}</p>
+                </div>
 
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {Object.entries(profile).map(([key, value]) => {
+                        if (['user_id', 'profile_picture', 'hospital', 'specialty', 'education', 'experience', 'languages', 'availability', 'biography'].includes(key)) {
+                            return null;
+                        }
+                        return (
+                            <div key={key} className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md">
+                                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 capitalize">{key.replace(/_/g, ' ')}</label>
+                                <p className="text-gray-800 dark:text-gray-200 mt-1">{value || 'N/A'}</p>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {profile.user_type === 'Doctor' && (
+                    <div className="mt-8">
+                        <h2 className="text-2xl font-semibold text-cyan-800 dark:text-cyan-400 text-center mb-6">Doctor Details</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {['hospital', 'specialty', 'education', 'experience', 'languages', 'availability', 'biography'].map((field) =>
+                                profile[field] ? (
+                                    <div key={field} className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md">
+                                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 capitalize">{field.replace(/_/g, ' ')}</label>
+                                        <p className="text-gray-800 dark:text-gray-200 mt-1">{profile[field]}</p>
+                                    </div>
+                                ) : null
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                <div className="mt-8 text-center">
                     <button
                         onClick={() => navigate('/editprofile')}
-                        className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+                        className="w-full sm:w-auto bg-cyan-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-cyan-700 transition-all duration-200"
                     >
                         Edit Profile
                     </button>

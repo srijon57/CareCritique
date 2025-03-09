@@ -1,54 +1,75 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature;
 
-use App\Models\User;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\URL;
 use Tests\TestCase;
+use App\Models\UserAccount;
+use Illuminate\Support\Facades\Cache;
 
 class EmailVerificationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_email_can_be_verified(): void
+    public function test_verify_otp_successfully()
     {
-        $user = User::factory()->create([
-            'email_verified_at' => null,
+        $user = UserAccount::factory()->create([
+            'Email' => 'test@example.com',
+            'verified' => false
         ]);
 
-        Event::fake();
+        Cache::put('otp_test@example.com', '123456', now()->addMinutes(5));
 
-        $verificationUrl = URL::temporarySignedRoute(
-            'verification.verify',
-            now()->addMinutes(60),
-            ['id' => $user->id, 'hash' => sha1($user->email)]
-        );
+        $response = $this->postJson('/api/verify-otp', [
+            'email' => 'test@example.com',
+            'otp' => '123456'
+        ]);
 
-        $response = $this->actingAs($user)->get($verificationUrl);
-
-        Event::assertDispatched(Verified::class);
-        $this->assertTrue($user->fresh()->hasVerifiedEmail());
-        $response->assertRedirect(config('app.frontend_url').RouteServiceProvider::HOME.'?verified=1');
+        $response->assertStatus(200)
+            ->assertJson(['message' => 'Registration completed successfully']);
+        
+        $this->assertDatabaseHas('UserAccount', [
+            'Email' => 'test@example.com',
+            'verified' => true
+        ]);
     }
 
-    public function test_email_is_not_verified_with_invalid_hash(): void
+    public function test_verify_expired_otp()
     {
-        $user = User::factory()->create([
-            'email_verified_at' => null,
+        $user = UserAccount::factory()->create([
+            'Email' => 'test@example.com',
+            'verified' => false,
+            'otp_expires_at' => now()->subMinute()
         ]);
 
-        $verificationUrl = URL::temporarySignedRoute(
-            'verification.verify',
-            now()->addMinutes(60),
-            ['id' => $user->id, 'hash' => sha1('wrong-email')]
-        );
+        $response = $this->postJson('/api/verify-otp', [
+            'email' => 'test@example.com',
+            'otp' => '123456'
+        ]);
 
-        $this->actingAs($user)->get($verificationUrl);
+        $response->assertStatus(422)
+            ->assertJson(['error' => 'OTP has expired. Please register again.']);
+        
+        $this->assertDatabaseMissing('UserAccount', [
+            'Email' => 'test@example.com'
+        ]);
+    }
 
-        $this->assertFalse($user->fresh()->hasVerifiedEmail());
+    public function test_verify_invalid_otp()
+    {
+        $user = UserAccount::factory()->create([
+            'Email' => 'test@example.com',
+            'verified' => false
+        ]);
+
+        Cache::put('otp_test@example.com', '123456', now()->addMinutes(5));
+
+        $response = $this->postJson('/api/verify-otp', [
+            'email' => 'test@example.com',
+            'otp' => 'wrongotp'
+        ]);
+
+        $response->assertStatus(422)
+            ->assertJson(['error' => 'Invalid OTP']);
     }
 }

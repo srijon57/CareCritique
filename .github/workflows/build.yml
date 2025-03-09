@@ -1,0 +1,75 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  backend:
+    name: Laravel Backend CI
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --host=localhost --user=root --password=root" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+          extensions: mbstring, bcmath, pdo, pdo_mysql
+
+      - name: Install Composer Dependencies
+        run: composer install --prefer-dist --no-progress
+        working-directory: ./backend
+
+      - name: Set up Environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+        working-directory: ./backend
+
+      - name: Serve Laravel Application
+        run: php artisan serve &
+        working-directory: ./backend
+
+  frontend:
+    name: React Frontend CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+        working-directory: frontend
+
+      - name: Run Lint
+        run: npm run lint
+        working-directory: frontend
+      
+      - name: Build React App
+        run: npm run build
+        working-directory: frontend
+
+

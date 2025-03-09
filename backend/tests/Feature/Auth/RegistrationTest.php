@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Feature\Auth;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,13 +11,17 @@ class RegistrationTest extends TestCase
     public function test_new_users_can_register(): void
     {
         $response = $this->post('/register', [
-            'name' => 'Test User',
             'email' => 'test@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
+            'user_type' => 'Patient',
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertNoContent();
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('UserAccount', [
+            'Email' => 'test@example.com',
+        ]);
     }
 }

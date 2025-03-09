@@ -23,4 +23,14 @@ class DoctorServices
 
         return response()->json($doctor);
     }
+    public function getDoctorsByHospitalId($hospitalId): JsonResponse
+    {
+        $doctors = Doctor::where('HospitalID', $hospitalId)->get();
+
+        if ($doctors->isEmpty()) {
+            return response()->json(['message' => 'No doctors found for this hospital'], 404);
+        }
+
+        return response()->json($doctors);
+    }
 }

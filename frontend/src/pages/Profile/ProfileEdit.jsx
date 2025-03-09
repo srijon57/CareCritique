@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/Authcontext';
 import api from '../../services/api';
 import { useSnackbar } from 'notistack';
 import { useSpinner } from '../../components/SpinnerProvider';
 
 const EditProfile = () => {
     const { accessToken } = useAuth();
-    const [profile, setProfile] = useState({});
+    const [profile, setProfile] = useState({
+        availabilityDays: '',
+        availabilityTime: '',
+    });
     const navigate = useNavigate();
     const { enqueueSnackbar } = useSnackbar();
     const { setLoading } = useSpinner();
@@ -17,7 +20,6 @@ const EditProfile = () => {
             setLoading(true);
             try {
                 if (!accessToken) {
-                    //enqueueSnackbar('No access token found. Please log in again.', { variant: 'error' });
                     return;
                 }
 
@@ -26,7 +28,17 @@ const EditProfile = () => {
                         Authorization: `Bearer ${accessToken}`,
                     },
                 });
-                setProfile(response.data.profile);
+                const profileData = response.data.profile;
+                if (profileData.availability) {
+                    const [days, time] = profileData.availability.split(' ');
+                    setProfile({
+                        ...profileData,
+                        availabilityDays: days || '',
+                        availabilityTime: time || '',
+                    });
+                } else {
+                    setProfile(profileData);
+                }
             } catch (error) {
                 if (error.response?.status === 401) {
                     enqueueSnackbar('Session expired. Please log in again.', { variant: 'error' });
@@ -55,11 +67,18 @@ const EditProfile = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        
+        const availability = profile.availabilityDays && profile.availabilityTime 
+            ? `${profile.availabilityDays} ${profile.availabilityTime}`
+            : profile.availability || '';
+
         try {
+            // eslint-disable-next-line no-unused-vars
             const response = await api.put(
                 '/profile/update',
                 {
                     ...profile,
+                    availability: availability,
                 },
                 {
                     headers: {
@@ -68,12 +87,13 @@ const EditProfile = () => {
                 }
             );
             enqueueSnackbar('Profile updated successfully', { variant: 'success' });
+        // eslint-disable-next-line no-unused-vars
         } catch (error) {
             enqueueSnackbar('Failed to update profile', { variant: 'error' });
         } finally {
             setLoading(false);
         }
-        navigate('/profile')
+        navigate('/profile');
     };
 
     if (!profile) {
@@ -254,14 +274,34 @@ const EditProfile = () => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Availability</label>
-                                <input
-                                    type="text"
-                                    name="availability"
-                                    value={profile.availability || ''}
+                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Availability Days</label>
+                                <select
+                                    name="availabilityDays"
+                                    value={profile.availabilityDays || ''}
                                     onChange={handleInputChange}
                                     className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
-                                />
+                                >
+                                    <option value="">Select Days</option>
+                                    <option value="Mon-Fri">Monday - Friday</option>
+                                    <option value="Mon-Sat">Monday - Saturday</option>
+                                    <option value="Mon-Sun">Monday - Sunday</option>
+                                    <option value="Sat-Sun">Saturday - Sunday</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Availability Time</label>
+                                <select
+                                    name="availabilityTime"
+                                    value={profile.availabilityTime || ''}
+                                    onChange={handleInputChange}
+                                    className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
+                                >
+                                    <option value="">Select Time</option>
+                                    <option value="9AM-5PM">9:00 AM - 5:00 PM</option>
+                                    <option value="8AM-4PM">8:00 AM - 4:00 PM</option>
+                                    <option value="10AM-6PM">10:00 AM - 6:00 PM</option>
+                                    <option value="12PM-8PM">12:00 PM - 8:00 PM</option>
+                                </select>
                             </div>
                             <div>
                                 <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Biography</label>
