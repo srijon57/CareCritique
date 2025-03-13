@@ -31,8 +31,14 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-in
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install PHP dependencies
-RUN composer install --optimize-autoloader --no-dev
+# Update Composer to the latest version
+RUN composer self-update
+
+# Clear Composer cache
+RUN composer clear-cache
+
+# Install PHP dependencies with verbose output
+RUN composer install --optimize-autoloader --no-dev -vvv
 
 # Set permissions for Laravel storage and bootstrap cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
