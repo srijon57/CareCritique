@@ -30,7 +30,7 @@ const Homepage = () => {
     // Fetch doctors and hospitals
     useEffect(() => {
         // Fetch doctors
-        axios.get("http://127.0.0.1:8000/api/doctors")
+        axios.get(`${import.meta.env.VITE_BACKEND}/api/doctors`)
             .then(response => {
                 if (Array.isArray(response.data)) {
                     const filteredDoctors = response.data
@@ -50,7 +50,7 @@ const Homepage = () => {
             });
 
         // Fetch hospitals
-        axios.get("http://127.0.0.1:8000/api/hospitals")
+        axios.get(`${import.meta.env.VITE_BACKEND}/api/hospitals`)
             .then(response => {
                 if (Array.isArray(response.data)) {
                     setHospitals(response.data.slice(0, 4)); // Take first 4 hospitals
