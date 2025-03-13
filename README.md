@@ -232,6 +232,6 @@ vi. **Top hospitals and doctors near user**
 
 **Mock UI Link**: [FIGMA](https://www.figma.com/design/NNaltjFIKe6KmvpEkPCo8o/CareCritique?node-id=0-1&p=f&t=ecCMGN9Ca10FRsSZ-0)
 
-**Live Project Link**: [VERCEL](https://shorturl.at/iWvkc)
+**Live Project Link**: [VERCEL](https://care-critique.vercel.app/)
 
 `Thank you for supporting us.`
