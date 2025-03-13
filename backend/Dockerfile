@@ -34,10 +34,14 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Update Composer to the latest version
 RUN composer self-update
 
-# Clear Composer cache
-RUN composer clear-cache
+# Increase Composer memory limit
+ENV COMPOSER_MEMORY_LIMIT=-1
+
+# Test network connectivity
+RUN curl -sS https://getcomposer.org/ -o /dev/null
 
 # Install PHP dependencies with verbose output
+COPY composer.json composer.lock ./
 RUN composer install --optimize-autoloader --no-dev -vvv
 
 # Set permissions for Laravel storage and bootstrap cache
