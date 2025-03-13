@@ -29,7 +29,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
 # Update Composer to the latest version
 RUN composer self-update
 
@@ -39,15 +39,14 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 # Test network connectivity
 RUN curl -sS https://getcomposer.org/ -o /dev/null
 
+# Copy existing application directory contents before installing dependencies
+COPY . /var/www/html
+
 # Install PHP dependencies with verbose output
-COPY composer.json composer.lock ./
-RUN composer install --optimize-autoloader --no-dev 
+RUN composer install --optimize-autoloader --no-dev
 
 # Set permissions for Laravel storage and bootstrap cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Copy existing application directory contents
-COPY . /var/www/html
 
 # Set Apache document root to Laravel's public directory
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
