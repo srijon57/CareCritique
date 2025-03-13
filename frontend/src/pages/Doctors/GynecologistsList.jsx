@@ -25,7 +25,7 @@ const GynecologistsList = () => {
         setLoading(true);
         try {
             const doctorsResponse = await axios.get(
-                "http://127.0.0.1:8000/api/doctors"
+                `${import.meta.env.VITE_BACKEND}/api/doctors`
             );
             
             if (Array.isArray(doctorsResponse.data)) {
@@ -53,7 +53,7 @@ const GynecologistsList = () => {
                     gynecologistList.map(async (doctor) => {
                         try {
                             const reviewsResponse = await axios.get(
-                                `http://127.0.0.1:8000/api/doctors/${doctor.id}/reviews`
+                                `${import.meta.env.VITE_BACKEND}/api/doctors/${doctor.id}/reviews`
                             );
                             const reviews = reviewsResponse.data.reviews || [];
                             const totalRating = reviews.reduce(

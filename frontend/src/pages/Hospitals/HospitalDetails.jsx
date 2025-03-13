@@ -19,7 +19,7 @@ const HospitalDetails = () => {
     
     // Fetch hospital details
     axios
-      .get(`http://127.0.0.1:8000/api/hospitals/${id}`)
+      .get(`${import.meta.env.VITE_BACKEND}/api/hospitals/${id}`)
       .then((response) => {
         setHospital(response.data)
         setLoading(false)
@@ -32,7 +32,7 @@ const HospitalDetails = () => {
     
     // Fetch doctors separately to avoid blocking hospital display
     axios
-      .get(`http://127.0.0.1:8000/api/hospitals/${id}/doctors`)
+      .get(`${import.meta.env.VITE_BACKEND}/api/hospitals/${id}/doctors`)
       .then((response) => {
         setDoctors(response.data || [])
         setDoctorsLoading(false)

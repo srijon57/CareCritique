@@ -15,7 +15,7 @@ const DhanmondiHospitalsList = () => {
     const fetchHospitals = async () => {
         setLoading(true);
         try {
-            const response = await axios.get("http://127.0.0.1:8000/api/hospitals");
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND}/api/hospitals`);
             if (Array.isArray(response.data)) {
                 const filteredHospitals = response.data.filter(hospital => 
                     hospital.HospitalArea?.toLowerCase() === "dhanmondi"

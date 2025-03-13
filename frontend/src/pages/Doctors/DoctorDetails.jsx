@@ -25,10 +25,10 @@ const DoctorDetails = () => {
     setLoading(true);
     const fetchData = async () => {
       try {
-        const doctorResponse = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}`);
+        const doctorResponse = await axios.get(`${import.meta.env.VITE_BACKEND}/api/doctors/${id}`);
         setDoctor(doctorResponse.data);
 
-        const reviewsResponse = await axios.get(`http://127.0.0.1:8000/api/doctors/${id}/reviews`);
+        const reviewsResponse = await axios.get(`${import.meta.env.VITE_BACKEND}/api/doctors/${id}/reviews`);
         const fetchedReviews = reviewsResponse.data.reviews || [];
         setReviews(fetchedReviews);
 
@@ -38,7 +38,7 @@ const DoctorDetails = () => {
         setAverageRating(average);
 
         if (isAuthenticated && accessToken) {
-          const profileResponse = await axios.get(`http://127.0.0.1:8000/api/profile`, {
+          const profileResponse = await axios.get(`${import.meta.env.VITE_BACKEND}/api/profile`, {
             headers: { Authorization: `Bearer ${accessToken}` }
           });
           setUserProfile(profileResponse.data.profile);
@@ -86,7 +86,7 @@ const DoctorDetails = () => {
     try {
       setLoading(true); // Show spinner during submission
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/doctors/${id}/reviews`,
+        `${import.meta.env.VITE_BACKEND}/api/doctors/${id}/reviews`,
         { rating: newReview.rating, comment: newReview.comment },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -124,7 +124,7 @@ const DoctorDetails = () => {
     try {
       setLoading(true); // Show spinner during update
       const response = await axios.put(
-        `http://127.0.0.1:8000/api/doctors/${id}/reviews/${editingReview.review_id}`,
+        `${import.meta.env.VITE_BACKEND}/api/doctors/${id}/reviews/${editingReview.review_id}`,
         { rating: editingReview.rating, comment: editingReview.comment },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -150,7 +150,7 @@ const DoctorDetails = () => {
     try {
       setLoading(true); // Show spinner during deletion
       await axios.delete(
-        `http://127.0.0.1:8000/api/doctors/${id}/reviews/${reviewId}`,
+        `${import.meta.env.VITE_BACKEND}/api/doctors/${id}/reviews/${reviewId}`,
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
 
@@ -178,7 +178,7 @@ const DoctorDetails = () => {
     try {
       setLoading(true); // Show spinner during verification toggle
       const response = await axios.post(
-        `http://127.0.0.1:8000/api/doctors/${id}/verify`,
+        `${import.meta.env.VITE_BACKEND}/api/doctors/${id}/verify`,
         { is_verified: !doctor.isVerified },
         { headers: { Authorization: `Bearer ${accessToken}` } }
       );
@@ -205,7 +205,7 @@ const DoctorDetails = () => {
     try {
       setLoading(true);
       const response = await axios.post(
-        'http://127.0.0.1:8000/api/appointments',
+        `${import.meta.env.VITE_BACKEND}/api/appointments`,
         {
           doctor_id: id,
           date: appointment.date,
