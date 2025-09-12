@@ -15,6 +15,7 @@
     "cloudinary": "^2.5.1",
     "dotenv": "^16.4.7",
     "framer-motion": "^12.4.2",
+    "fuse.js": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "notistack": "^3.0.2",

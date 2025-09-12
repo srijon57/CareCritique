@@ -165,7 +165,7 @@ const Footer = () => {
             </div>
             <br />
             <p className="text-center text-lg font-semibold text-gray-200">
-                &copy; 2025 | <span className="font-bold">CSE-3100</span> | C1 |{" "}
+                &copy; 2025 | <span className="font-bold">CSE-3200</span> | C1 |{" "}
                 <span className="italic">Team-Care_Critique</span> | All rights
                 reserved.
             </p>
