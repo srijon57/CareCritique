@@ -1,17 +1,30 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useParams, useNavigate } from "react-router-dom" // Import useNavigate
+import { useParams, useNavigate } from "react-router-dom"
 import axios from "axios"
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
+import L from "leaflet"
+import "leaflet/dist/leaflet.css"
+
+// Fix for default markers in react-leaflet
+delete L.Icon.Default.prototype._getIconUrl
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+  iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+  shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+})
 
 const HospitalDetails = () => {
   const { id } = useParams()
-  const navigate = useNavigate() // Initialize useNavigate
+  const navigate = useNavigate()
   const [hospital, setHospital] = useState(null)
   const [doctors, setDoctors] = useState([])
   const [doctorsLoading, setDoctorsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [coordinates, setCoordinates] = useState(null)
+  const [mapLoading, setMapLoading] = useState(false)
 
   useEffect(() => {
     setLoading(true)
@@ -23,6 +36,9 @@ const HospitalDetails = () => {
       .then((response) => {
         setHospital(response.data)
         setLoading(false)
+        
+        // Geocode the hospital address to get coordinates
+        geocodeAddress(response.data)
       })
       .catch((error) => {
         console.error("Error fetching hospital details:", error)
@@ -44,6 +60,48 @@ const HospitalDetails = () => {
       })
   }, [id])
 
+  // Function to geocode hospital address
+  const geocodeAddress = async (hospitalData) => {
+    setMapLoading(true)
+    try {
+      // Use a geocoding service (here using Nominatim from OpenStreetMap)
+     // console.log(hospitalData)
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          `${hospitalData.Name}, ${hospitalData.HospitalArea}, ${hospitalData.HospitalCity}`
+        )}`
+      )
+      
+      const data = await response.json()
+      
+      if (data && data.length > 0) {
+        setCoordinates({
+          lat: parseFloat(data[0].lat),
+          lng: parseFloat(data[0].lon)
+        })
+      } else {
+        // Fallback to city center if specific address not found
+        const cityResponse = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+            `${hospitalData.HospitalCity}`
+          )}`
+        )
+        
+        const cityData = await cityResponse.json()
+        if (cityData && cityData.length > 0) {
+          setCoordinates({
+            lat: parseFloat(cityData[0].lat),
+            lng: parseFloat(cityData[0].lon)
+          })
+        }
+      }
+    } catch (error) {
+      console.error("Error geocoding address:", error)
+    } finally {
+      setMapLoading(false)
+    }
+  }
+
   // Handle image error by using a fallback image
   const handleImageError = (e) => {
     e.target.src =
@@ -52,7 +110,7 @@ const HospitalDetails = () => {
 
   // Function to navigate to DoctorDetails page
   const handleSeeMore = (doctorId) => {
-    navigate(`/doctors/${doctorId}`) // Navigate to DoctorDetails page
+    navigate(`/doctors/${doctorId}`)
   }
 
   return (
@@ -122,11 +180,9 @@ const HospitalDetails = () => {
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden animate-pulse">
             {/* Image Skeleton */}
             <div className="h-64 bg-gray-300 dark:bg-gray-700"></div>
-
             {/* Content Skeleton */}
             <div className="p-6">
               <div className="h-8 bg-gray-300 dark:bg-gray-700 rounded-lg w-3/4 mx-auto mb-6"></div>
-
               <div className="space-y-4">
                 <div className="flex items-center">
                   <div className="h-5 w-5 rounded-full bg-gray-300 dark:bg-gray-700 mr-3"></div>
@@ -145,7 +201,6 @@ const HospitalDetails = () => {
                   <div className="h-4 bg-gray-300 dark:bg-gray-700 rounded w-full"></div>
                 </div>
               </div>
-
               <div className="mt-8 h-10 bg-gray-300 dark:bg-gray-700 rounded-lg w-1/3 mx-auto"></div>
             </div>
           </div>
@@ -180,7 +235,6 @@ const HospitalDetails = () => {
                   <h2 className="text-xl font-semibold text-gray-800 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">
                     Hospital Information
                   </h2>
-
                   <div className="flex items-start">
                     <div className="flex-shrink-0 bg-cyan-100 dark:bg-cyan-900/30 p-2 rounded-full mr-3">
                       <svg
@@ -209,7 +263,6 @@ const HospitalDetails = () => {
                       <p className="text-gray-800 dark:text-white">{hospital.Address}</p>
                     </div>
                   </div>
-
                   <div className="flex items-start">
                     <div className="flex-shrink-0 bg-cyan-100 dark:bg-cyan-900/30 p-2 rounded-full mr-3">
                       <svg
@@ -238,7 +291,6 @@ const HospitalDetails = () => {
                   <h2 className="text-xl font-semibold text-gray-800 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2">
                     Location Details
                   </h2>
-
                   <div className="flex items-start">
                     <div className="flex-shrink-0 bg-cyan-100 dark:bg-cyan-900/30 p-2 rounded-full mr-3">
                       <svg
@@ -261,7 +313,6 @@ const HospitalDetails = () => {
                       <p className="text-gray-800 dark:text-white">{hospital.HospitalArea}</p>
                     </div>
                   </div>
-
                   <div className="flex items-start">
                     <div className="flex-shrink-0 bg-cyan-100 dark:bg-cyan-900/30 p-2 rounded-full mr-3">
                       <svg
@@ -285,6 +336,59 @@ const HospitalDetails = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              {/* Map Section */}
+              <div className="mt-8">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white border-b border-gray-200 dark:border-gray-700 pb-2 mb-4">
+                  Location Map
+                </h2>
+                
+                {mapLoading ? (
+                  <div className="h-64 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-cyan-700 dark:border-cyan-400"></div>
+                  </div>
+                ) : coordinates ? (
+                  <div className="h-64 rounded-lg overflow-hidden">
+                    <MapContainer
+                      center={[coordinates.lat, coordinates.lng]}
+                      zoom={25}
+                      style={{ height: "100%", width: "100%" }}
+                      scrollWheelZoom={false}
+                    >
+                      <TileLayer
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      />
+                      <Marker position={[coordinates.lat, coordinates.lng]}>
+                        <Popup>
+                          <strong>{hospital.Name}</strong><br />
+                          {hospital.Address}
+                        </Popup>
+                      </Marker>
+                    </MapContainer>
+                  </div>
+                ) : (
+                  <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 text-center">
+                    <div className="flex-shrink-0 bg-cyan-100 dark:bg-cyan-900/30 p-2 rounded-full mx-auto mb-3 w-fit">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-6 w-6 text-cyan-700 dark:text-cyan-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-300">Map location not available.</p>
+                  </div>
+                )}
               </div>
 
               {/* Doctors Section */}
@@ -373,7 +477,6 @@ const HospitalDetails = () => {
 
               {/* Action Buttons */}
               <div className="mt-8 flex flex-wrap gap-4 justify-center">
-                
                 <a
                   href={`tel:${hospital.ContactNumber}`}
                   className="px-6 py-2.5 bg-cyan-600 text-white rounded-lg hover:bg-cyan-700 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-500 flex items-center"
