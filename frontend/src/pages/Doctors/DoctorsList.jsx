@@ -12,6 +12,8 @@ const DoctorsList = () => {
     const [searchQuery, setSearchQuery] = useState("");
     const [specialtyFilter, setSpecialtyFilter] = useState("");
     const [specialties, setSpecialties] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [doctorsPerPage] = useState(15); // Set to 15 doctors per page
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -21,14 +23,13 @@ const DoctorsList = () => {
         const initialSpecialtyFilter = queryParams.get("specialty") || "";
         setSearchQuery(initialSearchQuery);
         setSpecialtyFilter(initialSpecialtyFilter);
-
+        setCurrentPage(1); // Reset to first page when filters change
         fetchDoctorsAndReviews();
     }, [location.search]);
 
     const fetchDoctorsAndReviews = async () => {
         setLoading(true);
         try {
-            // Fetch the list of doctors
             const doctorsResponse = await axios.get(
                 `${import.meta.env.VITE_BACKEND}/api/doctors`
             );
@@ -46,10 +47,9 @@ const DoctorsList = () => {
                     rating: 0,
                     totalReviews: 0,
                     profilePicture: doctor.ProfilePicture || null,
-                    isVerified: doctor.isVerified || false, // Add verification status
+                    isVerified: doctor.isVerified || false,
                 }));
 
-                // Extract unique specialties for filter dropdown
                 const uniqueSpecialties = [
                     ...new Set(
                         doctorList
@@ -59,7 +59,6 @@ const DoctorsList = () => {
                 ];
                 setSpecialties(uniqueSpecialties);
 
-                // Fetch reviews for each doctor and update ratings
                 const updatedDoctors = await Promise.all(
                     doctorList.map(async (doctor) => {
                         try {
@@ -125,6 +124,7 @@ const DoctorsList = () => {
         const params = new URLSearchParams();
         if (searchQuery) params.set("search", searchQuery);
         if (specialtyFilter) params.set("specialty", specialtyFilter);
+        setCurrentPage(1); // Reset to first page when applying filters
         navigate(`/doctors?${params.toString()}`);
     };
 
@@ -137,6 +137,7 @@ const DoctorsList = () => {
     const clearFilters = () => {
         setSearchQuery("");
         setSpecialtyFilter("");
+        setCurrentPage(1); // Reset to first page when clearing filters
         navigate("/doctors");
     };
 
@@ -157,13 +158,27 @@ const DoctorsList = () => {
         return matchesSearch && matchesSpecialty;
     });
 
-    // Function to render rating stars
+    // Pagination logic
+    const indexOfLastDoctor = currentPage * doctorsPerPage;
+    const indexOfFirstDoctor = indexOfLastDoctor - doctorsPerPage;
+    const currentDoctors = filteredDoctors.slice(
+        indexOfFirstDoctor,
+        indexOfLastDoctor
+    );
+    const totalPages = Math.ceil(filteredDoctors.length / doctorsPerPage);
+
+    const paginate = (pageNumber) => {
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
+            setCurrentPage(pageNumber);
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top
+        }
+    };
+
     const renderStars = (rating) => {
         const stars = [];
         const fullStars = Math.floor(rating);
         const hasHalfStar = rating % 1 >= 0.5;
 
-        // Full stars
         for (let i = 0; i < fullStars; i++) {
             stars.push(
                 <span key={`full-${i}`} className="text-yellow-500">
@@ -172,7 +187,6 @@ const DoctorsList = () => {
             );
         }
 
-        // Half star
         if (hasHalfStar) {
             stars.push(
                 <span key="half" className="text-yellow-500">
@@ -181,7 +195,6 @@ const DoctorsList = () => {
             );
         }
 
-        // Empty stars
         const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
         for (let i = 0; i < emptyStars; i++) {
             stars.push(
@@ -210,10 +223,8 @@ const DoctorsList = () => {
                         find the right doctor for your needs.
                     </p>
 
-                    {/* Search and filter container */}
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            {/* Search input */}
                             <div className="col-span-1 md:col-span-2">
                                 <label
                                     htmlFor="search"
@@ -248,7 +259,6 @@ const DoctorsList = () => {
                                 </div>
                             </div>
 
-                            {/* Specialty filter */}
                             <div>
                                 <label
                                     htmlFor="specialty"
@@ -275,7 +285,6 @@ const DoctorsList = () => {
                             </div>
                         </div>
 
-                        {/* Action buttons */}
                         <div className="flex justify-end mt-4 space-x-3">
                             <button
                                 onClick={clearFilters}
@@ -294,9 +303,7 @@ const DoctorsList = () => {
                 </div>
             </div>
 
-            {/* Main content area */}
             <div className="container mx-auto px-4 py-8">
-                {/* Results header */}
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
                         {loading
@@ -309,14 +316,12 @@ const DoctorsList = () => {
                     </h2>
                 </div>
 
-                {/* Loading state */}
                 {loading && (
                     <div className="flex justify-center items-center py-12">
                         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-600"></div>
                     </div>
                 )}
 
-                {/* Error state */}
                 {error && (
                     <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 p-4 rounded">
                         <div className="flex">
@@ -342,7 +347,6 @@ const DoctorsList = () => {
                     </div>
                 )}
 
-                {/* Empty state */}
                 {!loading && !error && filteredDoctors.length === 0 && (
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
                         <div className="text-gray-400 text-5xl mb-4">👨‍⚕️</div>
@@ -362,15 +366,13 @@ const DoctorsList = () => {
                     </div>
                 )}
 
-                {/* Doctors list */}
                 <div className="space-y-6">
-                    {filteredDoctors.map((doctor) => (
+                    {currentDoctors.map((doctor) => (
                         <div
                             key={doctor.id}
                             className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden transition-all hover:shadow-lg"
                         >
                             <div className="flex flex-col md:flex-row">
-                                {/* Doctor image and quick info */}
                                 <div className="md:w-64 bg-cyan-50 dark:bg-gray-700 p-6 flex flex-col items-center justify-center">
                                     <img
                                         src={
@@ -400,7 +402,6 @@ const DoctorsList = () => {
                                     </p>
                                 </div>
 
-                                {/* Doctor details */}
                                 <div className="flex-1 p-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
@@ -474,6 +475,49 @@ const DoctorsList = () => {
                         </div>
                     ))}
                 </div>
+
+                {/* Pagination */}
+                {!loading && !error && filteredDoctors.length > 0 && (
+                    <div className="flex justify-center items-center mt-8 space-x-2">
+                        <button
+                            onClick={() => paginate(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className={`py-2 px-4 rounded-lg ${
+                                currentPage === 1
+                                    ? "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                                    : "bg-cyan-600 hover:bg-cyan-700 text-white"
+                            }`}
+                        >
+                            Previous
+                        </button>
+
+                        {Array.from({ length: totalPages }, (_, index) => (
+                            <button
+                                key={index + 1}
+                                onClick={() => paginate(index + 1)}
+                                className={`py-2 px-4 rounded-lg ${
+                                    currentPage === index + 1
+                                        ? "bg-cyan-600 text-white"
+                                        : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+                                }`}
+                            >
+                                {index + 1}
+                            </button>
+                        ))}
+
+                        <button
+                            onClick={() => paginate(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className={`py-2 px-4 rounded-lg ${
+                                currentPage === totalPages
+                                    ? "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                                    : "bg-cyan-600 hover:bg-cyan-700 text-white"
+                            }`}
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

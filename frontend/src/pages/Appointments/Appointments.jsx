@@ -53,9 +53,6 @@ const Appointments = () => {
 
             {/* Existing Appointments */}
             <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h2 className="text-2xl font-semibold mb-4 text-cyan-800 dark:text-cyan-200">
-                    {userType === 'Doctor' ? 'Patient Appointments' : 'Your Appointments'}
-                </h2>
                 {appointments.length === 0 ? (
                     <p className="text-gray-600 dark:text-gray-400">
                         {userType === 'Doctor' ? 'No appointments scheduled.' : 'No appointments booked yet.'}

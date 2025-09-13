@@ -8,6 +8,8 @@ const HospitalsList = () => {
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [areaQuery, setAreaQuery] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const hospitalsPerPage = 10;
     const location = useLocation();
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
@@ -41,14 +43,17 @@ const HospitalsList = () => {
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
+        setCurrentPage(1); // Reset to first page on new search
     };
 
     const handleAreaChange = (e) => {
         setAreaQuery(e.target.value);
+        setCurrentPage(1); // Reset to first page on new area filter
     };
 
     const handleSearch = () => {
         navigate(`/hospitals?search=${searchQuery}&area=${areaQuery}`);
+        setCurrentPage(1); // Reset to first page on search
     };
 
     const handleKeyPress = (e) => {
@@ -62,6 +67,17 @@ const HospitalsList = () => {
         const areaMatch = (hospital.HospitalArea || '').toLowerCase().includes(areaQuery.toLowerCase());
         return nameMatch && areaMatch;
     });
+
+    // Calculate pagination
+    const indexOfLastHospital = currentPage * hospitalsPerPage;
+    const indexOfFirstHospital = indexOfLastHospital - hospitalsPerPage;
+    const currentHospitals = filteredHospitals.slice(indexOfFirstHospital, indexOfLastHospital);
+    const totalPages = Math.ceil(filteredHospitals.length / hospitalsPerPage);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+        window.scrollTo(0, 0); // Scroll to top when changing pages
+    };
 
     if (error) {
         return (
@@ -192,7 +208,7 @@ const HospitalsList = () => {
 
                 {/* Hospital list */}
                 <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-1">
-                    {filteredHospitals.map(hospital => (
+                    {currentHospitals.map(hospital => (
                         <div
                             key={hospital.HospitalID}
                             className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden"
@@ -253,6 +269,49 @@ const HospitalsList = () => {
                         </div>
                     ))}
                 </div>
+
+                {/* Pagination */}
+                {!loading && filteredHospitals.length > 0 && (
+                    <div className="flex justify-center items-center mt-8 space-x-2">
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                currentPage === 1
+                                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500'
+                                    : 'bg-cyan-600 text-white hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600'
+                            }`}
+                        >
+                            Previous
+                        </button>
+
+                        {Array.from({ length: totalPages }, (_, index) => (
+                            <button
+                                key={index + 1}
+                                onClick={() => handlePageChange(index + 1)}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                    currentPage === index + 1
+                                        ? 'bg-cyan-600 text-white dark:bg-cyan-500'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                                }`}
+                            >
+                                {index + 1}
+                            </button>
+                        ))}
+
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                currentPage === totalPages
+                                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500'
+                                    : 'bg-cyan-600 text-white hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600'
+                            }`}
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

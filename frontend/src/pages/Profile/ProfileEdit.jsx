@@ -7,16 +7,156 @@ import { useSpinner } from "../../components/SpinnerProvider";
 
 // List of areas in Dhaka, Bangladesh
 const areas = [
-    "Abdullahpur", "Bochila", "Adabor", "Uttara", "Mirpur", "Pallabi", "Kazipara", "Kafrul",
-    "Agargaon", "Sher-e-Bangla Nagar", "Cantonment area", "Banani", "Gulshan", "Niketan",
-    "Shahjadpur", "Mohakhali", "Bashundhara", "Banasree", "Aftab Nagar", "Baridhara",
-    "Uttarkhan", "Dakshinkhan", "Bawnia", "Khilkhet", "Tejgaon", "Farmgate", "Mohammadpur",
-    "Rampura", "Badda", "Satarkul", "Beraid", "Khilgaon", "Vatara", "Gabtali", "Hazaribagh",
-    "Dhanmondi", "Segunbagicha", "Ramna", "Motijheel", "Sabujbagh", "Lalbagh", "Kamalapur",
-    "Kakrail", "Kamrangirchar", "Islampur", "Sadarghat", "Wari", "Kotwali", "Sutrapur",
-    "Jurain", "Dania", "Demra", "Shyampur", "Nimtoli", "Matuail", "Paribagh", "Shahbagh",
-    "Paltan", "Ashulia", "Birulia", "Savar", "Hasnabad", "Jinjira", "Tegharia", "Jhilmil",
-    "Tongi", "Gazipur", "Fatullah", "Siddhirganj", "Narayanganj"
+    "Abdullahpur",
+    "Bochila",
+    "Adabor",
+    "Uttara",
+    "Mirpur",
+    "Pallabi",
+    "Kazipara",
+    "Kafrul",
+    "Agargaon",
+    "Sher-e-Bangla Nagar",
+    "Cantonment area",
+    "Banani",
+    "Gulshan",
+    "Niketan",
+    "Shahjadpur",
+    "Mohakhali",
+    "Bashundhara",
+    "Banasree",
+    "Aftab Nagar",
+    "Baridhara",
+    "Uttarkhan",
+    "Dakshinkhan",
+    "Bawnia",
+    "Khilkhet",
+    "Tejgaon",
+    "Farmgate",
+    "Mohammadpur",
+    "Rampura",
+    "Badda",
+    "Satarkul",
+    "Beraid",
+    "Khilgaon",
+    "Vatara",
+    "Gabtali",
+    "Hazaribagh",
+    "Dhanmondi",
+    "Segunbagicha",
+    "Ramna",
+    "Motijheel",
+    "Sabujbagh",
+    "Lalbagh",
+    "Kamalapur",
+    "Kakrail",
+    "Kamrangirchar",
+    "Islampur",
+    "Sadarghat",
+    "Wari",
+    "Kotwali",
+    "Sutrapur",
+    "Jurain",
+    "Dania",
+    "Demra",
+    "Shyampur",
+    "Nimtoli",
+    "Matuail",
+    "Paribagh",
+    "Shahbagh",
+    "Paltan",
+    "Ashulia",
+    "Birulia",
+    "Savar",
+    "Hasnabad",
+    "Jinjira",
+    "Tegharia",
+    "Jhilmil",
+    "Tongi",
+    "Gazipur",
+    "Fatullah",
+    "Siddhirganj",
+    "Narayanganj",
+];
+
+const hospitals = [
+    "Square Hospital",
+    "United Hospital",
+    "Apollo Hospital",
+    "Labaid Hospital",
+    "Ibn Sina Hospital",
+    "Popular Hospital",
+    "Evercare Hospital",
+    "Dhaka Medical College Hospital",
+    "Holy Family Red Crescent Medical College Hospital",
+    "Bangabandhu Sheikh Mujib Medical University",
+    "Farazy Hospital Limited",
+    "Farazy Dental Hospital and Research Center",
+    "Dhaka Dental College Hospital",
+    "Mugda Medical College and Hospital",
+    "Kurmitola General Hospital",
+    "Shaheed Suhrawardy Medical College Hospital",
+    "Combined Military Hospital, Dhaka",
+    "National ENT Institute",
+    "National Institute of Cardiovascular Diseases",
+    "National Institute of Neurosciences and Hospital",
+    "Bangladesh Shishu Hospital and Institute",
+    "National Institute of Traumatology and Orthopaedic Rehabilitation",
+    "National Kidney Institute and Hospital",
+    "National Cancer Research Institute and Hospital",
+    "National Institute of Mental Health and Hospital",
+    "Dhaka Metropolitan General Hospital",
+    "Dhaka Shishu Hospital",
+    "National Institute of Burn and Plastic Surgery",
+    "Sheikh Fazilatunnesa Mujib Eye Hospital and Training Institute",
+    "Dhaka Community Hospital",
+    "BIRDEM General Hospital",
+    "Ad-din Women’s Medical College Hospital",
+    "Insaf Barakah Kidney and General Hospital",
+    "Aichi Hospital, Dhaka",
+    "Anwer Khan Modern Medical College Hospital",
+    "Asgar Ali Hospital",
+    "Ayesha Memorial Specialized Hospital",
+    "Kidney Foundation Bangladesh",
+    "Kuwait Bangladesh Friendship Hospital",
+    "Central Police Hospital",
+    "Bangladesh Nursing Hospital",
+    "Bangladesh Eye Hospital",
+    "Bangladesh Medical College Hospital",
+    "Bangladesh Specialized Hospital",
+    "Bangladesh Spine and Orthopaedic General Hospital Ltd",
+    "BRB Hospital",
+    "Bashundhara Hospital",
+    "Munnu Medical College and Hospital",
+    "Green Life Medical College and Hospital",
+    "City Medical College and Hospital",
+    "Bikrampur Bhuiyan Medical College and Hospital",
+    "Enam Medical College and Hospital",
+    "Bashundhara Ad-din Medical College Hospital",
+    "Medical College for Women and Hospital",
+    "Tangail Medical College and Hospital",
+    "Faridpur Medical College and Hospital",
+    "Ispahani Islamia Eye Institute and Hospital",
+    "Bangladesh Homeopathic Medical College and Hospital",
+    "Government Unani and Ayurvedic Medical College and Hospital",
+    "Sir Salimullah Medical College and Hospital",
+    "Ahmed Medical Center",
+    "Al Enayet Modern Hospital",
+    "Al Helal Specialized Hospital",
+    "Al-Razi Hospital",
+    "Al Ashraf General Hospital",
+    "Al Biruni Hospital",
+    "Al Madina General Hospital",
+    "Al Manar Hospital",
+    "Al Markazul Islami Hospital",
+    "Cholera Hospital",
+    "Christian Medical Hospital",
+    "Salauddin Hospital",
+    "Green Hospital",
+    "Green Eye Hospital Ltd",
+    "Ibrahim Cardiac Hospital & Research Institute",
+    "Shyamoli TB Hospital",
+    "Islami Bank Hospital",
 ];
 
 // Blood group options
@@ -27,15 +167,43 @@ const genderOptions = ["", "Male", "Female", "Other"];
 
 // Days of the week
 const daysOfWeek = [
-    "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    "",
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
 ];
 
 // Time slots
 const timeSlots = [
-    "", "12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", "6:00 AM",
-    "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM",
-    "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM",
-    "9:00 PM", "10:00 PM", "11:00 PM"
+    "",
+    "12:00 AM",
+    "1:00 AM",
+    "2:00 AM",
+    "3:00 AM",
+    "4:00 AM",
+    "5:00 AM",
+    "6:00 AM",
+    "7:00 AM",
+    "8:00 AM",
+    "9:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "12:00 PM",
+    "1:00 PM",
+    "2:00 PM",
+    "3:00 PM",
+    "4:00 PM",
+    "5:00 PM",
+    "6:00 PM",
+    "7:00 PM",
+    "8:00 PM",
+    "9:00 PM",
+    "10:00 PM",
+    "11:00 PM",
 ];
 
 const EditProfile = () => {
@@ -65,9 +233,11 @@ const EditProfile = () => {
                 const profileData = response.data.profile;
                 setProfile({
                     ...profileData,
-                    availabilityStartDay: profileData.availabilityStartDay || "",
+                    availabilityStartDay:
+                        profileData.availabilityStartDay || "",
                     availabilityEndDay: profileData.availabilityEndDay || "",
-                    availabilityStartTime: profileData.availabilityStartTime || "",
+                    availabilityStartTime:
+                        profileData.availabilityStartTime || "",
                     availabilityEndTime: profileData.availabilityEndTime || "",
                     area: profileData.area || "",
                     blood_group: profileData.blood_group || "",
@@ -76,12 +246,16 @@ const EditProfile = () => {
                 });
             } catch (error) {
                 if (error.response?.status === 401) {
-                    enqueueSnackbar("Session expired. Please log in again.", { variant: "error" });
+                    enqueueSnackbar("Session expired. Please log in again.", {
+                        variant: "error",
+                    });
                     localStorage.removeItem("accessToken");
                     localStorage.removeItem("refreshToken");
                     navigate("/login");
                 } else {
-                    enqueueSnackbar("Failed to fetch profile", { variant: "error" });
+                    enqueueSnackbar("Failed to fetch profile", {
+                        variant: "error",
+                    });
                 }
             } finally {
                 setLoading(false);
@@ -99,19 +273,28 @@ const EditProfile = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const days = profile.availabilityStartDay && profile.availabilityEndDay
-                ? `${profile.availabilityStartDay.substring(0, 3)}-${profile.availabilityEndDay.substring(0, 3)}`
-                : "";
-            const time = profile.availabilityStartTime && profile.availabilityEndTime
-                ? `${formatTime(profile.availabilityStartTime)}-${formatTime(profile.availabilityEndTime)}`
-                : "";
+            const days =
+                profile.availabilityStartDay && profile.availabilityEndDay
+                    ? `${profile.availabilityStartDay.substring(
+                          0,
+                          3
+                      )}-${profile.availabilityEndDay.substring(0, 3)}`
+                    : "";
+            const time =
+                profile.availabilityStartTime && profile.availabilityEndTime
+                    ? `${formatTime(
+                          profile.availabilityStartTime
+                      )}-${formatTime(profile.availabilityEndTime)}`
+                    : "";
             const availability = days && time ? `${days} ${time}` : "";
             await api.put(
                 "/profile/update",
                 { ...profile, availability },
                 { headers: { Authorization: `Bearer ${accessToken}` } }
             );
-            enqueueSnackbar("Profile updated successfully", { variant: "success" });
+            enqueueSnackbar("Profile updated successfully", {
+                variant: "success",
+            });
         } catch (error) {
             enqueueSnackbar("Failed to update profile", { variant: "error" });
         } finally {
@@ -337,14 +520,21 @@ const EditProfile = () => {
                                 <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
                                     Hospital
                                 </label>
-                                <input
-                                    type="text"
+                                <select
                                     name="hospital"
                                     value={profile.hospital || ""}
                                     onChange={handleInputChange}
                                     className="bg-gray-100 dark:bg-gray-700 p-3 rounded-lg text-gray-700 dark:text-gray-300 w-full"
-                                />
+                                >
+                                    <option value="">Select Hospital</option>
+                                    {hospitals.map((hospital) => (
+                                        <option key={hospital} value={hospital}>
+                                            {hospital}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
+
                             <div>
                                 <label className="block text-gray-700 dark:text-gray-300 font-semibold mb-2">
                                     Experience
