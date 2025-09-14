@@ -45,6 +45,7 @@ const Navbar = () => {
             ],
         },
         { name: 'News', href: '/news' },
+        { name: 'Health check!', href: '/health-check' },
         ...(isAuthenticated && userType === 'Patient'||userType === 'Doctor' ? [{ name: 'Appointments', href: '/appointments' }] : []),
     ];
 
