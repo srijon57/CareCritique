@@ -7,11 +7,14 @@ const HealthCheck = () => {
   const [weight, setWeight] = useState("");
   const [systolic, setSystolic] = useState("");
   const [diastolic, setDiastolic] = useState("");
+  const [sleepHours, setSleepHours] = useState("");
+  const [sleepQuality, setSleepQuality] = useState("Good");
+  const [sleepIssues, setSleepIssues] = useState([]);
   const [results, setResults] = useState(null);
 
   const calculateHealth = () => {
-    if (!height || !weight || !systolic || !diastolic) {
-      alert("Please fill in all fields.");
+    if (!height || !weight || !systolic || !diastolic || !sleepHours) {
+      alert("Please fill in all required fields.");
       return;
     }
 
@@ -44,6 +47,65 @@ const HealthCheck = () => {
       bpCategory = "Hypertensive Crisis";
     else bpCategory = "Unknown";
 
+    // Sleep Assessment
+    const sleepHoursNum = parseFloat(sleepHours);
+    let sleepAssessment = "";
+    let sleepRisk = "";
+    let sleepSuggestions = [];
+
+    if (sleepHoursNum < 6) {
+      sleepAssessment = "Insufficient Sleep";
+      sleepRisk = "High risk of sleep deprivation";
+      sleepSuggestions = [
+        "Aim for 7-9 hours of sleep per night",
+        "Maintain a consistent sleep schedule",
+        "Avoid caffeine and screens before bedtime"
+      ];
+    } else if (sleepHoursNum >= 6 && sleepHoursNum <= 9) {
+      sleepAssessment = "Adequate Sleep";
+      sleepRisk = "Low risk";
+      sleepSuggestions = [
+        "Maintain your healthy sleep habits",
+        "Continue with your consistent sleep schedule"
+      ];
+    } else {
+      sleepAssessment = "Excessive Sleep";
+      sleepRisk = "Potential underlying health issues";
+      sleepSuggestions = [
+        "Consult with a healthcare provider about your sleep patterns",
+        "Consider a sleep study if you frequently need more than 9 hours"
+      ];
+    }
+
+    // Adjust based on sleep quality
+    if (sleepQuality === "Poor") {
+      sleepRisk = sleepRisk + " with poor sleep quality";
+      sleepSuggestions.push(
+        "Create a relaxing bedtime routine",
+        "Ensure your sleep environment is dark, quiet, and cool"
+      );
+    }
+
+    // Adjust based on sleep issues
+    if (sleepIssues.includes("Insomnia")) {
+      sleepSuggestions.push(
+        "Consider cognitive behavioral therapy for insomnia (CBT-I)",
+        "Avoid long naps during the day"
+      );
+    }
+    if (sleepIssues.includes("Snoring")) {
+      sleepSuggestions.push(
+        "Consider a sleep study to rule out sleep apnea",
+        "Try sleeping on your side instead of your back"
+      );
+    }
+    if (sleepIssues.includes("Restless")) {
+      sleepSuggestions.push(
+        "Reduce caffeine and alcohol intake",
+        "Consider iron levels as restless legs can be related to deficiency"
+      );
+    }
+
     // Risk factors based on BMI + BP
     const riskFactors = [];
     if (bmiCategory === "Underweight") {
@@ -66,7 +128,23 @@ const HealthCheck = () => {
       riskFactors.push("Seek emergency medical care immediately!");
     }
 
-    setResults({ bmi, bmiCategory, bpCategory, riskFactors });
+    setResults({ 
+      bmi, 
+      bmiCategory, 
+      bpCategory, 
+      riskFactors,
+      sleepAssessment,
+      sleepRisk,
+      sleepSuggestions
+    });
+  };
+
+  const handleSleepIssueChange = (issue) => {
+    if (sleepIssues.includes(issue)) {
+      setSleepIssues(sleepIssues.filter(item => item !== issue));
+    } else {
+      setSleepIssues([...sleepIssues, issue]);
+    }
   };
 
   return (
@@ -76,8 +154,8 @@ const HealthCheck = () => {
         <div className="max-w-3xl mx-auto px-4">
           <h1 className="text-4xl font-bold mb-4">Health Check</h1>
           <p className="text-cyan-100 dark:text-gray-300 max-w-2xl">
-            Enter your details to calculate BMI and evaluate your blood pressure
-            level. You'll also see potential risk factors.
+            Enter your details to calculate BMI, evaluate your blood pressure
+            level, and assess your sleep health. You'll also see potential risk factors and suggestions.
           </p>
         </div>
       </div>
@@ -151,6 +229,59 @@ const HealthCheck = () => {
                 className="w-full p-3 rounded-lg border bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
               />
             </div>
+            
+            {/* Sleep Assistant Section */}
+            <div className="md:col-span-2 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold mb-4">Sleep Assessment</h3>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div>
+                  <label className="block mb-1 text-sm font-medium">
+                    Average Sleep Hours (per night)*
+                  </label>
+                  <input
+                    type="number"
+                    value={sleepHours}
+                    onChange={(e) => setSleepHours(e.target.value)}
+                    className="w-full p-3 rounded-lg border bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+                    min="0"
+                    max="24"
+                    step="0.5"
+                  />
+                </div>
+                <div>
+                  <label className="block mb-1 text-sm font-medium">
+                    Sleep Quality
+                  </label>
+                  <select
+                    value={sleepQuality}
+                    onChange={(e) => setSleepQuality(e.target.value)}
+                    className="w-full p-3 rounded-lg border bg-gray-50 dark:bg-gray-700 dark:border-gray-600"
+                  >
+                    <option>Good</option>
+                    <option>Fair</option>
+                    <option>Poor</option>
+                  </select>
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block mb-2 text-sm font-medium">
+                    Sleep Issues (select all that apply)
+                  </label>
+                  <div className="flex flex-wrap gap-4">
+                    {["Insomnia", "Snoring", "Restless", "Nightmares", "None"].map((issue) => (
+                      <label key={issue} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          checked={sleepIssues.includes(issue)}
+                          onChange={() => handleSleepIssueChange(issue)}
+                          className="rounded border-gray-300 text-cyan-600 focus:ring-cyan-500"
+                        />
+                        <span>{issue}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <button
@@ -165,6 +296,8 @@ const HealthCheck = () => {
         {results && (
           <div className="mt-10 space-y-6">
             <h2 className="text-2xl font-bold mb-4">Your Results</h2>
+            
+            {/* BMI and BP Results */}
             <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 space-y-4">
               <div className="flex justify-between items-center">
                 <span className="font-medium">BMI:</span>
@@ -200,11 +333,54 @@ const HealthCheck = () => {
               </div>
             </div>
 
+            {/* Sleep Results */}
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6">
+              <h3 className="text-lg font-bold mb-3 text-cyan-700 dark:text-cyan-400">
+                Sleep Assessment
+              </h3>
+              <div className="flex justify-between items-center mb-4">
+                <span className="font-medium">Assessment:</span>
+                <span
+                  className={`px-4 py-1 rounded-lg font-bold ${
+                    results.sleepAssessment === "Adequate Sleep"
+                      ? "bg-green-200 text-green-800"
+                      : results.sleepAssessment === "Insufficient Sleep"
+                      ? "bg-orange-200 text-orange-800"
+                      : "bg-yellow-200 text-yellow-800"
+                  }`}
+                >
+                  {results.sleepAssessment}
+                </span>
+              </div>
+              <div className="mb-4">
+                <span className="font-medium">Risk Level: </span>
+                <span className={
+                  results.sleepRisk.includes("High") 
+                    ? "text-red-600 dark:text-red-400" 
+                    : results.sleepRisk.includes("Low")
+                    ? "text-green-600 dark:text-green-400"
+                    : "text-yellow-600 dark:text-yellow-400"
+                }>
+                  {results.sleepRisk}
+                </span>
+              </div>
+              {results.sleepSuggestions.length > 0 && (
+                <div>
+                  <h4 className="font-medium mb-2">Suggestions:</h4>
+                  <ul className="list-disc list-inside space-y-2 text-sm">
+                    {results.sleepSuggestions.map((suggestion, idx) => (
+                      <li key={idx}>{suggestion}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
             {/* Risk Factors */}
             {results.riskFactors.length > 0 && (
               <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6">
                 <h3 className="text-lg font-bold mb-3 text-red-600 dark:text-red-400">
-                  Potential Risk Factors
+                  Potential Health Risk Factors
                 </h3>
                 <ul className="list-disc list-inside space-y-2 text-sm">
                   {results.riskFactors.map((risk, idx) => (
@@ -255,6 +431,28 @@ const HealthCheck = () => {
               </li>
             </ul>
           </div>
+        </div>
+
+        {/* Sleep Reference Table */}
+        <div className="mt-8 bg-white dark:bg-gray-800 shadow-md rounded-xl p-6">
+          <h3 className="text-lg font-bold mb-4">Sleep Health Guidelines</h3>
+          <ul className="space-y-2 text-sm">
+            <li>
+              <b>Adults (18-64 years):</b> 7-9 hours per night
+            </li>
+            <li>
+              <b>Older Adults (65+ years):</b> 7-8 hours per night
+            </li>
+            <li>
+              <b>Consistent schedule:</b> Going to bed and waking up at the same time helps regulate your body's clock
+            </li>
+            <li>
+              <b>Sleep environment:</b> Cool, dark, and quiet rooms promote better sleep
+            </li>
+            <li>
+              <b>Limit screen time:</b> Avoid screens 1 hour before bedtime
+            </li>
+          </ul>
         </div>
       </div>
     </div>
