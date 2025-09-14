@@ -8,6 +8,7 @@ import GulshanHospitalsList from "../pages/Hospitals/GulshanHospitalsList";
 import BashundharaHospitalsList from "../pages/Hospitals/BashundharaHospitalsList";
 import MirpurHospitalsList from "../pages/Hospitals/MirpurHospitalsList";
 import MotijhilHospitalsList from "../pages/Hospitals/MotijhilHospitalsList";
+import HealthCheck from "../pages/Hospitals/HealthCheck";
 
 const hospitalRoutes = [
     <Route key="hospitals" path="/hospitals" element={<HospitalsList />} />,
@@ -50,6 +51,11 @@ const hospitalRoutes = [
         key="motijhil"
         path="/hospitals/Motijhil"
         element={<MotijhilHospitalsList />}
+    />,
+    <Route 
+        key="health-check" 
+        path="/health-check" 
+        element={<HealthCheck />} 
     />,
 ];
 
