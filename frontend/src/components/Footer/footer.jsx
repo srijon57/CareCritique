@@ -43,6 +43,11 @@ const Footer = () => {
                                 News
                             </Link>
                         </li>
+                        <li>
+                            <Link to="/privacyppolicy" className="hover:text-cyan-400 transition">
+                                Privacy-Policy
+                            </Link>
+                        </li>
                     </ul>
                 </motion.div>
 
