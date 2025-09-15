@@ -23,7 +23,7 @@ const Footer = () => {
             whileInView="visible"
             viewport={{ once: true }}
             variants={containerVariants}
-            className="bg-gradient-to-r from-gray-900 via-gray-800 to-black text-gray-300 py-10 mt-10"
+            className="bg-gradient-to-r from-gray-900 via-gray-800 to-black text-gray-300 py-10 "
         >
             {/* Top Sections */}
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-6">

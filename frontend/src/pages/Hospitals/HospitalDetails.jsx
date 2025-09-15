@@ -65,7 +65,6 @@ const HospitalDetails = () => {
     setMapLoading(true)
     try {
       // Use a geocoding service (here using Nominatim from OpenStreetMap)
-     // console.log(hospitalData)
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
           `${hospitalData.Name}, ${hospitalData.HospitalArea}, ${hospitalData.HospitalCity}`
@@ -179,7 +178,7 @@ const HospitalDetails = () => {
         {loading && !error && (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden animate-pulse">
             {/* Image Skeleton */}
-            <div className="h-64 bg-gray-300 dark:bg-gray-700"></div>
+            <div className="h-48 sm:h-64 bg-gray-300 dark:bg-gray-700"></div>
             {/* Content Skeleton */}
             <div className="p-6">
               <div className="h-8 bg-gray-300 dark:bg-gray-700 rounded-lg w-3/4 mx-auto mb-6"></div>
@@ -209,22 +208,26 @@ const HospitalDetails = () => {
         {/* Hospital Details */}
         {!loading && !error && hospital && (
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden transform transition-all">
-            {/* Hospital Image with Overlay */}
-            <div className="h-64 sm:h-80 overflow-hidden">
-              <img
-                src={
-                  hospital.ImageURL ||
-                  "https://static.vecteezy.com/system/resources/previews/038/252/707/non_2x/hospital-building-illustration-medical-clinic-isolated-on-white-background-vector.jpg"
-                }
-                alt={hospital.Name}
-                className="w-full h-full object-cover transition-transform hover:scale-105 duration-700"
-                onError={handleImageError}
-              />
-              <div className="bg-gradient-to-t from-black/70 via-transparent to-transparent h-full flex flex-col justify-end p-6">
+            {/* Hospital Image and Name Section */}
+            <div className="flex flex-col sm:flex-row">
+              <div className="w-full sm:w-1/2 h-48 sm:h-64 overflow-hidden">
+                <img
+                  src={
+                    hospital.ImageURL ||
+                    "https://static.vecteezy.com/system/resources/previews/038/252/707/non_2x/hospital-building-illustration-medical-clinic-isolated-on-white-background-vector.jpg"
+                  }
+                  alt={hospital.Name}
+                  className="w-full h-full object-cover transition-transform hover:scale-105 duration-700"
+                  onError={handleImageError}
+                />
+              </div>
+              <div className="w-full sm:w-1/2 p-6 flex flex-col justify-center bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-gray-700 dark:to-gray-600">
                 <div className="inline-block px-3 py-1 bg-cyan-600 text-white text-xs font-semibold rounded-full mb-2">
                   Medical Facility
                 </div>
-                <h1 className="text-3xl sm:text-4xl font-bold text-white">{hospital.Name}</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+                  {hospital.Name}
+                </h1>
               </div>
             </div>
 
@@ -352,7 +355,7 @@ const HospitalDetails = () => {
                   <div className="h-64 rounded-lg overflow-hidden">
                     <MapContainer
                       center={[coordinates.lat, coordinates.lng]}
-                      zoom={25}
+                      zoom={15}
                       style={{ height: "100%", width: "100%" }}
                       scrollWheelZoom={false}
                     >
@@ -459,7 +462,6 @@ const HospitalDetails = () => {
                               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                 {doctor.Education}
                               </p>
-                              {/* Add "See More" Button */}
                               <button
                                 onClick={() => handleSeeMore(doctor.DoctorID)}
                                 className="mt-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg transition-colors"

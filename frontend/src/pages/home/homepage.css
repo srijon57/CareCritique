@@ -1,0 +1,154 @@
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in-down {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+.animate-fade-in-down {
+    animation: fade-in-down 0.3s ease-out forwards;
+}
+
+.delay-200 {
+    animation-delay: 200ms;
+}
+
+.delay-300 {
+    animation-delay: 300ms;
+}
+
+.delay-1000 {
+    animation-delay: 1000ms;
+}
+
+.delay-2000 {
+    animation-delay: 2000ms;
+}
+
+.delay-3000 {
+    animation-delay: 3000ms;
+}
+
+.hover\\:scale-102:hover {
+    transform: scale(1.02);
+}
+
+.testimonial-carousel .carousel .slide {
+    background: transparent !important;
+}
+
+.testimonial-carousel .carousel .control-arrow {
+    background: rgba(8, 145, 178, 0.8) !important;
+    border-radius: 50% !important;
+    width: 50px !important;
+    height: 50px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    transition: all 0.3s ease !important;
+}
+
+.testimonial-carousel .carousel .control-arrow:hover {
+    background: rgba(8, 145, 178, 1) !important;
+    transform: translateY(-50%) scale(1.1) !important;
+}
+
+.testimonial-carousel .carousel .control-arrow:before {
+    border-top: 8px solid transparent !important;
+    border-bottom: 8px solid transparent !important;
+}
+
+.testimonial-carousel .carousel .control-prev.control-arrow:before {
+    border-right: 12px solid white !important;
+}
+
+.testimonial-carousel .carousel .control-next.control-arrow:before {
+    border-left: 12px solid white !important;
+}
+
+/* Floating Animation for Background Elements */
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Glow Effect */
+.glow {
+    box-shadow: 0 0 20px rgba(8, 145, 178, 0.5);
+}
+
+.glow:hover {
+    box-shadow: 0 0 30px rgba(8, 145, 178, 0.8);
+}
+
+/* Gradient Text */
+.gradient-text {
+    background: linear-gradient(45deg, #0891b2, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0891b2;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0e7490;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-track {
+    background: #374151;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #06b6d4;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #0891b2;
+}

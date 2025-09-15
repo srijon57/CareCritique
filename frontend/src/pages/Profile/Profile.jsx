@@ -53,7 +53,6 @@ const Profile = () => {
                             <img src={profile.profile_picture} alt="Profile" className="w-full h-full object-cover" />
                         </div>
                     )}
-                    <p className="text-gray-600 dark:text-gray-400">{profile.email || 'N/A'}</p>
                 </div>
 
                 <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">

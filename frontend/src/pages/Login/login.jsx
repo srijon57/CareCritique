@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../context/Authcontext';
-import { useSnackbar } from 'notistack';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../../context/Authcontext";
+import { useSnackbar } from "notistack";
 
 const LoginPage = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const loginMethod = 'email'; // Fixed for now, but ready for expansion
+    const loginMethod = "email"; // Fixed for now, but ready for expansion
     const navigate = useNavigate();
     const { login } = useAuth();
     const { enqueueSnackbar } = useSnackbar();
@@ -21,12 +21,16 @@ const LoginPage = () => {
         setIsSubmitting(true);
         try {
             await login(email, password);
-            enqueueSnackbar('Welcome back! Redirecting...', { variant: 'success' });
-            navigate('/');
+            enqueueSnackbar("Welcome back! Redirecting...", {
+                variant: "success",
+            });
+            navigate("/");
         } catch (error) {
-            console.error('Error during login:', error);
-            const errorMessage = error.message || 'Login failed. Please check your credentials and try again.';
-            enqueueSnackbar(errorMessage, { variant: 'error' });
+            console.error("Error during login:", error);
+            const errorMessage =
+                error.message ||
+                "Login failed. Please check your credentials and try again.";
+            enqueueSnackbar(errorMessage, { variant: "error" });
         } finally {
             setIsSubmitting(false);
         }
@@ -40,9 +44,9 @@ const LoginPage = () => {
             transition: {
                 staggerChildren: 0.1,
                 duration: 0.6,
-                ease: "easeOut"
-            }
-        }
+                ease: "easeOut",
+            },
+        },
     };
 
     const itemVariants = {
@@ -50,23 +54,30 @@ const LoginPage = () => {
         visible: {
             opacity: 1,
             y: 0,
-            transition: { duration: 0.5, ease: "easeOut" }
-        }
+            transition: { duration: 0.5, ease: "easeOut" },
+        },
     };
 
     const buttonVariants = {
         rest: { scale: 1 },
         hover: { scale: 1.03 },
-        tap: { scale: 0.97 }
+        tap: { scale: 0.97 },
     };
 
     const pulseAnimation = {
-        animate: { boxShadow: ['0 0 #0000', '0 0 0 #0000', '0 0 20px rgba(14, 189, 241, 0.5)', '0 0 20px rgba(14, 189, 241, 0.3)'] },
+        animate: {
+            boxShadow: [
+                "0 0 #0000",
+                "0 0 0 #0000",
+                "0 0 20px rgba(14, 189, 241, 0.5)",
+                "0 0 20px rgba(14, 189, 241, 0.3)",
+            ],
+        },
         transition: {
             duration: 2,
             repeat: Infinity,
-            repeatType: "reverse"
-        }
+            repeatType: "reverse",
+        },
     };
 
     return (
@@ -101,8 +112,19 @@ const LoginPage = () => {
                     className="flex justify-center mb-8"
                 >
                     <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M12 15v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" strokeLinecap="round" strokeLinejoin="round" />
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-8 w-8 text-white"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                        >
+                            <path
+                                d="M12 15v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
                         </svg>
                     </div>
                 </motion.div>
@@ -121,7 +143,7 @@ const LoginPage = () => {
                 </motion.p>
 
                 <AnimatePresence mode="wait">
-                    {loginMethod === 'email' && (
+                    {loginMethod === "email" && (
                         <motion.form
                             onSubmit={handleLogin}
                             variants={itemVariants}
@@ -131,7 +153,10 @@ const LoginPage = () => {
                             className="space-y-6"
                         >
                             <div className="space-y-2">
-                                <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                <label
+                                    htmlFor="email"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
                                     Email Address
                                 </label>
                                 <motion.div
@@ -142,7 +167,9 @@ const LoginPage = () => {
                                         type="email"
                                         id="email"
                                         value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        onChange={(e) =>
+                                            setEmail(e.target.value)
+                                        }
                                         className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 transition-all duration-200 shadow-sm"
                                         placeholder="you@example.com"
                                         required
@@ -161,7 +188,10 @@ const LoginPage = () => {
                             </div>
 
                             <div className="space-y-2">
-                                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                <label
+                                    htmlFor="password"
+                                    className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                                >
                                     Password
                                 </label>
                                 <motion.div
@@ -169,10 +199,14 @@ const LoginPage = () => {
                                     className="relative"
                                 >
                                     <input
-                                        type={showPassword ? "text" : "password"}
+                                        type={
+                                            showPassword ? "text" : "password"
+                                        }
                                         id="password"
                                         value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        onChange={(e) =>
+                                            setPassword(e.target.value)
+                                        }
                                         className="w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 dark:focus:ring-cyan-400 transition-all duration-200 shadow-sm"
                                         placeholder="••••••••"
                                         required
@@ -180,26 +214,48 @@ const LoginPage = () => {
                                     />
                                     <button
                                         type="button"
-                                        onClick={() => setShowPassword(!showPassword)}
+                                        onClick={() =>
+                                            setShowPassword(!showPassword)
+                                        }
                                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
-                                        aria-label={showPassword ? "Hide password" : "Show password"}
+                                        aria-label={
+                                            showPassword
+                                                ? "Hide password"
+                                                : "Show password"
+                                        }
                                     >
                                         {showPassword ? (
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-5 w-5"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
+                                            >
                                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                                    clipRule="evenodd"
+                                                />
                                             </svg>
                                         ) : (
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-5 w-5"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
+                                            >
                                                 <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                                                <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                                    clipRule="evenodd"
+                                                />
                                             </svg>
                                         )}
                                     </button>
                                 </motion.div>
                             </div>
-
-                           
 
                             <motion.button
                                 variants={buttonVariants}
@@ -208,21 +264,39 @@ const LoginPage = () => {
                                 type="submit"
                                 disabled={isSubmitting}
                                 className={`w-full bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-cyan-300 dark:focus:ring-cyan-800 transition-all duration-200 flex items-center justify-center ${
-                                    isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+                                    isSubmitting
+                                        ? "opacity-70 cursor-not-allowed"
+                                        : ""
                                 }`}
                                 whileInView={{ scale: 1 }}
                                 viewport={{ once: true }}
                             >
                                 {isSubmitting ? (
                                     <>
-                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        <svg
+                                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <circle
+                                                className="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                strokeWidth="4"
+                                            ></circle>
+                                            <path
+                                                className="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            ></path>
                                         </svg>
                                         Signing In...
                                     </>
                                 ) : (
-                                    'Sign In'
+                                    "Sign In"
                                 )}
                             </motion.button>
                         </motion.form>
@@ -232,7 +306,9 @@ const LoginPage = () => {
                 {/* Divider */}
                 <div className="mt-8 flex items-center">
                     <div className="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
-                    <span className="mx-4 text-sm text-gray-500 dark:text-gray-400">or</span>
+                    <span className="mx-4 text-sm text-gray-500 dark:text-gray-400">
+                        or
+                    </span>
                     <div className="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
                 </div>
 
@@ -267,10 +343,11 @@ const LoginPage = () => {
                 <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => navigate('/SignUp')}
+                    onClick={() => navigate("/SignUp")}
                     className="mt-8 w-full border border-cyan-500 dark:border-cyan-400 text-cyan-600 dark:text-cyan-400 font-medium py-3 px-6 rounded-xl hover:bg-cyan-50 dark:hover:bg-cyan-900/30 transition-all duration-200 flex items-center justify-center"
                 >
-                    New Here? <span className="ml-1 font-bold">Sign Up Now</span>
+                    New Here?{" "}
+                    <span className="ml-1 font-bold">Sign Up Now</span>
                 </motion.button>
             </motion.div>
 
@@ -286,10 +363,15 @@ const LoginPage = () => {
                     {...pulseAnimation}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={() => alert('Calling emergency service...')}
+                    onClick={() => (window.location.href = "tel:999")}
                     className="bg-red-600 dark:bg-red-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800 transition-all duration-200 flex items-center space-x-2"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                    >
                         <path d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" />
                     </svg>
                     <span>Emergency Call 999</span>
@@ -303,7 +385,7 @@ const LoginPage = () => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 1.2 }}
             >
-                © {new Date().getFullYear()} YourApp. All rights reserved.
+                © {new Date().getFullYear()} CareCritique. All rights reserved.
             </motion.p>
         </div>
     );

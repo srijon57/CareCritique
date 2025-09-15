@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import api from '../../services/api';
 import { useSnackbar } from 'notistack';
 
@@ -126,7 +126,7 @@ const SignUpPage = () => {
                     </motion.div>
 
                     <h1 className="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-2 tracking-tight">
-                        Welcome to <span className="text-cyan-600 dark:text-cyan-400">CareLink</span>
+                        Welcome to <span className="text-cyan-600 dark:text-cyan-400">CareCritique</span>
                     </h1>
                     <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed max-w-xs mx-auto">
                         Your trusted partner in personalized healthcare. Join thousands of patients who choose excellence.
