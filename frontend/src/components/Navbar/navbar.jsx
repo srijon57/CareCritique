@@ -50,6 +50,7 @@ const Navbar = () => {
         ...(isAuthenticated && (userType === 'Patient' || userType === 'Doctor')
             ? [{ name: 'Appointments', href: '/appointments' }]
             : []),
+        { name: 'Health check!', href: '/health-check' },   
     ];
 
     // Animation Variants
