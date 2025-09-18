@@ -6,6 +6,8 @@ import App from "./App.jsx";
 import { AuthProvider } from "./context/Authcontext.jsx";
 import { SnackbarProvider } from "notistack";
 import { SpinnerProvider } from "./components/SpinnerProvider.jsx";
+import './i18n'; // just import to initialize i18next
+
 createRoot(document.getElementById("root")).render(
     <BrowserRouter>
         <StrictMode>
