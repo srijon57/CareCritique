@@ -227,21 +227,148 @@ const Navbar = () => {
             </motion.header>
 
             {/* Mobile Sidebar */}
-            <AnimatePresence>
-                {isMenuOpen && (
-                    <motion.aside
-                        variants={sidebarVariants}
-                        initial="closed"
-                        animate="open"
-                        exit="closed"
-                        className="fixed inset-y-0 right-0 w-80 bg-gradient-to-b from-cyan-950 to-cyan-900 shadow-2xl z-50 p-6 text-white overflow-y-auto"
+            {/* Mobile Sidebar */}
+<AnimatePresence>
+  {isMenuOpen && (
+    <motion.aside
+      variants={sidebarVariants}
+      initial="closed"
+      animate="open"
+      exit="closed"
+      className="fixed inset-y-0 right-0 w-80 bg-gradient-to-b from-cyan-950 to-cyan-900 shadow-2xl z-50 p-6 text-white overflow-y-auto"
+    >
+      {/* Top Logo */}
+      <motion.div variants={itemVariants} className="flex justify-between items-center mb-8">
+        <Link to="/" className="flex items-center space-x-2" onClick={toggleMenu}>
+          <img src={logo} alt="Logo" className="w-10 h-10 rounded-lg" />
+          <h2 className="text-xl font-bold">Care {t('Health check!')}</h2>
+        </Link>
+        <motion.button
+          whileHover={{ scale: 1.1, rotate: 90 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={toggleMenu}
+          className="text-white hover:text-cyan-200 transition-colors duration-200"
+        >
+          <FaTimes className="w-6 h-6" />
+        </motion.button>
+      </motion.div>
+
+      {/* Nav Items */}
+      <motion.ul variants={dropdownVariants} className="space-y-4">
+        {navItems.map((item, index) => (
+          <motion.li key={index} variants={itemVariants}>
+            {item.children ? (
+              <div>
+                <button
+                  className="flex items-center justify-between w-full py-3 px-2 hover:text-cyan-200 rounded-lg transition-colors duration-200"
+                  onClick={() => toggleDropdown(index)}
+                >
+                  <span className="font-medium">{item.name}</span>
+                  <motion.span
+                    animate={openDropdown === index ? { rotate: 180 } : { rotate: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <FaChevronDown className="w-5 h-5" />
+                  </motion.span>
+                </button>
+
+                <AnimatePresence>
+                  {openDropdown === index && (
+                    <motion.ul
+                      initial="closed"
+                      animate="open"
+                      exit="closed"
+                      variants={dropdownVariants}
+                      className="mt-2 pl-4 space-y-2"
                     >
-                        {/* Sidebar content remains identical with translations using t() */}
-                        {/* ... */}
-                        {/* You can copy your previous mobile sidebar code but replace all text with t() */}
-                    </motion.aside>
-                )}
-            </AnimatePresence>
+                      {item.children.map((child, childIndex) => (
+                        <motion.li
+                          key={childIndex}
+                          variants={itemVariants}
+                          whileHover={{ x: 5, transition: { duration: 0.2 } }}
+                        >
+                          <Link
+                            to={child.href}
+                            className="block py-2 text-gray-300 hover:text-cyan-200 transition-colors duration-200"
+                            onClick={toggleMenu}
+                          >
+                            {child.name}
+                          </Link>
+                        </motion.li>
+                      ))}
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <Link
+                to={item.href}
+                className="block py-3 px-2 hover:text-cyan-200 rounded-lg transition-colors duration-200"
+                onClick={toggleMenu}
+              >
+                {item.name}
+              </Link>
+            )}
+          </motion.li>
+        ))}
+
+        {/* Language Toggle */}
+        <motion.li variants={itemVariants} className="mt-4 pt-4 border-t border-cyan-800/50">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleLanguageToggle}
+            className="w-full py-3 px-4 bg-cyan-700/80 text-white rounded-lg text-sm font-medium hover:bg-cyan-600 transition-colors duration-200"
+          >
+            {i18n.language === 'en' ? 'বাংলা' : 'English'}
+          </motion.button>
+        </motion.li>
+
+        {/* Auth Buttons */}
+        {!isAuthenticated && (
+          <motion.li variants={itemVariants} className="mt-4 pt-4 border-t border-cyan-800/50">
+            <Link
+              to="/login"
+              className="block py-3 px-4 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white font-medium rounded-lg text-center hover:from-cyan-700 hover:to-cyan-800 transition-all duration-200"
+              onClick={toggleMenu}
+            >
+              {t('Login')}
+            </Link>
+          </motion.li>
+        )}
+
+        {isAuthenticated && (
+          <motion.li variants={itemVariants} className="mt-4 pt-4 border-t border-cyan-800/50 space-y-2">
+            <Link
+              to="/profile"
+              className="flex items-center gap-3 py-3 px-4 hover:text-cyan-200 rounded-lg transition-colors duration-200"
+              onClick={toggleMenu}
+            >
+              <FaUserCircle className="w-5 h-5" />
+              {t('My Profile')}
+            </Link>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={logout}
+              className="w-full py-3 px-4 bg-gradient-to-r from-red-500 to-red-600 text-white font-medium rounded-lg text-center hover:from-red-600 hover:to-red-700 transition-all duration-200"
+            >
+              {t('Logout')}
+            </motion.button>
+          </motion.li>
+        )}
+      </motion.ul>
+
+      {/* Footer */}
+      <motion.div variants={itemVariants} className="mt-12 pt-6 border-t border-cyan-800/50 text-center">
+        <p className="text-xs text-gray-400 italic">
+          {t('In partnership with AUST • CSE-3200')}
+        </p>
+      </motion.div>
+    </motion.aside>
+  )}
+</AnimatePresence>
+
         </>
     );
 };

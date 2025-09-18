@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import { useTranslation } from "react-i18next";
 const HospitalsList = () => {
+    const { t } = useTranslation();
     const [hospitals, setHospitals] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -102,7 +103,7 @@ const HospitalsList = () => {
             {/* Header section */}
             <div className="bg-cyan-700 dark:bg-gray-800 text-white py-12">
                 <div className="container mx-auto px-4">
-                    <h1 className="text-4xl font-bold mb-4">Find a Hospital</h1>
+                    <h1 className="text-4xl font-bold mb-4">{t("Find a Hospital")}</h1>
                     <p className="text-cyan-100 dark:text-gray-300 max-w-2xl">
                         Search and browse hospitals in your area to find the right care for your needs.
                     </p>

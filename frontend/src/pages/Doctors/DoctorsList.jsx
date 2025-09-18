@@ -4,8 +4,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoMdStar, IoMdStarHalf, IoMdStarOutline } from "react-icons/io";
 import { MdVerified } from "react-icons/md";
 import { VscUnverified } from "react-icons/vsc";
-
+import { useTranslation } from "react-i18next";
 const DoctorsList = () => {
+    const { t } = useTranslation();
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -216,11 +217,10 @@ const DoctorsList = () => {
             <div className="bg-gradient-to-r from-cyan-700 to-blue-900 dark:from-gray-800 dark:to-gray-900">
                 <div className="container mx-auto px-4 py-12">
                     <h1 className="text-4xl font-bold text-white text-center mb-4">
-                        Find Your Doctor
+                        {t("Find Your Doctor")}
                     </h1>
                     <p className="text-cyan-100 dark:text-gray-300 text-center mb-8 max-w-2xl mx-auto">
-                        Browse our network of qualified medical professionals to
-                        find the right doctor for your needs.
+                        {t("Browse our network of qualified medical professionals to find the right doctor for your needs.")}
                     </p>
 
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-4xl mx-auto">

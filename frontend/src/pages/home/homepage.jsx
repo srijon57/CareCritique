@@ -6,8 +6,9 @@ import axios from "axios";
 import { BodyComponent } from "reactjs-human-body";
 import CountUp from "react-countup"; // Import react-countup
 import "./homepage.css";
-
+import { useTranslation } from "react-i18next";
 const Homepage = () => {
+    const { t } = useTranslation();
     const [searchQuery, setSearchQuery] = useState("");
     const [area, setArea] = useState("");
     const [activeSearchSuggestionIndex, setActiveSearchSuggestionIndex] =
@@ -329,11 +330,10 @@ const Homepage = () => {
 
                 <div className="container mx-auto text-center relative z-10">
                     <h1 className="text-5xl font-bold mb-4 animate-fade-in-up">
-                        Find the Best Healthcare Providers
+                        {t("Find the best hospitals in your area")}
                     </h1>
                     <p className="text-xl mb-8 animate-fade-in-up delay-200">
-                        Your health is our priority. Search for doctors,
-                        hospitals, and specialists near you.
+                        {t("Your health is our priority. Search for doctors, hospitals, and specialists near you.")}
                     </p>
 
                     <div className="flex justify-center items-center gap-4 animate-fade-in-up delay-300">
