@@ -2,21 +2,12 @@ import { useState, useMemo } from "react";
 
 const teamMembers = [
   {
-    id: "20210204116",
-    name: "Sumaiya Islam Daina",
-    email: "daina116@gmail.com",
-    username: "sumaiyadaina",
-    role: "Database Expert",
-    tags: [ "UI/UX", "Design"],
-    img: "/src/assets/daina.jpg",
-  },
-  {
     id: "20220104120",
     name: "Zawad Al Mahi",
     email: "zawadalmahi@gmail.com",
     username: "zawadalmahi",
-    role: "Frontend + Backend",
-    tags: ["React", "Node.js"],
+    role: "Backend",
+    tags: ["React", "Node.js", "Database","Decision Making", "Critical Thinking", "SQL"],
     img: "/src/assets/mahi.jpg",
   },
   {
@@ -25,7 +16,7 @@ const teamMembers = [
     email: "abdullahaljubair2019@gmail.com",
     username: "abduillahaljubair",
     role: "Frontend + Backend",
-    tags: ["JavaScript", "Express", "MongoDB"],
+    tags: ["JavaScript", "Express", "MongoDB", "Tailwind", "Animaiton", "React"],
     img: "/src/assets/jubair.jpg",
   },
   {
@@ -34,7 +25,7 @@ const teamMembers = [
     email: "srijond57@gmail.com",
     username: "srijon57",
     role: "Lead + UI/UX",
-    tags: ["Leadership", "API","Database", "SQL", "Optimization",],
+    tags: ["Leadership", "API","Database","Cloudinary", "MYSQL", "Optimization","Fullstack", "Laravel", "Vercel", "Deployment"],
     img: "/src/assets/srijon.jpg",
   },
   {
@@ -42,8 +33,8 @@ const teamMembers = [
     name: "Rakibul Islam Rahi",
     email: "rakibulislam.rahi.rir@gmail.com",
     username: "Rakibul-rahi",
-    role: "Frontend + Backend",
-    tags: ["Fullstack", "React", "Firebase"],
+    role: "Frontend + UI/UX",
+    tags: ["React","UI/UX", "Design", "Multilang-Support", "Theme", "Color-Combination"],
     img: "/src/assets/rakibul.jpg",
   },
 ];
