@@ -276,15 +276,15 @@ const EditProfile = () => {
             const days =
                 profile.availabilityStartDay && profile.availabilityEndDay
                     ? `${profile.availabilityStartDay.substring(
-                          0,
-                          3
-                      )}-${profile.availabilityEndDay.substring(0, 3)}`
+                        0,
+                        3
+                    )}-${profile.availabilityEndDay.substring(0, 3)}`
                     : "";
             const time =
                 profile.availabilityStartTime && profile.availabilityEndTime
                     ? `${formatTime(
-                          profile.availabilityStartTime
-                      )}-${formatTime(profile.availabilityEndTime)}`
+                        profile.availabilityStartTime
+                    )}-${formatTime(profile.availabilityEndTime)}`
                     : "";
             const availability = days && time ? `${days} ${time}` : "";
             await api.put(
@@ -295,7 +295,8 @@ const EditProfile = () => {
             enqueueSnackbar("Profile updated successfully", {
                 variant: "success",
             });
-        } catch (error) {
+            // eslint-disable-next-line no-unused-vars
+        } catch (e) {
             enqueueSnackbar("Failed to update profile", { variant: "error" });
         } finally {
             setLoading(false);
@@ -306,7 +307,7 @@ const EditProfile = () => {
     const formatTime = (time) => {
         if (!time) return "";
         const [timePart, period] = time.split(" ");
-        const [hours, minutes] = timePart.split(":");
+        const [hours] = timePart.split(":");
         return `${hours}${period}`;
     };
 

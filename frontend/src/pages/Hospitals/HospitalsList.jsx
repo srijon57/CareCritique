@@ -105,7 +105,7 @@ const HospitalsList = () => {
                 <div className="container mx-auto px-4">
                     <h1 className="text-4xl font-bold mb-4">{t("Find a Hospital")}</h1>
                     <p className="text-cyan-100 dark:text-gray-300 max-w-2xl">
-                        Search and browse hospitals in your area to find the right care for your needs.
+                        {t("Search and browse hospitals in your area to find the right care for your needs.")}
                     </p>
                 </div>
             </div>
@@ -127,7 +127,7 @@ const HospitalsList = () => {
                                 <input
                                     id="hospital-search"
                                     type="text"
-                                    placeholder="Search by hospital name"
+                                    placeholder= {t("Search by hospital name")}
                                     className="pl-10 w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:text-white"
                                     value={searchQuery}
                                     onChange={handleSearchChange}
@@ -149,7 +149,7 @@ const HospitalsList = () => {
                                 <input
                                     id="area-search"
                                     type="text"
-                                    placeholder="Search by area"
+                                    placeholder={t("Search by area")}
                                     className="pl-10 w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:text-white"
                                     value={areaQuery}
                                     onChange={handleAreaChange}
@@ -176,8 +176,8 @@ const HospitalsList = () => {
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
                         {loading ? "Loading hospitals..." : 
-                         filteredHospitals.length === 0 ? "No hospitals found" :
-                         `Found ${filteredHospitals.length} hospital${filteredHospitals.length === 1 ? '' : 's'}`}
+                        filteredHospitals.length === 0 ? "No hospitals found" :
+                        `Found ${filteredHospitals.length} hospital${filteredHospitals.length === 1 ? '' : 's'}`}
                     </h2>
                 </div>
 
@@ -259,7 +259,7 @@ const HospitalsList = () => {
                                             to={`/hospitals/${hospital.HospitalID}`}
                                             className="inline-flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                                         >
-                                            View Details
+                                            {t("Learn More")}
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
                                                 <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
                                             </svg>

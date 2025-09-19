@@ -6,14 +6,14 @@ import { useAuth } from '../../context/Authcontext';
 import { motion, AnimatePresence } from 'framer-motion';
 import ThemeToggle from '../ThemeToggle';
 import { useTranslation } from 'react-i18next';
-import i18n from '../../i18n';
+import i18n from '../i18n';
 
 
 const Navbar = () => {
     const { t } = useTranslation();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [openDropdown, setOpenDropdown] = useState(null);
-    const [hoveredItem, setHoveredItem] = useState(null);
+    const [ setHoveredItem] = useState(null);
     const { isAuthenticated, logout, userType } = useAuth();
 
     const toggleMenu = () => {

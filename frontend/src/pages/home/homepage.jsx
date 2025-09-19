@@ -4,7 +4,7 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import axios from "axios";
 import { BodyComponent } from "reactjs-human-body";
-import CountUp from "react-countup"; // Import react-countup
+import CountUp from "react-countup"; 
 import "./homepage.css";
 import { useTranslation } from "react-i18next";
 const Homepage = () => {
@@ -437,7 +437,7 @@ const Homepage = () => {
                             className="bg-white text-cyan-800 py-3 px-8 rounded hover:bg-cyan-100 focus:outline-none focus:ring-4 focus:ring-cyan-300 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 transition-all duration-300 transform hover:scale-110 hover:shadow-2xl active:scale-95 font-semibold"
                             onClick={handleSearch}
                         >
-                            🔍 Search
+                            🔍 {t('Search')}
                         </button>
                     </div>
                 </div>
@@ -446,7 +446,7 @@ const Homepage = () => {
             {/* Featured Doctors Section with Staggered Animation */}
             <section className="container mx-auto p-6">
                 <h2 className="text-4xl font-bold mb-8 text-cyan-800 text-center dark:text-white animate-fade-in-up">
-                    Featured Doctors
+                    {t("Featured Doctors")}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     {doctors.map((doctor, index) => (
@@ -473,7 +473,7 @@ const Homepage = () => {
                                 className="bg-cyan-800 text-white py-3 px-6 mt-4 rounded-lg hover:bg-cyan-700 focus:outline-none focus:ring-4 focus:ring-cyan-300 dark:bg-cyan-700 dark:hover:bg-cyan-600 transition-all duration-300 transform hover:scale-110 active:scale-95 font-semibold shadow-lg hover:shadow-xl"
                                 onClick={() => handleDoctorLearnMore(doctor.id)}
                             >
-                                👨‍⚕️ View Profile
+                                👨‍⚕️ {t("View Profile")}
                             </button>
                         </div>
                     ))}
@@ -483,25 +483,25 @@ const Homepage = () => {
             {/* Animated Counter Section with react-countup */}
             <section className=" py-12 animate-fade-in-up">
                 <h2 className="text-4xl font-bold mb-8 text-cyan-800 text-center dark:text-white">
-                    Our Impact
+                    {t("Our Impact")}
                 </h2>
                 <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
                     {[
                         {
                             icon: "👨‍⚕️",
-                            title: "Total Doctors",
+                            title: t("Total Doctors"),
                             end: 150, // Target count
                             color: "from-cyan-400 to-blue-500",
                         },
                         {
                             icon: "🏥",
-                            title: "Total Hospitals",
+                            title: t("Total Hospitals"),
                             end: 50, // Target count
                             color: "from-teal-400 to-cyan-500",
                         },
                         {
                             icon: "🩺",
-                            title: "Total Patients",
+                            title: t("Total Patients"),
                             end: 10000, // Target count
                             color: "from-blue-400 to-indigo-500",
                         },
@@ -538,7 +538,7 @@ const Homepage = () => {
             {/* Enhanced Testimonials Carousel */}
             <section className="bg-blue-50 py-12 dark:bg-gray-900 animate-fade-in-up">
                 <h2 className="text-4xl font-bold mb-8 text-cyan-800 text-center dark:text-white">
-                    What Our Patients Say
+                    {t("What Our Patients Say")}
                 </h2>
                 <div className="container mx-auto">
                     <Carousel
@@ -584,29 +584,29 @@ const Homepage = () => {
             {/* Enhanced Health Tips Section */}
             <section className="container mx-auto p-6">
                 <h2 className="text-4xl font-bold mb-8 text-cyan-800 text-center dark:text-white animate-fade-in-up">
-                    Health Tips
+                    {t("Health Tips")}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {[
                         {
                             icon: "💧",
-                            title: "Stay Hydrated",
+                            title: t("Stay Hydrated"),
                             content:
-                                "Drinking enough water is essential for maintaining good health. Aim for at least 8 glasses a day.",
+                                t("Drinking enough water is essential for maintaining good health. Aim for at least 8 glasses a day."),
                             color: "from-blue-400 to-cyan-500",
                         },
                         {
                             icon: "🏃‍♂️",
-                            title: "Exercise Regularly",
+                            title: t("Exercise Regularly"),
                             content:
-                                "Regular physical activity can help you maintain a healthy weight and reduce the risk of chronic diseases.",
+                                t("Regular physical activity can help you maintain a healthy weight and reduce the risk of chronic diseases."),
                             color: "from-green-400 to-teal-500",
                         },
                         {
                             icon: "🥗",
-                            title: "Eat a Balanced Diet",
+                            title: t("Eat a Balanced Diet"),
                             content:
-                                "A balanced diet rich in fruits, vegetables, and whole grains is key to maintaining good health.",
+                                t("A balanced diet rich in fruits, vegetables, and whole grains is key to maintaining good health."),
                             color: "from-orange-400 to-red-500",
                         },
                     ].map((tip, index) => (
@@ -634,7 +634,7 @@ const Homepage = () => {
             {/* Enhanced Human Body UI Section */}
             <section className="container mx-auto p-6 text-center animate-fade-in-up">
                 <h2 className="text-4xl font-bold mb-8 text-cyan-800 dark:text-white">
-                    🫀 Explore Human Body
+                    🫀 {t("Explore Human Body")}
                 </h2>
                 <div className="flex justify-center gap-4 mb-6">
                     <button
@@ -645,7 +645,7 @@ const Homepage = () => {
                         }`}
                         onClick={() => setBodyModel("male")}
                     >
-                        🚹 Male Model
+                        🚹 {t('Male Model')}
                     </button>
                     <button
                         className={`py-3 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-110 active:scale-95 focus:outline-none focus:ring-4 focus:ring-cyan-300 ${
@@ -655,7 +655,7 @@ const Homepage = () => {
                         }`}
                         onClick={() => setBodyModel("female")}
                     >
-                        🚺 Female Model
+                        🚺 {t('Female Model')}
                     </button>
                 </div>
                 <div className="flex justify-center mb-6">
@@ -671,7 +671,7 @@ const Homepage = () => {
                 {selectedBodyPart && (
                     <div className="mt-6 p-6 bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-lg transform animate-fade-in-up border border-cyan-200 dark:border-gray-600">
                         <h3 className="text-2xl font-bold text-cyan-800 dark:text-white mb-4 flex items-center justify-center gap-2">
-                            🔍 Possible Diseases in{" "}
+                            🔍 {t('Possible Diseases in')}{" "}
                             {selectedBodyPart.replace("_", " ").toUpperCase()}
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -698,17 +698,17 @@ const Homepage = () => {
                     href="tel:999"
                     className="bg-red-600 text-white py-6 px-12 text-2xl font-bold rounded-xl hover:bg-red-500 focus:outline-none focus:ring-4 focus:ring-red-300 dark:bg-red-700 dark:hover:bg-red-600 transition-all duration-300 transform hover:scale-110 active:scale-95 shadow-2xl animate-pulse block w-fit mx-auto"
                 >
-                    🚨 Emergency - Call 999
+                    🚨 {t('Emergency - Call 999')}
                 </a>
                 <p className="mt-3 text-gray-600 dark:text-gray-400">
-                    Available 24/7 for medical emergencies
+                    {t('Available 24/7 for medical emergencies')}
                 </p>
             </section>
 
             {/* Enhanced Top Hospitals Section */}
             <section className="container mx-auto p-6 mb-9">
                 <h2 className="text-4xl font-bold mb-8 text-cyan-800 text-center dark:text-white animate-fade-in-up">
-                    🏥 Top Hospitals
+                    🏥 {t("Top Hospitals")}
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     {hospitals.map((hospital, index) => (
@@ -734,7 +734,7 @@ const Homepage = () => {
                                     handleHospitalLearnMore(hospital.HospitalID)
                                 }
                             >
-                                🏥 Learn More
+                                🏥 {t("Learn More")}
                             </button>
                         </div>
                     ))}
