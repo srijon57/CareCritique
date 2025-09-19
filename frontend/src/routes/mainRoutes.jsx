@@ -9,6 +9,7 @@ import VerifyOtpPage from "../pages/VerifyOtpPage/VerifyOtpPage";
 import AboutUs from "../pages/AboutUs";
 import NewsApp from "../components/NewsApp";
 import Appointments from "../pages/Appointments/Appointments";
+import PrivacyPolicy from "../pages/PrivacyPpolicy";
 
 const mainRoutes = [
     <Route key="home" path="/" element={<Homepage />} />,
@@ -20,7 +21,8 @@ const mainRoutes = [
     <Route key="verify-otp" path="/verify-otp" element={<VerifyOtpPage />} />,
     <Route key="aboutus" path="/aboutus" element={<AboutUs/>} />,
     <Route key="news" path="/news" element={<NewsApp/>} />,
-    <Route key="appointments" path="/appointments" element={<Appointments />} />, // New route
+    <Route key="appointments" path="/appointments" element={<Appointments />} />, 
+    <Route key="privacyppolicy" path="/privacyppolicy" element={<PrivacyPolicy />} />, 
 ];
 
 export default mainRoutes;

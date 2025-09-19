@@ -1,0 +1,87 @@
+[
+  {
+    "question": "What is CareCritique?",
+    "keywords": ["actually"],
+    "answer": "CareCritique is a community-driven platform designed to review doctors. It allows users to share their experiences, rate doctors, and help others make informed decisions about their healthcare providers. "
+  },
+  {
+    "question": "How do I register as a patient on CareCritique?",
+    "keywords": ["register", "patient", "signup"],
+    "answer": "Click the 'Login' button on the homepage, click 'new here/sign up' button fill in your details (name, email, phone), and verify your email to complete registration."
+  },
+  {
+    "question": "How do I log in to my CareCritique account?",
+    "keywords": ["login", "account", "signin"],
+    "answer": "Click 'Log In' on the homepage, enter your email and password, and click 'Submit'. Use 'Forgot Password' if you need to reset it."
+  },
+  {
+    "question": "How do I search for a doctor?",
+    "keywords": ["search", "doctor", "find"],
+    "answer": "Use the search bar on the homepage or 'Doctors' page. Filter by specialization, location, or ratings to narrow results."
+  },
+  {
+    "question": "How do I view a doctor’s profile?",
+    "keywords": ["view", "doctor", "profile"],
+    "answer": "Click on a doctor’s name or image from the search results to see their profile, including reviews, ratings, and contact info."
+  },
+  {
+    "question": "How do I leave a review for a doctor?",
+    "keywords": ["leave", "review", "doctor", "rate"],
+    "answer": "Go to the doctor’s profile, scroll to the 'Reviews' section, click 'Write a Review', and submit your rating and feedback."
+  },
+  {
+    "question": "Can I edit or delete my review?",
+    "keywords": ["edit", "delete", "review"],
+    "answer": "Yes, go to your profile, find the review under 'My Reviews', and click 'Edit' or 'Delete'."
+  },
+  {
+    "question": "How do I book an appointment with a doctor?",
+    "keywords": ["book", "appointment", "doctor"],
+    "answer": "On the doctor’s profile, click 'Book Appointment', select a date/time, and confirm. You’ll receive a confirmation email/SMS."
+  },
+  {
+    "question": "How do I cancel an appointment?",
+    "keywords": ["cancel", "appointment"],
+    "answer": "Go to 'My Appointments' in your profile, find the appointment, and click 'Cancel'. Confirm to complete the cancellation."
+  },
+  {
+    "question": "How do I view my upcoming appointments?",
+    "keywords": ["view", "upcoming", "appointments"],
+    "answer": "Click 'My Appointments' in your profile to see a list of all scheduled appointments with dates, times, and doctor details."
+  },
+  {
+    "question": "How do I find hospitals near me?",
+    "keywords": ["find", "hospitals", "near me"],
+    "answer": "Use the 'Hospitals' tab and enable location access, or enter your area in the search bar. Results will show on the map and list view."
+  },
+  {
+    "question": "How do I change my profile information?",
+    "keywords": ["change", "profile", "information"],
+    "answer": "Go to 'Profile', click 'Edit Profile', update your details, and save changes."
+  },
+  {
+    "question": "How do I reset my password?",
+    "keywords": ["reset", "password"],
+    "answer": "Click 'Forgot Password' on the login page, enter your email, and follow the link sent to reset your password."
+  },
+  {
+    "question": "How do I contact CareCritique support?",
+    "keywords": ["contact", "support"],
+    "answer": "Look at footer there are Facebook,Linkedin,Whatsapp etc links are given."
+  },
+  {
+    "question": "Is my personal data secure on CareCritique?",
+    "keywords": ["secure", "data", "privacy"],
+    "answer": "Yes, CareCritique uses encryption and strict privacy policies to protect your data. Only you and authorized healthcare providers can access your information."
+  },
+  {
+    "question": "What should I do if I can’t find my doctor?",
+    "keywords": ["can't find", "doctor"],
+    "answer": "Use the search bar with filters (specialization, location) or contact support to request adding the doctor to the platform."
+  },
+  {
+    "question": "How do I use the blood donation feature?",
+    "keywords": ["blood", "donation", "feature"],
+    "answer": "Go to the 'Blood Donation' tab, It will navigate to blood donation site."
+  }
+]

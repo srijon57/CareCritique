@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import { useTranslation } from "react-i18next";
 const HospitalsList = () => {
+    const { t } = useTranslation();
     const [hospitals, setHospitals] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [areaQuery, setAreaQuery] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const hospitalsPerPage = 10;
     const location = useLocation();
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
@@ -41,14 +44,17 @@ const HospitalsList = () => {
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
+        setCurrentPage(1); // Reset to first page on new search
     };
 
     const handleAreaChange = (e) => {
         setAreaQuery(e.target.value);
+        setCurrentPage(1); // Reset to first page on new area filter
     };
 
     const handleSearch = () => {
         navigate(`/hospitals?search=${searchQuery}&area=${areaQuery}`);
+        setCurrentPage(1); // Reset to first page on search
     };
 
     const handleKeyPress = (e) => {
@@ -62,6 +68,17 @@ const HospitalsList = () => {
         const areaMatch = (hospital.HospitalArea || '').toLowerCase().includes(areaQuery.toLowerCase());
         return nameMatch && areaMatch;
     });
+
+    // Calculate pagination
+    const indexOfLastHospital = currentPage * hospitalsPerPage;
+    const indexOfFirstHospital = indexOfLastHospital - hospitalsPerPage;
+    const currentHospitals = filteredHospitals.slice(indexOfFirstHospital, indexOfLastHospital);
+    const totalPages = Math.ceil(filteredHospitals.length / hospitalsPerPage);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+        window.scrollTo(0, 0); // Scroll to top when changing pages
+    };
 
     if (error) {
         return (
@@ -86,9 +103,9 @@ const HospitalsList = () => {
             {/* Header section */}
             <div className="bg-cyan-700 dark:bg-gray-800 text-white py-12">
                 <div className="container mx-auto px-4">
-                    <h1 className="text-4xl font-bold mb-4">Find a Hospital</h1>
+                    <h1 className="text-4xl font-bold mb-4">{t("Find a Hospital")}</h1>
                     <p className="text-cyan-100 dark:text-gray-300 max-w-2xl">
-                        Search and browse hospitals in your area to find the right care for your needs.
+                        {t("Search and browse hospitals in your area to find the right care for your needs.")}
                     </p>
                 </div>
             </div>
@@ -110,7 +127,7 @@ const HospitalsList = () => {
                                 <input
                                     id="hospital-search"
                                     type="text"
-                                    placeholder="Search by hospital name"
+                                    placeholder= {t("Search by hospital name")}
                                     className="pl-10 w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:text-white"
                                     value={searchQuery}
                                     onChange={handleSearchChange}
@@ -132,7 +149,7 @@ const HospitalsList = () => {
                                 <input
                                     id="area-search"
                                     type="text"
-                                    placeholder="Search by area"
+                                    placeholder={t("Search by area")}
                                     className="pl-10 w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:text-white"
                                     value={areaQuery}
                                     onChange={handleAreaChange}
@@ -159,8 +176,8 @@ const HospitalsList = () => {
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
                         {loading ? "Loading hospitals..." : 
-                         filteredHospitals.length === 0 ? "No hospitals found" :
-                         `Found ${filteredHospitals.length} hospital${filteredHospitals.length === 1 ? '' : 's'}`}
+                        filteredHospitals.length === 0 ? "No hospitals found" :
+                        `Found ${filteredHospitals.length} hospital${filteredHospitals.length === 1 ? '' : 's'}`}
                     </h2>
                 </div>
 
@@ -192,7 +209,7 @@ const HospitalsList = () => {
 
                 {/* Hospital list */}
                 <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-1">
-                    {filteredHospitals.map(hospital => (
+                    {currentHospitals.map(hospital => (
                         <div
                             key={hospital.HospitalID}
                             className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden"
@@ -242,7 +259,7 @@ const HospitalsList = () => {
                                             to={`/hospitals/${hospital.HospitalID}`}
                                             className="inline-flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                                         >
-                                            View Details
+                                            {t("Learn More")}
                                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
                                                 <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
                                             </svg>
@@ -253,6 +270,49 @@ const HospitalsList = () => {
                         </div>
                     ))}
                 </div>
+
+                {/* Pagination */}
+                {!loading && filteredHospitals.length > 0 && (
+                    <div className="flex justify-center items-center mt-8 space-x-2">
+                        <button
+                            onClick={() => handlePageChange(currentPage - 1)}
+                            disabled={currentPage === 1}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                currentPage === 1
+                                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500'
+                                    : 'bg-cyan-600 text-white hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600'
+                            }`}
+                        >
+                            Previous
+                        </button>
+
+                        {Array.from({ length: totalPages }, (_, index) => (
+                            <button
+                                key={index + 1}
+                                onClick={() => handlePageChange(index + 1)}
+                                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                    currentPage === index + 1
+                                        ? 'bg-cyan-600 text-white dark:bg-cyan-500'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                                }`}
+                            >
+                                {index + 1}
+                            </button>
+                        ))}
+
+                        <button
+                            onClick={() => handlePageChange(currentPage + 1)}
+                            disabled={currentPage === totalPages}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                                currentPage === totalPages
+                                    ? 'bg-gray-200 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500'
+                                    : 'bg-cyan-600 text-white hover:bg-cyan-700 dark:bg-cyan-500 dark:hover:bg-cyan-600'
+                            }`}
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
