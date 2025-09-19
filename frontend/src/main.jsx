@@ -6,6 +6,8 @@ import App from "./App.jsx";
 import { AuthProvider } from "./context/Authcontext.jsx";
 import { SnackbarProvider } from "notistack";
 import { SpinnerProvider } from "./components/SpinnerProvider.jsx";
+import './components/i18n.jsx'; 
+
 createRoot(document.getElementById("root")).render(
     <BrowserRouter>
         <StrictMode>
