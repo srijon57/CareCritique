@@ -148,14 +148,14 @@ const HealthCheck = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-100 to-cyan-200 dark:from-gray-900 dark:to-gray-950 text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-blue-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       {/* Header */}
       <div className="bg-cyan-700 dark:bg-gray-800 text-white py-12 shadow-md">
         <div className="max-w-3xl mx-auto px-4">
           <h1 className="text-4xl font-bold mb-4">Health Check</h1>
           <p className="text-cyan-100 dark:text-gray-300 max-w-2xl">
             Enter your details to calculate BMI, evaluate your blood pressure
-            level, and assess your sleep health. You'll also see potential risk factors and suggestions.
+            level, and assess your sleep health. You`ll also see potential risk factors and suggestions.
           </p>
         </div>
       </div>
@@ -444,7 +444,7 @@ const HealthCheck = () => {
               <b>Older Adults (65+ years):</b> 7-8 hours per night
             </li>
             <li>
-              <b>Consistent schedule:</b> Going to bed and waking up at the same time helps regulate your body's clock
+              <b>Consistent schedule:</b> Going to bed and waking up at the same time helps regulate your body`s clock
             </li>
             <li>
               <b>Sleep environment:</b> Cool, dark, and quiet rooms promote better sleep

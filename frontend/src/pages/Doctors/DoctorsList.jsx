@@ -4,8 +4,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IoMdStar, IoMdStarHalf, IoMdStarOutline } from "react-icons/io";
 import { MdVerified } from "react-icons/md";
 import { VscUnverified } from "react-icons/vsc";
-
+import { useTranslation } from "react-i18next";
 const DoctorsList = () => {
+    const { t } = useTranslation();
     const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -216,11 +217,10 @@ const DoctorsList = () => {
             <div className="bg-gradient-to-r from-cyan-700 to-blue-900 dark:from-gray-800 dark:to-gray-900">
                 <div className="container mx-auto px-4 py-12">
                     <h1 className="text-4xl font-bold text-white text-center mb-4">
-                        Find Your Doctor
+                        {t("Find Your Doctor")}
                     </h1>
                     <p className="text-cyan-100 dark:text-gray-300 text-center mb-8 max-w-2xl mx-auto">
-                        Browse our network of qualified medical professionals to
-                        find the right doctor for your needs.
+                        {t("Browse our network of qualified medical professionals to find the right doctor for your needs.")}
                     </p>
 
                     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 max-w-4xl mx-auto">
@@ -250,7 +250,7 @@ const DoctorsList = () => {
                                     <input
                                         id="search"
                                         type="text"
-                                        placeholder="Search by doctor name or specialty"
+                                        placeholder= {t("Search by doctor name or specialty")}
                                         className="pl-10 w-full p-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 dark:text-white"
                                         value={searchQuery}
                                         onChange={handleSearchChange}
@@ -272,7 +272,7 @@ const DoctorsList = () => {
                                     value={specialtyFilter}
                                     onChange={handleSpecialtyChange}
                                 >
-                                    <option value="">All Specialties</option>
+                                    <option value="">{t('All Specialties')}</option>
                                     {specialties.map((specialty) => (
                                         <option
                                             key={specialty}
@@ -290,13 +290,13 @@ const DoctorsList = () => {
                                 onClick={clearFilters}
                                 className="py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
                             >
-                                Clear Filters
+                                {t("Clear Filters")}
                             </button>
                             <button
                                 onClick={handleApplyFilters}
                                 className="py-2 px-4 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
                             >
-                                Search
+                                {t("Search")}
                             </button>
                         </div>
                     </div>
@@ -406,7 +406,7 @@ const DoctorsList = () => {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                Hospital
+                                                {t("Hospital")}
                                             </h4>
                                             <p className="text-gray-900 dark:text-white">
                                                 {doctor.hospital || "N/A"}
@@ -415,7 +415,7 @@ const DoctorsList = () => {
 
                                         <div>
                                             <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                Languages
+                                                {t("Languages")}
                                             </h4>
                                             <p className="text-gray-900 dark:text-white">
                                                 {doctor.languages || "N/A"}
@@ -424,7 +424,7 @@ const DoctorsList = () => {
 
                                         <div>
                                             <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                Gender
+                                                {t("Gender")}
                                             </h4>
                                             <p className="text-gray-900 dark:text-white">
                                                 {doctor.gender || "N/A"}
@@ -433,7 +433,7 @@ const DoctorsList = () => {
 
                                         <div>
                                             <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                                Experience
+                                                {t("Experience")}
                                             </h4>
                                             <p className="text-gray-900 dark:text-white">
                                                 {doctor.experience || "N/A"}
@@ -443,7 +443,7 @@ const DoctorsList = () => {
 
                                     <div className="mt-4">
                                         <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                                            Availability
+                                            {t("Availability")}
                                         </h4>
                                         <p className="text-gray-900 dark:text-white">
                                             {doctor.availability || "N/A"}
@@ -455,7 +455,7 @@ const DoctorsList = () => {
                                             to={`/doctors/${doctor.id}`}
                                             className="inline-flex items-center bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
                                         >
-                                            View Profile
+                                            {t("View Profile")}
                                             <svg
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 className="h-5 w-5 ml-1"

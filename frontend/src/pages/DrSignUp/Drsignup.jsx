@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { useSnackbar } from 'notistack';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import FileUpload from '../../components/FileUpload';
 
 const DrSignUpPage = () => {

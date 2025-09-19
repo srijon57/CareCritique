@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@vitalets/google-translate-api": "^9.2.1",
+    "i18next": "^25.5.2",
+    "react-i18next": "^15.7.3"
+  }
+}
