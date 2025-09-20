@@ -6,6 +6,8 @@ import axios from "axios";
 import { BodyComponent } from "reactjs-human-body";
 import CountUp from "react-countup"; // Import react-countup
 import "./homepage.css";
+import shuffle from "lodash/shuffle";
+
 
 const Homepage = () => {
     const [searchQuery, setSearchQuery] = useState("");
@@ -23,6 +25,188 @@ const Homepage = () => {
     const [searchFocused, setSearchFocused] = useState(false);
     const [areaFocused, setAreaFocused] = useState(false);
     const navigate = useNavigate();
+    
+
+
+ const quizData = [
+    {
+        question: "What is the normal human body temperature?",
+        options: ["36°C", "37°C", "38°C", "39°C"],
+        answer: "37°C",
+    },
+    {
+        question: "Which organ pumps blood throughout the body?",
+        options: ["Lungs", "Heart", "Kidney", "Liver"],
+        answer: "Heart",
+    },
+    {
+        question: "Which vitamin is produced when skin is exposed to sunlight?",
+        options: ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D"],
+        answer: "Vitamin D",
+    },
+    {
+        question: "Which part of the brain controls balance?",
+        options: ["Cerebellum", "Cerebrum", "Medulla", "Hypothalamus"],
+        answer: "Cerebellum",
+    },
+    {
+        question: "What is the largest organ in the human body?",
+        options: ["Liver", "Skin", "Heart", "Lungs"],
+        answer: "Skin",
+    },
+    {
+        question: "How many bones are in the adult human body?",
+        options: ["206", "201", "210", "215"],
+        answer: "206",
+    },
+    {
+        question: "Which blood type is the universal donor?",
+        options: ["O+", "O-", "AB+", "AB-"],
+        answer: "O-",
+    },
+    {
+        question: "What is the main function of red blood cells?",
+        options: ["Fight infection", "Transport oxygen", "Clot blood", "Produce hormones"],
+        answer: "Transport oxygen",
+    },
+    {
+        question: "Which nutrient is essential for muscle growth?",
+        options: ["Carbohydrates", "Proteins", "Fats", "Vitamins"],
+        answer: "Proteins",
+    },
+    {
+        question: "Which organ removes waste from blood?",
+        options: ["Liver", "Kidney", "Lungs", "Spleen"],
+        answer: "Kidney",
+    },
+    {
+        question: "Which vitamin helps in blood clotting?",
+        options: ["Vitamin A", "Vitamin D", "Vitamin K", "Vitamin E"],
+        answer: "Vitamin K",
+    },
+    {
+        question: "What is the primary function of the lungs?",
+        options: ["Digest food", "Pump blood", "Exchange gases", "Store energy"],
+        answer: "Exchange gases",
+    },
+    {
+        question: "Which mineral is important for strong bones?",
+        options: ["Calcium", "Iron", "Zinc", "Magnesium"],
+        answer: "Calcium",
+    },
+    {
+        question: "What is the normal resting heart rate for adults?",
+        options: ["60-100 bpm", "40-60 bpm", "100-120 bpm", "120-140 bpm"],
+        answer: "60-100 bpm",
+    },
+    {
+        question: "Which organ produces insulin?",
+        options: ["Pancreas", "Liver", "Kidney", "Heart"],
+        answer: "Pancreas",
+    },
+    {
+        question: "Which is the smallest bone in the human body?",
+        options: ["Stapes", "Femur", "Tibia", "Humerus"],
+        answer: "Stapes",
+    },
+    {
+        question: "What protects the brain from injury?",
+        options: ["Skin", "Skull", "Spine", "Ribs"],
+        answer: "Skull",
+    },
+    {
+        question: "Which cells fight infections in the body?",
+        options: ["Red blood cells", "White blood cells", "Platelets", "Muscle cells"],
+        answer: "White blood cells",
+    },
+    {
+        question: "Which organ stores bile?",
+        options: ["Liver", "Gallbladder", "Pancreas", "Stomach"],
+        answer: "Gallbladder",
+    },
+    {
+        question: "Which nutrient is the main source of energy?",
+        options: ["Proteins", "Fats", "Carbohydrates", "Vitamins"],
+        answer: "Carbohydrates",
+    },
+    {
+    question: "Which vitamin is important for blood cell production?",
+    options: ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D"],
+    answer: "Vitamin B12",
+  },
+  {
+    question: "What is the largest artery in the human body?",
+    options: ["Pulmonary artery", "Aorta", "Carotid artery", "Femoral artery"],
+    answer: "Aorta",
+  },
+  {
+    question: "Which organ is primarily responsible for filtering toxins from blood?",
+    options: ["Kidney", "Liver", "Spleen", "Lungs"],
+    answer: "Liver",
+  },
+  {
+    question: "How many chambers are there in the human heart?",
+    options: ["2", "3", "4", "5"],
+    answer: "4",
+  },
+  {
+    question: "Which nutrient helps in muscle growth and repair?",
+    options: ["Protein", "Carbohydrate", "Fat", "Vitamin C"],
+    answer: "Protein",
+  },
+  {
+    question: "Which vitamin is essential for strong bones?",
+    options: ["Vitamin A", "Vitamin B12", "Vitamin D", "Vitamin K"],
+    answer: "Vitamin D",
+  },
+  {
+    question: "Which organ is part of both the digestive and endocrine system?",
+    options: ["Liver", "Pancreas", "Stomach", "Gallbladder"],
+    answer: "Pancreas",
+  },
+  {
+    question: "Which condition is characterized by high blood sugar levels?",
+    options: ["Hypertension", "Diabetes", "Anemia", "Asthma"],
+    answer: "Diabetes",
+  },
+  {
+    question: "What is the main function of red blood cells?",
+    options: ["Fight infection", "Carry oxygen", "Clot blood", "Remove toxins"],
+    answer: "Carry oxygen",
+  },
+  {
+    question: "Which part of the eye is responsible for focusing light?",
+    options: ["Iris", "Lens", "Cornea", "Retina"],
+    answer: "Lens",
+  },
+];
+const [quizQuestions] = useState(() =>
+  quizData && quizData.length ? shuffle(quizData).slice(0, 10) : []
+);
+const [currentQuestion, setCurrentQuestion] = useState(0);
+const [score, setScore] = useState(0);
+const [selectedOption, setSelectedOption] = useState(null);
+const [showScore, setShowScore] = useState(false);
+const handleOptionClick = (option) => {
+    setSelectedOption(option);
+    if (option === quizQuestions[currentQuestion].answer) {
+        setScore((prev) => prev + 1);
+    }
+};
+
+const handleNextQuestion = () => {
+    if (currentQuestion < quizQuestions.length - 1) {
+        setCurrentQuestion((prev) => prev + 1);
+        setSelectedOption(null);
+    } else {
+        setShowScore(true);
+    }
+};
+
+
+
+
+
 
     const bodyPartDiseases = {
         head: {
@@ -315,7 +499,7 @@ const Homepage = () => {
             </div>
         );
     }
-
+   
     return (
         <div className="bg-blue-50 dark:bg-gray-900 min-h-screen font-sans overflow-hidden">
             {/* Hero Section with Enhanced Animations */}
@@ -704,6 +888,73 @@ const Homepage = () => {
                     Available 24/7 for medical emergencies
                 </p>
             </section>
+            <section className="container mx-auto p-6 my-12 bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 rounded-xl shadow-lg animate-fade-in-up">
+    <h2 className="text-4xl font-bold mb-6 text-cyan-800 dark:text-white text-center">
+        📝 Health Quiz
+    </h2>
+    {!showScore ? (
+        <div className="text-center">
+            <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+                Question {currentQuestion + 1} of {quizQuestions.length}
+            </h3>
+            <p className="text-lg mb-6 text-gray-700 dark:text-gray-300">
+                {quizQuestions[currentQuestion].question}
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {shuffle(quizQuestions[currentQuestion].options).map((option, index) => (
+                    <button
+                        key={index}
+                        onClick={() => handleOptionClick(option)}
+                        className={`py-3 px-4 rounded-lg border-2 font-semibold transition-all duration-300 ${
+                            selectedOption === option
+                                ? option === quizQuestions[currentQuestion].answer
+                                    ? "bg-green-500 text-white border-green-600"
+                                    : "bg-red-500 text-white border-red-600"
+                                : "bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 text-gray-800 dark:text-white hover:bg-cyan-100 dark:hover:bg-cyan-600"
+                        }`}
+                        disabled={!!selectedOption}
+                    >
+                        {option}
+                    </button>
+                ))}
+            </div>
+            {selectedOption && (
+                <button
+                    onClick={handleNextQuestion}
+                    className="mt-6 py-3 px-6 bg-cyan-800 text-white rounded-lg hover:bg-cyan-700 transition-all duration-300 font-semibold"
+                >
+                    {currentQuestion === quizQuestions.length - 1
+                        ? "See Score"
+                        : "Next Question"}
+                </button>
+            )}
+        </div>
+    ) : (
+        <div className="text-center">
+            <h3 className="text-2xl font-bold mb-4 text-cyan-800 dark:text-white">
+                🎉 Your Score: {score} / {quizQuestions.length}
+            </h3>
+            <p className="text-gray-700 dark:text-gray-300">
+                {score === quizQuestions.length
+                    ? "Excellent! You got all questions correct."
+                    : score >= quizQuestions.length / 2
+                    ? "Good job! Keep learning."
+                    : "Better luck next time! Keep practicing."}
+            </p>
+            <button
+                onClick={() => {
+                    setScore(0);
+                    setCurrentQuestion(0);
+                    setShowScore(false);
+                    setSelectedOption(null);
+                }}
+                className="mt-6 py-3 px-6 bg-cyan-800 text-white rounded-lg hover:bg-cyan-700 transition-all duration-300 font-semibold"
+            >
+                🔄 Retry Quiz
+            </button>
+        </div>
+    )}
+</section>
 
             {/* Enhanced Top Hospitals Section */}
             <section className="container mx-auto p-6 mb-9">
